@@ -1,0 +1,23 @@
+{
+  "subject": "projeto-integrador-redes-ii",
+  "subject_title": "Projeto Integrador em Redes de Computadores II",
+  "subject_description": "Componente que conduz a equipe na implementação de uma infraestrutura de rede completa sob a cultura NetDevOps: controle de versão com Git, projeto físico e lógico, integração com Windows Server, automação com PowerShell e ações de extensão junto à comunidade, culminando na entrega final do projeto.",
+  "subject_status": "20 Encontros • 4 Blocos",
+  "layout": "aula",
+  "tags": ["aula"],
+  "componente": "Projeto Integrador em Redes de Computadores II",
+  "nav_text": "⮜ VOLTAR",
+  "unit_label": "Encontro",
+  "bimester_labels": {
+    "bimestre-01": "Bloco 1",
+    "bimestre-02": "Bloco 2",
+    "bimestre-03": "Bloco 3",
+    "bimestre-04": "Bloco 4"
+  },
+  "bimester_titles": {
+    "bimestre-01": "Fundamentos, Versionamento e Planejamento",
+    "bimestre-02": "Projeto de Infraestrutura Física e Lógica",
+    "bimestre-03": "Implementação de Sistemas e Automação",
+    "bimestre-04": "Finalização, Avaliação e Fechamento"
+  }
+}

@@ -46,6 +46,7 @@ Cada componente é uma apostila completa, localizada em `src/componentes/[slug-d
 | `programacao-web-ii` | Programação Web II |
 | `programacao-web-iii` | Programação Web III |
 | `projeto-integrador-redes-i` | Projeto Integrador em Redes de Computadores I |
+| `projeto-integrador-redes-ii` | Projeto Integrador em Redes de Computadores II |
 | `projetos-de-tecnologia-de-informacao-e-comunicacao` | Projetos de TI e Comunicação |
 | `qualidade-e-teste-de-software` | Qualidade e Teste de Software |
 

@@ -9,7 +9,7 @@ layout: base
       href="{{ ['/componentes/', subject, '/'] | join | url }}"
       class="back-link-class"
     >← Voltar</a>
-    <h1>Aula {{ aula_numero }} - {{ title }}</h1>
+    <h1>{{ unit_label | default("Aula") }} {{ aula_numero }} - {{ title }}</h1>
     {% if description %}
       <p class="lesson-intro">{{ description }}</p>
     {% endif %}
@@ -23,7 +23,7 @@ layout: base
 
 <nav class="lesson-pagination">
   {% if previousAula and previousAula.data.subject == subject %}
-    <a href="{{ previousAula.url | url }}" class="prev">← Aula {{
+    <a href="{{ previousAula.url | url }}" class="prev">← {{ unit_label | default("Aula") }} {{
         previousAula.data.aula_numero
       }}</a>
   {% else %}
@@ -35,7 +35,7 @@ layout: base
 
   {% if nextAula and nextAula.data.subject == subject %}
     <a href="{{ nextAula.url | url }}" class="next"
-    >Aula {{ nextAula.data.aula_numero }} →</a>
+    >{{ unit_label | default("Aula") }} {{ nextAula.data.aula_numero }} →</a>
   {% else %}
     <span></span>
   {% endif %}

@@ -45,6 +45,7 @@ Cada componente é uma apostila completa, localizada em `src/componentes/[slug-d
 | `programacao-e-algoritmos` | Programação e Algoritmos |
 | `programacao-web-ii` | Programação Web II |
 | `programacao-web-iii` | Programação Web III |
+| `projeto-integrador-redes-i` | Projeto Integrador em Redes de Computadores I |
 | `projetos-de-tecnologia-de-informacao-e-comunicacao` | Projetos de TI e Comunicação |
 | `qualidade-e-teste-de-software` | Qualidade e Teste de Software |
 
@@ -100,6 +101,8 @@ As aulas são numeradas de forma **contínua de 01 a 40** ao longo de todo o com
 
 Essa convenção facilita a navegação sequencial, a paginação anterior/próxima e a referência cruzada entre conteúdos relacionados.
 
+> **Variações:** a contagem e a nomenclatura são configuráveis por componente via `subject_status` (ex.: `"20 Encontros • 4 Blocos"`), `unit_label` (ex.: `"Encontro"`) e `bimester_labels` (ex.: `"Bloco 1"`). A estrutura de pastas (`bimestre-XX/aula-NN/`) e os metadados (`aula_numero`) permanecem os mesmos.
+
 ### Estrutura de pastas de um componente
 
 ```text
@@ -146,6 +149,7 @@ Este arquivo funciona como *directory data file* do Eleventy: os metadados dele 
   "subject_status": "40 Aulas • 4 Bimestres",
   "layout": "aula",
   "tags": ["aula"],
+  "componente": "Nome Completo do Componente",
   "nav_text": "⮜ VOLTAR",
   "bimester_titles": {
     "bimestre-01": "Título do 1º Bimestre",
@@ -164,8 +168,11 @@ Este arquivo funciona como *directory data file* do Eleventy: os metadados dele 
 | `subject_status` | Não | Texto de status exibido no card do portal. |
 | `layout` | Sim | Layout herdado por todas as aulas do componente (`aula`). |
 | `tags` | Sim | Inclui `aula` para indexar as páginas na coleção de aulas. |
+| `componente` | Não | Nome usado no `<title>` das páginas (`{{ title }} \| {{ componente }}`). |
 | `nav_text` | Não | Texto de navegação (atualmente não renderizado pelos layouts). |
 | `bimester_titles` | Sim | Título de cada bimestre usado no dashboard. |
+| `unit_label` | Não | Como chamar cada unidade de conteúdo. Padrão: `Aula` (ex.: `Encontro`). Afeta o dashboard, o título da página e a paginação. |
+| `bimester_labels` | Não | Rótulo de cada período, substituindo o `label` global de `bimesters.json`. Ex.: `{ "bimestre-01": "Bloco 1", ... }`. |
 
 ### 2. Dashboard do componente (`index.njk`)
 

@@ -1,0 +1,23 @@
+{
+  "subject": "projeto-integrador-redes-i",
+  "subject_title": "Projeto Integrador em Redes de Computadores I",
+  "subject_description": "Componente centrado na elaboração de projetos de redes de computadores: levantamento de requisitos, extensão comunitária, normatização, diagnóstico de infraestrutura e especificação técnica, culminando na entrega de um portfólio completo do projeto.",
+  "subject_status": "20 Encontros • 4 Blocos",
+  "layout": "aula",
+  "tags": ["aula"],
+  "componente": "Projeto Integrador em Redes de Computadores I",
+  "nav_text": "⮜ VOLTAR",
+  "unit_label": "Encontro",
+  "bimester_labels": {
+    "bimestre-01": "Bloco 1",
+    "bimestre-02": "Bloco 2",
+    "bimestre-03": "Bloco 3",
+    "bimestre-04": "Bloco 4"
+  },
+  "bimester_titles": {
+    "bimestre-01": "Iniciação, Requisitos e Extensão",
+    "bimestre-02": "Normatização, Diagnóstico e Gestão",
+    "bimestre-03": "Desenvolvimento e Especificação Técnica",
+    "bimestre-04": "Entrega, Avaliação e Recuperação"
+  }
+}

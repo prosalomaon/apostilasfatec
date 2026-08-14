@@ -8,20 +8,22 @@ layout: base
 </div>
 
 {% for bimester in bimesters %}
+{% set period_label = (bimester_labels | default({}))[bimester.tag] or bimester.label %}
+{% set unit = unit_label | default("AULA") %}
 <section class="bimester-section">
   <h2 class="bimester-title">
-    {{ bimester.label }}{% if bimester_titles[bimester.tag] %}: {{ bimester_titles[bimester.tag] }}{% endif %}
+    {{ period_label }}{% if bimester_titles[bimester.tag] %}: {{ bimester_titles[bimester.tag] }}{% endif %}
   </h2>
   <div class="lesson-grid">
     {% set lessons = collections.aulas | filterBySubjectBimester(subject, bimester.tag) %}
     {% for post in lessons %}
     <a href="{{ post.url | url }}" class="lesson-card">
-      <span class="number">AULA {{ post.data.aula_numero }}</span>
+      <span class="number">{{ unit | upper }} {{ post.data.aula_numero }}</span>
       <span class="title">{{ post.data.title }}</span>
       <span class="lesson-desc">{{ post.data.description }}</span>
     </a>
     {% else %}
-    <p class="empty-state">Nenhuma aula cadastrada para este bimestre.</p>
+    <p class="empty-state">Nenhum conteúdo cadastrado para este período.</p>
     {% endfor %}
   </div>
 </section>

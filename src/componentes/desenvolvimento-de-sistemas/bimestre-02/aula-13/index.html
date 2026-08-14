@@ -1,0 +1,313 @@
+---
+title: "Encapsulamento: Modificadores e Getters/Setters"
+aula_numero: "13"
+description: "Proteção de dados usando modificadores de acesso private e public. Implementação de métodos de leitura e escrita para controle de integridade dos atributos."
+tags:
+  - aula
+  - bimestre-02
+---
+
+<section class="section-box">
+  <h2>Teoria & Conceito: Aula 13 — Encapsulamento: Modificadores e Getters/Setters</h2>
+  <p>O encapsulamento é um dos pilares fundamentais da Programação Orientada a Objetos (OO). Ele consiste em "esconder" os detalhes internos de como uma classe funciona, expondo apenas o que é necessário para quem a utiliza. A ideia central é separar o comportamento interno da interface (métodos públicos) que a classe disponibiliza para seus clientes.</p>
+
+  <h3>1. O que é Encapsular?</h3>
+  <p>Encapsular é proteger os dados de uma classe para que eles não fiquem em um estado inconsistente. Imagine um objeto Conta: se o atributo saldo for público, qualquer um pode alterá-lo para um valor negativo ou inválido sem passar por nenhuma conferência. Ao encapsular, forçamos que qualquer interação com o dado passe por um método que pode conter regras de negócio e validações.</p>
+  <ul>
+    <li><strong>Analogia do Mundo Real:</strong> Quando você dirige um carro, interage com os pedais e o volante (interface). Você não precisa entender como a explosão do combustível move os pistões (implementação interna). Se o fabricante trocar o motor, você não precisa "reaprender" a dirigir, pois a interface continua a mesma.</li>
+  </ul>
+
+  <hr>
+
+  <h3>2. Modificadores de Acesso: private e public</h3>
+  <p>Os modificadores de acesso (ou de visibilidade) determinam quem pode ver e usar os membros de uma classe.</p>
+  <ul>
+    <li><strong>private (Privado):</strong> É o nível mais restritivo. Membros (atributos ou métodos) marcados como private só podem ser acessados e manipulados por métodos dentro da própria classe. É a prática recomendada para quase todos os atributos de uma classe.</li>
+    <li><strong>public (Público):</strong> Permite que qualquer outra classe no projeto acesse o membro. Geralmente, os métodos que representam os "serviços" que a classe presta são públicos.</li>
+  </ul>
+  <p>Exemplo de erro por falta de acesso:</p>
+  <div class="code-container">
+    <pre><code class="language-java">public class Conta {
+    private double saldo; // Atributo protegido
+}
+
+public class Principal {
+    public static void main(String[] args) {
+        Conta c = new Conta();
+        c.saldo = 1000; // ERRO DE COMPILAÇÃO: 'saldo' tem acesso privado [19, 20]
+    }
+}</code></pre>
+  </div>
+
+  <hr>
+
+  <h3>3. Métodos Getters e Setters</h3>
+  <p>Como os atributos são privados, precisamos de uma maneira controlada de lê-los e modificá-los. Para isso, utilizamos a convenção de métodos Get (pegar) e Set (configurar).</p>
+  <ul>
+    <li><strong>Getters (Acessores):</strong> Métodos que retornam o valor de um atributo. Geralmente não recebem parâmetros e possuem um tipo de retorno condizente com o atributo.</li>
+    <li><strong>Setters (Modificadores):</strong> Métodos que permitem alterar o valor de um atributo. Eles recebem um parâmetro e geralmente possuem o tipo de retorno void.</li>
+  </ul>
+  <p>Exemplo Prático com Validação:</p>
+  <div class="code-container">
+    <pre><code class="language-java">public class Aluno {
+    private String nome;
+    private double media;
+
+    // Getter para o nome
+    public String getNome() {
+        return nome; [26, 27]
+    }
+
+    // Setter para o nome
+    public void setName(String nome) {
+        this.nome = nome; [27, 28] // 'this' diferencia o atributo do parâmetro
+    }
+
+    // Setter para a média com VALIDAÇÃO de integridade [10, 29]
+    public void setMedia(double media) {
+        if (media >= 0.0 && media <= 10.0) {
+            this.media = media;
+        } else {
+            System.out.println("Média inválida!");
+        }
+    }
+}</code></pre>
+  </div>
+
+  <hr>
+
+  <h3>4. Vantagens da Engenharia de Software</h3>
+  <p>O uso de variáveis de instância private e métodos de acesso public traz benefícios cruciais:</p>
+  <ul>
+    <li><strong>Ocultamento de Informações:</strong> O cliente da classe sabe o que o método faz, mas não como ele faz. Isso permite que você mude a implementação interna sem quebrar o código de quem usa a sua classe.</li>
+    <li><strong>Controle de Integridade:</strong> Você pode impedir que um saldo fique negativo ou que um CPF inválido seja cadastrado.</li>
+    <li><strong>Flexibilidade:</strong> Se no futuro você decidir que o saldo deve sempre ser exibido somado ao limite, basta alterar o método getSaldo(). Todas as partes do sistema que chamam esse método serão atualizadas automaticamente.</li>
+    <li><strong>Baixo Acoplamento:</strong> As classes tornam-se mais independentes, facilitando a manutenção e a expansão do software.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Exemplos de Código</h2>
+
+  <h3>Exemplo 1: O Cenário de Erro (Sem Encapsulamento)</h3>
+  <p><strong>Objetivo:</strong> Mostrar o perigo de deixar os atributos públicos (public). Qualquer parte do sistema pode inserir dados inválidos e quebrar as regras de negócio.</p>
+  <div class="code-container">
+    <pre><code class="language-java">// CLASSE MAL PROJETADA (Sem proteção)
+class ContaBancaria {
+    public String titular;
+    public double saldo; // Perigo: qualquer um altera diretamente
+}
+
+// PROGRAMA PRINCIPAL
+public class TesteSemEncapsulamento {
+    public static void main(String[] args) {
+        ContaBancaria conta = new ContaBancaria();
+        conta.titular = "Alex";
+        
+        // O desastre acontece aqui:
+        conta.saldo = -5000.0; // Saldo negativo direto sem validação!
+        
+        System.out.println(conta.titular + " tem saldo de: R$ " + conta.saldo);
+    }
+}</code></pre>
+  </div>
+
+  <hr>
+
+  <h3>Exemplo 2: Encapsulamento Básico (Modificadores + Get/Set)</h3>
+  <p><strong>Objetivo:</strong> Aplicar a regra de ouro do encapsulamento: atributos sempre privados (private), leitura e escrita controladas por métodos públicos (public).</p>
+  <div class="code-container">
+    <pre><code class="language-java">class Aluno {
+    // 1. Atributos privados (Escondidos do mundo exterior)
+    private String nome;
+    private double nota;
+
+    // 2. Construtor
+    public Aluno(String nome, double nota) {
+        this.nome = nome;
+        setNota(nota); // Usa o setter para garantir a regra desde o início
+    }
+
+    // 3. Método Getter (Leitura)
+    public String getNome() { return this.nome; }
+    public double getNota() { return this.nota; }
+
+    // 4. Método Setter (Escrita com Controle de Integridade)
+    public void setNota(double novaNota) {
+        if (novaNota >= 0 && novaNota <= 10) {
+            this.nota = novaNota;
+        } else {
+            System.out.println("Erro: Nota inválida! Mantendo o valor anterior.");
+        }
+    }
+}</code></pre>
+  </div>
+
+  <hr>
+
+  <h3>Exemplo 3: Intermediário (Atributo de "Apenas Leitura")</h3>
+  <p><strong>Objetivo:</strong> Explicar que nem todo atributo precisa de um Setter. Se o dado não deve mudar após ser criado (ex: CPF, ID, Data de Nascimento), criamos apenas o Getter.</p>
+  <div class="code-container">
+    <pre><code class="language-java">class Funcionario {
+    private final String cpf; // 'final' reforça a imutabilidade
+    private double salario;
+
+    public Funcionario(String cpf, double salarioInicial) {
+        this.cpf = cpf;
+        this.salario = salarioInicial;
+    }
+
+    // Apenas Getter para o CPF. Ninguém pode alterar o CPF de um funcionário cadastrado!
+    public String getCpf() { return this.cpf; }
+
+    public double getSalario() { return this.salario; }
+    
+    // O salário não muda diretamente, muda através de uma regra de negócio (Aumento)
+    public void aumentarSalario(double porcentagem) {
+        if (porcentagem > 0) {
+            this.salario += this.salario * (porcentagem / 100);
+        }
+    }
+}</code></pre>
+  </div>
+
+  <hr>
+
+  <h3>Exemplo 4: Avançado (Encapsulamento com Swing e Boas Práticas)</h3>
+  <p><strong>Objetivo:</strong> Juntar os conceitos de encapsulamento com a interface gráfica, demonstrando como o encapsulamento protege o estado de um objeto em uma aplicação real acionada por eventos.</p>
+  <div class="code-container">
+    <pre><code class="language-java">import javax.swing.*;
+import java.awt.FlowLayout;
+
+// CLASSE DE NEGÓCIO ENCAPSULADA
+class Termometro {
+    private double temperaturaCelsius;
+
+    public double getCelsius() { return temperaturaCelsius; }
+
+    // Controle de integridade severo (Zero Absoluto da física)
+    public boolean setCelsius(double temp) {
+        if (temp >= -273.15) {
+            this.temperaturaCelsius = temp;
+            return true; // Sucesso
+        }
+        return false; // Falha na validação
+    }
+
+    // Getter calculado (Não existe o atributo fahrenheit na memória, ele é gerado na hora)
+    public double getFahrenheit() {
+        return (temperaturaCelsius * 9 / 5) + 32;
+    }
+}
+
+// INTERFACE SWING
+public class TelaTermometro extends JFrame {
+    private Termometro termometro = new Termometro();
+
+    public TelaTermometro() {
+        super("Controle de Temperatura");
+        setLayout(new FlowLayout());
+
+        JTextField txtInput = new JTextField(10);
+        JButton btnAtualizar = new JButton("Definir Temp (°C)");
+
+        btnAtualizar.addActionListener(e -> {
+            try {
+                double tempDigitada = Double.parseDouble(txtInput.getText());
+                
+                // O Swing tenta atualizar o objeto encapsulado
+                if (termometro.setCelsius(tempDigitada)) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Sucesso!\nFahrenheit: " + termometro.getFahrenheit() + " °F");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Erro: Abaixo do zero absoluto!");
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Digite um número válido!");
+            }
+        });
+
+        add(new JLabel("Graus Celsius:"));
+        add(txtInput);
+        add(btnAtualizar);
+
+        setSize(300, 150);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+    }
+
+    public static void main(String[] args) {
+        new TelaTermometro().setVisible(true);
+    }
+}</code></pre>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>Representações Gráficas</h2>
+
+  <h3>1. Diagrama de Classe (Visão Estática)</h3>
+  <p>Este diagrama demonstra a visibilidade dos membros da classe utilizando a notação padrão UML (<code class="one-line-code">-</code> para private e <code class="one-line-code">+</code> para public). Ele deixa claro que os atributos estão trancados, enquanto os métodos servem de portaria.</p>
+  <div class="mermaid">
+classDiagram
+    class Aluno {
+        - String nome
+        - double nota
+        + Aluno(String nome, double nota)
+        + getNome() String
+        + getNota() double
+        + setNota(double novaNota) void
+    }
+  </div>
+
+  <hr>
+
+  <h3>2. O Fluxo de Bloqueio e Permissão (Conceitual)</h3>
+  <p>Este mapa mental/fluxograma ajuda o aluno a entender a "barreira" do modificador de acesso. Mostra o que acontece quando o mundo externo tenta interagir diretamente com o objeto.</p>
+  <div class="mermaid">
+graph TD
+    A[Mundo Externo / Classe Principal] -->|Tenta alterar diretamente| B(Atributo Privado)
+    B -->|Resultado| C[ERRO DE COMPILAÇÃO]
+
+    A -->|Chama o Método Público| D[setNota]
+    D -->|Validação: A nota está entre 0 e 10?| E{Decisão}
+    E -->|Sim| F[Altera o Atributo Privado de forma segura  ✓]
+    E -->|Não| G[Bloqueia e exibe mensagem de erro]
+  </div>
+
+  <hr>
+
+  <h3>3. Diagrama de Sequência (Execução em Tempo de Real)</h3>
+  <p>Este diagrama mostra a linha do tempo de uma tentativa de alteração de dados inválidos através de uma interface Swing, ilustrando o papel do encapsulamento como uma camada protetora.</p>
+  <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Aluno as Usuário (Tela)
+    participant Swing as TelaTermometro (JFrame)
+    participant Objeto as Termometro (Objeto)
+
+    Aluno->>Swing: Digita "-300" e clica em Atualizar
+    Swing->>Objeto: setCelsius(-300)
+    Note over Objeto: Valida se é maior ou igual&lt;br/&gt;ao Zero Absoluto (-273.15)
+    Objeto-->>Swing: Retorna 'false' (Dados Inválidos)
+    Swing-->>Aluno: Exibe JOptionPane ("Erro: Abaixo do zero absoluto!")
+  </div>
+</section>
+
+<div class="tip-box">
+  <h4>Dicas & Lembretes</h4>
+  <ul>
+    <li><strong>Não crie Getters/Setters indiscriminadamente:</strong> Só forneça esses métodos se houver uma real necessidade de leitura ou escrita. Se um atributo for usado apenas internamente, ele não precisa de get/set.</li>
+    <li><strong>Encapsulamento de Comportamento:</strong> Encapsular não é apenas proteger atributos; é também esconder a lógica de métodos complexos, deixando-os privados caso sejam apenas auxiliares para a própria classe.</li>
+    <li><strong>Convenção JavaBeans:</strong> Siga o padrão <code class="one-line-code">getAtributo()</code> e <code class="one-line-code">setAtributo()</code>. Muitas bibliotecas e frameworks Java (como Hibernate e Spring) dependem dessa nomenclatura para funcionar corretamente.</li>
+    <li><strong>Atalhos da IDE:</strong> No Eclipse, você pode gerar todos os getters e setters rapidamente usando o atalho <code class="one-line-code">Alt + Shift + S</code> ou <code class="one-line-code">Ctrl + 3</code> e digitando "ggas" (Generate Getters and Setters).</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Para Praticar</h2>
+  <ul>
+    <li><a href="./exercicio-01/">Exercício 01: Encapsulando o Cofre Digital</a></li>
+    <li><a href="./exercicio-02/">Exercício 02: Questionário</a></li>
+  </ul>
+</section>

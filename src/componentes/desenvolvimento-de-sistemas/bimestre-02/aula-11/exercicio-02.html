@@ -1,0 +1,60 @@
+---
+layout: exercicio
+title: "Exercício 02: Desafio de Fixação (Concessionária Speed)"
+exercicio_numero: "02"
+aula_numero: "11"
+description: "Desafio prático para reforçar os conceitos de estado do objeto e manipulação de múltiplos atributos em Java."
+---
+
+<section class="section-box">
+  <h2>Desafio de Fixação: Sistema de Concessionária</h2>
+  
+  <h3>1. Enunciado</h3>
+  <p>Você foi contratado para desenvolver o módulo inicial de um sistema para a <strong>Concessionária Speed</strong>. Sua tarefa é criar um molde para representar os veículos do estoque e realizar o cadastro inicial de alguns carros para teste.</p>
+</section>
+
+<section class="section-box">
+  <h2>2. Requisitos do Sistema</h2>
+  <p>Implemente as classes seguindo as especificações abaixo:</p>
+  
+  <h3>A. Classe Carro</h3>
+  <ul>
+    <li><strong>Atributos:</strong>
+      <ul>
+        <li><code class="one-line-code">fabricante</code> (String)</li>
+        <li><code class="one-line-code">modelo</code> (String)</li>
+        <li><code class="one-line-code">ano</code> (int)</li>
+        <li><code class="one-line-code">cor</code> (String)</li>
+        <li><code class="one-line-code">preco</code> (double)</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>B. Classe de Teste (Estoque)</h3>
+  <ul>
+    <li>Crie o método <code class="one-line-code">main</code>.</li>
+    <li>Instancie <strong>três</strong> carros diferentes.</li>
+    <li>Atribua valores que façam sentido (ex: Toyota, Corolla, 2023, Branco, 150000.0).</li>
+    <li><strong>Lógica de Negócio Simples:</strong> Ao exibir os dados, utilize uma estrutura de decisão (<code class="one-line-code">if</code>) para verificar se o carro é "Novo" (ano >= 2023) ou "Seminovo" (ano < 2023).</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>3. Exemplo de Saída Esperada</h2>
+  <div class="code-container">
+    <pre><code class="language-text">--- Estoque Concessionária Speed ---
+Veículo: Corolla (Branco)
+Ano: 2023 [NOVO]
+Preço: R$ 150.000,00
+------------------------------------
+Veículo: Civic (Preto)
+Ano: 2020 [SEMINOVO]
+Preço: R$ 110.000,00
+------------------------------------</code></pre>
+  </div>
+</section>
+
+<div class="tip-box">
+  <h3>Dica de Ouro</h3>
+  <p>Lembre-se que para comparar números no <code class="one-line-code">if</code>, usamos os operadores relacionais (<code class="one-line-code">></code>, <code class="one-line-code"><</code>, <code class="one-line-code">>=</code>). Para exibir os dados formatados, você pode usar o <code class="one-line-code">System.out.println</code> concatenando as Strings com o operador <code class="one-line-code">+</code>.</p>
+</div>

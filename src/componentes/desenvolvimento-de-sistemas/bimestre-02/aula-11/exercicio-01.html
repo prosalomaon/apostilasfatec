@@ -1,0 +1,89 @@
+---
+layout: exercicio
+title: "Exercício 01: Modelando Entidades (Livraria Técnica)"
+exercicio_numero: "01"
+aula_numero: "11"
+description: "Prática inicial de Orientação a Objetos: criação de classes, definição de atributos e instanciação de objetos em Java."
+---
+
+<section class="section-box">
+  <h2>Atividade Prática: Sistema de Livraria - Modelagem de Dados</h2>
+  
+  <h3>1. Enunciado</h3>
+  <p>Nesta atividade, você dará os primeiros passos na Orientação a Objetos aplicando os conceitos de <strong>Abstração</strong> e <strong>Classe</strong>. O objetivo é modelar a entidade "Livro" para um sistema de livraria técnica, definindo suas características fundamentais (atributos) e criando instâncias reais na memória.</p>
+</section>
+
+<section class="section-box">
+  <h2>2. Preparação</h2>
+  <ul>
+    <li><strong>Localização:</strong> Crie os arquivos dentro da sua pasta de projetos Java (ex: <code class="one-line-code">src/aula11/</code>).</li>
+    <li><strong>Arquivos Necessários:</strong>
+      <ul>
+        <li><code class="one-line-code">Livro.java</code>: A classe que servirá como molde.</li>
+        <li><code class="one-line-code">TestaLivro.java</code>: A classe que contém o método <code class="one-line-code">main</code> para executar o teste.</li>
+      </ul>
+    </li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>3. Passo a Passo</h2>
+
+  <h3>Passo 1: Definindo o Molde (Livro.java)</h3>
+  <p>Crie a classe <code class="one-line-code">Livro</code> com os seguintes atributos que representam o estado do objeto:</p>
+  <ul>
+    <li><code class="one-line-code">nome</code> (tipo String)</li>
+    <li><code class="one-line-code">descricao</code> (tipo String)</li>
+    <li><code class="one-line-code">valor</code> (tipo double)</li>
+    <li><code class="one-line-code">isbn</code> (tipo String)</li>
+  </ul>
+
+  <div class="code-container">
+    <pre><code class="language-java">public class Livro {
+    String nome;
+    String descricao;
+    double valor;
+    String isbn;
+}</code></pre>
+  </div>
+
+  <h3>Passo 2: Criando Objetos (TestaLivro.java)</h3>
+  <p>Agora, crie uma classe de teste. Dentro do método <code class="one-line-code">main</code>, você deve:</p>
+  <ol>
+    <li>Instanciar um objeto chamado <code class="one-line-code">meuLivro</code>.</li>
+    <li>Atribuir valores aos seus atributos.</li>
+    <li>Instanciar um segundo objeto chamado <code class="one-line-code">outroLivro</code> com valores diferentes.</li>
+    <li>Exibir os dados no console.</li>
+  </ol>
+
+  <div class="code-container">
+    <pre><code class="language-java">public class TestaLivro {
+    public static void main(String[] args) {
+        // 1. Instanciação
+        Livro meuLivro = new Livro();
+        
+        // 2. Definindo o Estado
+        meuLivro.nome = "Java e Orientação a Objetos";
+        meuLivro.valor = 59.90;
+        meuLivro.isbn = "978-85-66250-22-0";
+
+        // 3. Criando outro objeto independente
+        Livro outroLivro = new Livro();
+        outroLivro.nome = "Lógica de Programação";
+        outroLivro.valor = 39.90;
+
+        // 4. Exibindo os dados
+        System.out.println("Livro 1: " + meuLivro.nome + " - R$ " + meuLivro.valor);
+        System.out.println("Livro 2: " + outroLivro.nome + " - R$ " + outroLivro.valor);
+    }
+}</code></pre>
+  </div>
+</section>
+
+<div class="tip-box">
+  <h3>4. Desafios de Fixação</h3>
+  <ul>
+    <li><strong>Independência:</strong> Altere o valor de <code class="one-line-code">meuLivro.valor</code> e verifique se o valor de <code class="one-line-code">outroLivro.valor</code> permanece o mesmo. Isso prova que cada objeto tem seu próprio espaço na memória.</li>
+    <li><strong>Valores Default:</strong> Crie um terceiro livro, mas não atribua nenhum valor. Tente imprimir o nome e o valor. O que acontece? (Observe os valores padrão do Java: <code class="one-line-code">null</code> para objetos e <code class="one-line-code">0.0</code> para números).</li>
+  </ul>
+</div>

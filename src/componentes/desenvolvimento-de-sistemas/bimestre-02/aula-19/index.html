@@ -1,0 +1,315 @@
+---
+title: "Revisão Técnica do Bimestre II"
+aula_numero: "19"
+description: "Reforço sobre os pilares da OO (Encapsulamento, Herança, Polimorfismo e Abstração)."
+tags:
+- aula
+- bimestre-02
+---
+
+<section class="section-box">
+  <h2>Estudo de Caso: Sistema de Gestão de Frota</h2>
+  <p>Para consolidar os conceitos aprendidos ao longo do semestre, utilizaremos um sistema modular de logística e
+    transporte. Este código foi intencionalmente dividido em arquivos individuais para respeitar a arquitetura
+    profissional da linguagem Java, garantindo que todas as dependências e relações de herança funcionem corretamente no
+    ambiente de compilação.</p>
+</section>
+
+<section class="section-box">
+  <h2>1. Interface do Sistema</h2>
+  <p><strong>Arquivo:</strong> <code class="one-line-code">Tributavel.java</code></p>
+  <p>Estabelece um contrato puro de software. Qualquer classe concreta do sistema que assine este documento será
+    obrigada a fornecer a regra matemática para o cálculo de taxas.</p>
+  <div class="code-container">
+    <pre><code class="language-java">public interface Tributavel {
+    
+    // Metodos em interfaces sao implicitamente publicos e abstratos
+    double calcularIpva();
+}</code></pre>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>2. Classe Abstrata Base</h2>
+  <p><strong>Arquivo:</strong> <code class="one-line-code">Veiculo.java</code></p>
+  <p>Centraliza a estrutura comum da frota através do encapsulamento estrito. Sendo uma classe abstrata, ela impede a
+    criação de objetos genéricos diretos por meio do operador <code class="one-line-code">new</code>.</p>
+  <div class="code-container">
+    <pre><code class="language-java">public abstract class Veiculo implements Tributavel {
+    
+    // Atributos privados restringem o acesso direto externo aos dados do objeto
+    private String placa;
+    private String modelo;
+    private double capacidadeCarga;
+    private double cargaAtual;
+
+    // Construtor personalizado utilizando a referencia 'this' para sanar conflitos de escopo
+    public Veiculo(String placa, String modelo, double capacidadeCarga) {
+        this.placa = placa;
+        this.modelo = modelo;
+        // Invocacao do metodo setter interno para acionar a barreira de validacao
+        setCapacidadeCarga(capacidadeCarga);
+        this.cargaAtual = 0.0; 
+    }
+
+    // Metodo de comportamento com passagem de parametros e retorno booleano
+    public boolean carregar(double peso) {
+        // Operadores logicos, relacionais e estruturas de selecao controlando o estado do objeto
+        if (peso > 0 && (this.cargaAtual + peso) <= this.capacidadeCarga) {
+            this.cargaAtual += peso; // Variavel operando como acumuladora de dados
+            return true; 
+        }
+        return false; 
+    }
+
+    // Metodo com retorno vazio (void)
+    public void descarregar() {
+        this.cargaAtual = 0.0;
+    }
+
+    // Metodo Abstrato: Sem corpo, delega a implementacao obrigatoria para as filhas
+    public abstract String getTipo();
+
+    // Metodos de leitura publicos (Getters)
+    public String getPlaca() { return this.placa; }
+    public String getModelo() { return this.modelo; }
+    public double getCapacidadeCarga() { return this.capacidadeCarga; }
+    public double getCargaAtual() { return this.cargaAtual; }
+
+    // Metodo de escrita (Setter) contendo regras para assegurar a integridade do atributo
+    public void setCapacidadeCarga(double capacidadeCarga) {
+        if (capacidadeCarga > 0) {
+            this.capacidadeCarga = capacidadeCarga;
+        } else {
+            this.capacidadeCarga = 1000.0; // Valor padrao de seguranca contra dados inconsistentes
+        }
+    }
+}</code></pre>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>3. Subclasse Especializada: Carro</h2>
+  <p><strong>Arquivo:</strong> <code class="one-line-code">CarroEntrega.java</code></p>
+  <p>Herda as propriedades estruturais da classe base através da palavra-chave <code
+      class="one-line-code">extends</code>, adicionando uma propriedade de volume específica para operações urbanas.</p>
+  <div class="code-container">
+    <pre><code class="language-java">public class CarroEntrega extends Veiculo {
+    private int volumePortaMalas;
+
+    // Construtor repassando os dados mandatorios para a superclasse via instrucao 'super'
+    public CarroEntrega(String placa, String modelo, double capacidadeCarga, int volumePortaMalas) {
+        super(placa, modelo, capacidadeCarga); // Deve ser obrigatoriamente a primeira linha do bloco
+        this.volumePortaMalas = volumePortaMalas;
+    }
+
+    // Polimorfismo por sobre-escrita redefinindo o comportamento abstrato do pai
+    @Override
+    public String getTipo() {
+        return "Carro de Entrega Urbano";
+    }
+
+    @Override
+    public double calcularIpva() {
+        return getCapacidadeCarga() * 0.04; // Regra especifica: 4% da capacidade total
+    }
+
+    public int getVolumePortaMalas() { return this.volumePortaMalas; }
+}</code></pre>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>4. Subclasse Especializada: Caminhão</h2>
+  <p><strong>Arquivo:</strong> <code class="one-line-code">CaminhaoEntrega.java</code></p>
+  <p>Aplica o pilar da herança para estender a base abstrata, implementando uma fórmula matemática diferenciada para o
+    cálculo de tributos com base nos eixos rodoviários.</p>
+  <div class="code-container">
+    <pre><code class="language-java">public class CaminhaoEntrega extends Veiculo {
+    private int quantidadeEixos;
+
+    public CaminhaoEntrega(String placa, String modelo, double capacidadeCarga, int quantidadeEixos) {
+        super(placa, modelo, capacidadeCarga);
+        this.quantidadeEixos = quantidadeEixos;
+    }
+
+    // Polimorfismo por sobre-escrita indicado pela anotacao @Override
+    @Override
+    public String getTipo() {
+        return "Caminhao de Grande Porte";
+    }
+
+    @Override
+    public double calcularIpva() {
+        return (getCapacidadeCarga() * 0.02) + (this.quantidadeEixos * 150.0);
+    }
+
+    public int getQuantidadeEixos() { return this.quantidadeEixos; }
+}</code></pre>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>5. Painel de Controle e Menu</h2>
+  <p><strong>Arquivo:</strong> <code class="one-line-code">Menu.java</code></p>
+  <p>Gerencia as lógicas de console aprendidas no primeiro bimestre. Implementa menus persistentes, estruturas de
+    repetição e gerencia os objetos do sistema dentro de listas de alocação dinâmica.</p>
+  <div class="code-container">
+    <pre><code class="language-java">import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Menu {
+    private Scanner leitor;
+    private ArrayList&lt;Veiculo&gt; frota; // Uso de colecoes dinamicas do tipo ArrayList
+
+    public Menu() {
+        this.leitor = new Scanner(System.in);
+        this.frota = new ArrayList&lt;&gt;();
+    }
+
+    public void exibir() {
+        int opcaoMenu;
+
+        // Estrutura de repeticao pos-teste que mantem o terminal ativo ate a condicao de saida
+        do {
+            System.out.println("\n=== SISTEMA DE GESTAO DE FROTA ===");
+            System.out.println("1 - Cadastrar Carro de Entrega");
+            System.out.println("2 - Cadastrar Caminhao de Entrega");
+            System.out.println("3 - Listar Frota e Relatorio");
+            System.out.println("4 - Carregar um Veiculo (Operacao)");
+            System.out.println("5 - Descarregar Frota Toda");
+            System.out.println("6 - Sair do Sistema");
+            System.out.print("Escolha uma opcao: ");
+            opcaoMenu = leitor.nextInt();
+            leitor.nextLine(); // Limpeza crucial do buffer do teclado apos ler dados numericos
+
+            // Selecao multipla baseada em casos fixos estruturados
+            switch (opcaoMenu) {
+                case 1:
+                    cadastrarCarro();
+                    break;
+                case 2:
+                    cadastrarCaminhao();
+                    break;
+                case 3:
+                    listarFrota();
+                    break;
+                case 4:
+                    operarCarregamento();
+                    break;
+                case 5:
+                    descarregarFrota();
+                    break;
+                case 6:
+                    System.out.println("Encerrando o sistema de frota... Ate logo!");
+                    break;
+                default:
+                    System.out.println("Opcao incorreta! Tente um numero entre 1 e 6.");
+            }
+
+        } while (opcaoMenu != 6); // O valor sentinela de parada equivale a instrucao 6
+    }
+
+    private void cadastrarCarro() {
+        System.out.print("Digite a placa: ");
+        String placa = leitor.nextLine();
+        System.out.print("Digite o modelo: ");
+        String modelo = leitor.nextLine();
+        System.out.print("Capacidade de carga (kg): ");
+        double capacidade = leitor.nextDouble();
+        System.out.print("Volume do porta-malas (L): ");
+        int volume = leitor.nextInt();
+        
+        // Polimorfismo na colecao: inserindo um CarroEntrega em um espaco destinado a Veiculo
+        frota.add(new CarroEntrega(placa, modelo, capacidade, volume));
+        System.out.println("[SUCESSO] Carro adicionado a frota.");
+    }
+
+    private void cadastrarCaminhao() {
+        System.out.print("Digite a placa: ");
+        String placa = leitor.nextLine();
+        System.out.print("Digite o modelo: ");
+        String modelo = leitor.nextLine();
+        System.out.print("Capacidade de carga (kg): ");
+        double capacidade = leitor.nextDouble();
+        System.out.print("Quantidade de eixos: ");
+        int eixos = leitor.nextInt();
+        
+        // Polimorfismo na colecao: inserindo um CaminhaoEntrega em um espaco destinado a Veiculo
+        frota.add(new CaminhaoEntrega(placa, modelo, capacidade, eixos));
+        System.out.println("[SUCESSO] Caminhao adicionado a frota.");
+    }
+
+    private void listarFrota() {
+        if (frota.isEmpty()) {
+            System.out.println("[AVISO] Nao ha veiculos cadastrados na frota.");
+        } else {
+            System.out.println("\n--- LISTAGEM DE VEICULOS DA FROTA ---");
+            // Laco de repeticao determinado baseado em um contador incremental explicito
+            for (int i = 0; i &lt; frota.size(); i++) {
+                // Captura da referencia pelo tipo geral abstrato
+                Veiculo v = frota.get(i);
+                
+                // O Polimorfismo resolve em tempo de execucao a invocacao dos metodos sobre-escritos
+                System.out.println("ID: " + i + " | Tipo: " + v.getTipo() + " | Modelo: " + v.getModelo() + 
+                                   " | Placa: " + v.getPlaca() + " | Carga: " + v.getCargaAtual() + "/" + 
+                                   v.getCapacidadeCarga() + " kg | IPVA: R$ " + v.calcularIpva());
+            }
+        }
+    }
+
+    private void operarCarregamento() {
+        if (frota.isEmpty()) {
+            System.out.println("[ERRO] Sem veiculos disponiveis para carregamento.");
+            return;
+        }
+        
+        System.out.print("Digite o ID do veiculo (0 a " + (frota.size() - 1) + "): ");
+        int id = leitor.nextInt();
+        
+        if (id &gt;= 0 && id &lt; frota.size()) {
+            System.out.print("Digite o peso da carga a ser adicionada (kg): ");
+            double peso = leitor.nextDouble();
+            
+            if (frota.get(id).carregar(peso)) {
+                System.out.println("[SUCESSO] Carga acoplada ao veiculo.");
+            } else {
+                System.out.println("[FALHA] Nao foi possivel carregar. Limite maximo excedido ou valor invalido.");
+            }
+        } else {
+            System.out.println("[ERRO] ID de veiculo inexistente.");
+        }
+    }
+
+    private void descarregarFrota() {
+        System.out.println("Descarregando todos os veiculos da frota...");
+        // Uso do laco compacto For-Each para varredura completa de ponteiros na lista
+        for (Veiculo v : frota) {
+            v.descarregar();
+        }
+        System.out.println("[SUCESSO] Frota completamente esvaziada.");
+    }
+}</code></pre>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>6. Arquivo Central de Execução</h2>
+  <p><strong>Arquivo:</strong> <code class="one-line-code">SistemaLogisticaConsole.java</code></p>
+  <p>Ponto de entrada obrigatório da aplicação, responsável por acionar o ecossistema e carregar o menu na Máquina
+    Virtual Java (JVM).</p>
+  <div class="code-container">
+    <pre><code class="language-java">public class SistemaLogisticaConsole {
+
+    // O metodo main serve como ponto de partida mandatorio para execucao do software
+    public static void main(String[] args) {
+        
+        // Instanciacao da classe Menu
+        Menu sistemaMenu = new Menu();
+        
+        // Transferencia de controle para o laco visual interativo
+        sistemaMenu.exibir();
+    }
+}</code></pre>
+  </div>
+</section>

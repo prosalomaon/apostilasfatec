@@ -1,0 +1,134 @@
+---
+layout: exercicio
+title: "Exercício 01: Atividade Prática (JavaFlix)"
+exercicio_numero: "01"
+aula_numero: "15"
+description: "Atividade prática para aplicar os conceitos de herança, construtores com super() e sobrescrita de
+métodos."
+---
+
+<section class="section-box">
+  <h2>Atividade Prática: Arquitetura do Catálogo "JavaFlix"</h2>
+
+  <h3>1. Enunciado</h3>
+  <p>Você foi contratado para refatorar o sistema de catálogo de uma nova plataforma de streaming. O desenvolvedor
+    anterior criou classes separadas para <strong>Filme</strong> e <strong>Serie</strong>, mas copiou e colou muito
+    código, pois ambos possuem título, ano de lançamento e um método para exibir a ficha técnica.</p>
+  <p>Sua missão é aplicar o conceito de <strong>Herança</strong> para criar uma superclasse chamada
+    <strong>Midia</strong>, eliminando a duplicidade de código e organizando as subclasses Filme e Serie usando a
+    palavra-chave <code class="one-line-code">extends</code>.</p>
+</section>
+
+<section class="section-box">
+  <h2>2. Preparação</h2>
+  <ul>
+    <li><strong>Nome do Arquivo:</strong> <code class="one-line-code">JavaFlixApp.java</code></li>
+    <li><strong>Conceitos Focados:</strong> Reutilização com <code class="one-line-code">extends</code>, uso do construtor com
+      <code class="one-line-code">super()</code> e sobrescrita de métodos com <code class="one-line-code">@Override</code>.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>3. Código Base</h2>
+  <p>Copie o código abaixo para iniciar sua atividade. A estrutura principal e a classe mãe já estão prontas, assim como
+    o método <code class="one-line-code">main</code>. Seu foco deve ser exclusivamente construir as classes filhas conectando-as ao pai.</p>
+
+  <div class="code-container">
+    <pre><code class="language-java">// SUPERCLASSE (Classe Pai)
+class Midia {
+    protected String titulo;
+    protected int anoLancamento;
+
+    // Construtor da classe pai
+    public Midia(String titulo, int anoLancamento) {
+        this.titulo = titulo;
+        this.anoLancamento = anoLancamento;
+    }
+
+    public void exibirFicha() {
+        System.out.println("Título: " + titulo);
+        System.out.println("Ano de Lançamento: " + anoLancamento);
+    }
+}
+
+// ========================================================
+// TODO: VOCÊ DEVE IMPLEMENTAR AS SUBCLASSES AQUI (VEJA O DESAFIO)
+// ========================================================
+
+
+// CLASSE PRINCIPAL (Não mexer aqui, serve para testar seu código)
+public class JavaFlixApp {
+    public static void main(String[] args) {
+        System.out.println("--- Carregando Catálogo JavaFlix ---");
+
+        // Instanciando um Filme (Título, Ano, Duração)
+        Filme filme = new Filme("Inception", 2010, 148);
+        
+        // Instanciando uma Série (Título, Ano, Temporadas)
+        Serie serie = new Serie("Stranger Things", 2016, 4);
+
+        // Testando os métodos herdados e sobrescritos
+        System.out.println("\n[Ficha do Filme]");
+        filme.exibirFicha();
+
+        System.out.println("\n[Ficha da Série]");
+        serie.exibirFicha();
+    }
+}</code></pre>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>4. O Desafio</h2>
+  <p>Sua tarefa é escrever o código das subclasses <strong>Filme</strong> e <strong>Serie</strong> logo abaixo da classe
+    Midia, seguindo os requisitos técnicos abaixo:</p>
+
+  <h3>A. Implementar a classe Filme</h3>
+  <ul>
+    <li>Deve herdar de <code class="one-line-code">Midia</code> usando a palavra-chave <code class="one-line-code">extends</code>.</li>
+    <li>Deve possuir o atributo específico: <code class="one-line-code">private int duracaoEmMinutos;</code>.</li>
+    <li>Deve conter um construtor que receba <code class="one-line-code">titulo</code>, <code class="one-line-code">anoLancamento</code> e
+      <code class="one-line-code">duracaoEmMinutos</code>. Use o <code class="one-line-code">super(titulo, anoLancamento)</code> para repassar os dados para o pai.
+    </li>
+    <li>Deve sobrescrever (<code class="one-line-code">@Override</code>) o método <code class="one-line-code">exibirFicha()</code>. Dentro dele, chame
+      <code class="one-line-code">super.exibirFicha()</code> para reaproveitar a impressão do pai e adicione a linha para exibir a duração.
+    </li>
+  </ul>
+
+  <h3>B. Implementar a classe Serie</h3>
+  <ul>
+    <li>Deve herdar de <code class="one-line-code">Midia</code> usando a palavra-chave <code class="one-line-code">extends</code>.</li>
+    <li>Deve possuir o atributo específico: <code class="one-line-code">private int totalTemporadas;</code>.</li>
+    <li>Deve conter um construtor que receba <code class="one-line-code">titulo</code>, <code class="one-line-code">anoLancamento</code> e
+      <code class="one-line-code">totalTemporadas</code>. Use o <code class="one-line-code">super(...)</code> corretamente.</li>
+    <li>Deve sobrescrever (<code class="one-line-code">@Override</code>) o método <code class="one-line-code">exibirFicha()</code>. Use
+      <code class="one-line-code">super.exibirFicha()</code> e adicione a linha para exibir o total de temporadas.</li>
+  </ul>
+
+  <h3>Resultado Esperado no Terminal</h3>
+  <div class="code-container">
+    <pre><code class="language-text">--- Carregando Catálogo JavaFlix ---
+[Ficha do Filme]
+Título: Inception
+Ano de Lançamento: 2010
+Duração: 148 minutos
+
+[Ficha da Série]
+Título: Stranger Things
+Ano de Lançamento: 2016
+Total de Temporadas: 4 temporadas</code></pre>
+  </div>
+</section>
+
+<div class="tip-box">
+  <h3>Orientação Finais</h3>
+  <ul>
+    <li><strong>O erro do Construtor:</strong> Se você tentar criar a classe filha e não chamar o
+      <code class="one-line-code">super(...)</code> no construtor, o Java vai dar um erro de compilação dizendo que não encontrou um
+      construtor padrão na classe pai. O <code class="one-line-code">super</code> deve ser sempre a primeira linha do construtor do filho.
+    </li>
+    <li><strong>Visualização do Polimorfismo:</strong> Note que no método <code class="one-line-code">main</code>, chamamos
+      <code class="one-line-code">.exibirFicha()</code> tanto para o filme quanto para a série. Graças à herança e à sobrescrita, cada objeto
+      responde exibindo suas informações exclusivas, além das informações comuns guardadas no pai.</li>
+  </ul>
+</div>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} | {{ componente }}</title>
+    <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
+    <link
+      rel="shortcut icon"
+      href="{{ '/imagens/favicon.ico' | url }}"
+      type="image/x-icon"
+    >
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+    >
+  </head>
+  <body>
+    <header class="nav-header">
+      <div class="container">
+        <nav>
+          <a class="back-link" href="{{ '/' | url }}"
+          >Apostilas - Prof. Salomão</a>
+        </nav>
+        <div class="dropdown">
+          <button class="logo-toggle">
+            Disciplinas <span class="arrow">▼</span>
+          </button>
+          <div class="dropdown-content">
+            <a href="{{ '/' | url }}" class="dropdown-home">Início</a>
+            <div class="dropdown-divider"></div>
+            {% for subject in collections.subjects %}
+              <a href="{{ subject.url | url }}">{{
+                subject.data.subject_title
+              }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="container">
+      {{ content | safe }}
+    </main>
+    <footer>
+      <a
+        class="report-btn"
+        href="https://github.com/prosalomaon/apostilas/issues/new"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Reportar problema
+      </a>
+      <div>&copy; 2026 - Professor Salomão</div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">
+    </script>
+    <script src="{{ '/js/main.js' | url }}"></script>
+  </body>
+</html>

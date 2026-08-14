@@ -1,0 +1,15 @@
+{
+  "subject": "desenvolvimento-de-sistemas",
+  "subject_title": "Desenvolvimento de Sistemas",
+  "subject_description": "Disciplina dedicada à programação Java, cobrindo desde fundamentos básicos até aplicações Web, APIs e segurança.",
+  "subject_status": "40 Aulas • 4 Bimestres",
+  "layout": "aula",
+  "tags": ["aula"],
+  "nav_text": "⮜ VOLTAR",
+  "bimester_titles": {
+    "bimestre-01": "Fundamentos de Programação e Console",
+    "bimestre-02": "Orientação a Objetos Profissional",
+    "bimestre-03": "Interfaces Gráficas e Persistência",
+    "bimestre-04": "Java Web, APIs e Segurança"
+  }
+}

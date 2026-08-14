@@ -1,0 +1,29 @@
+---
+layout: base
+---
+
+<div class="subject-header">
+  <h1>{{ subject_title }}</h1>
+  <p class="subject-intro">{{ subject_description }}</p>
+</div>
+
+{% for bimester in bimesters %}
+<section class="bimester-section">
+  <h2 class="bimester-title">
+    {{ bimester.label }}{% if bimester_titles[bimester.tag] %}: {{ bimester_titles[bimester.tag] }}{% endif %}
+  </h2>
+  <div class="lesson-grid">
+    {% set lessons = collections.aulas | filterBySubjectBimester(subject, bimester.tag) %}
+    {% for post in lessons %}
+    <a href="{{ post.url | url }}" class="lesson-card">
+      <span class="number">AULA {{ post.data.aula_numero }}</span>
+      <span class="title">{{ post.data.title }}</span>
+      <span class="lesson-desc">{{ post.data.description }}</span>
+    </a>
+    {% else %}
+    <p class="empty-state">Nenhuma aula cadastrada para este bimestre.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endfor %}
+

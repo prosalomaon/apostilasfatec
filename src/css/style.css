@@ -1,0 +1,638 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  --bg: #ffffff;
+  --fg: #000000;
+  --border: #000000;
+  --accent: #f0f0f0;
+  --spacing: 1.5rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  line-height: 1.6;
+  background-color: var(--bg);
+  color: var(--fg);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4 {
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+h1 {
+  font-size: 2.5rem;
+  padding-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 8px solid var(--border);
+  padding-left: 1rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+h5 {
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+ul,
+ol {
+  list-style-position: outside;
+  padding-left: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+li {
+  margin-bottom: 0.3rem;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: auto;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+.nav-header {
+  border-bottom: 3px solid #000;
+}
+
+.logo-toggle {
+  text-transform: uppercase;
+  border: 2px solid var(--border);
+  padding: 0.5rem 1rem;
+  font-weight: 800;
+  text-decoration: none;
+  background: var(--bg);
+  color: var(--fg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  user-select: none;
+  margin-bottom: 0.5rem;
+}
+
+.logo-toggle:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--bg);
+  min-width: 280px;
+  box-shadow: 6px 6px 0px var(--fg);
+  border: 2px solid var(--fg);
+  z-index: 1000;
+  top: 100%;
+  left: 0;
+  /* margin-top: 0.5rem; */
+}
+
+.dropdown-content a {
+  color: var(--fg);
+  padding: 0.8rem 1.2rem;
+  text-decoration: none;
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-bottom: 1px solid #f0f0f0;
+  text-transform: none;
+  transition: background 0.1s ease;
+}
+
+.dropdown-content a:hover {
+  background-color: var(--fg);
+  color: var(--bg);
+}
+
+.dropdown-home {
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  background-color: var(--accent);
+}
+
+.dropdown-divider {
+  height: 2px;
+  background-color: var(--fg);
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.arrow {
+  font-size: 0.6rem;
+  transition: transform 0.3s ease;
+}
+
+.dropdown:hover .arrow {
+  transform: rotate(180deg);
+}
+
+/* Layout */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 100%;
+}
+
+header {
+  background: var(--bg);
+  color: var(--fg);
+  padding: 1.5rem 0 1rem;
+}
+
+header .container {
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header a {
+  color: var(--fg);
+  text-decoration: none;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.back-link {
+  position: relative;
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  color: var(--fg);
+  text-decoration: none;
+  font-weight: bold;
+  overflow: hidden;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.back-link::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  transition: all 0.3s ease;
+}
+
+.back-link:hover {
+  color: var(--bg);
+}
+
+.back-link:hover::before {
+  top: 0;
+}
+
+/* Portal & Dashboard */
+.portal-container,
+.subject-header {
+  margin-bottom: 4rem;
+}
+
+.subject-grid,
+.lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.bimester-title {
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+  margin: 2rem 0 1rem;
+}
+
+.subject-card,
+.lesson-card {
+  border: 2px solid var(--border);
+  padding: 2rem;
+  text-decoration: none;
+  color: var(--fg);
+  transition: transform 0.1s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.subject-card:hover,
+.lesson-card:hover {
+  background: var(--bg);
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0px var(--fg);
+}
+
+.subject-card h2,
+.lesson-card .title {
+  border: none;
+  padding: 0;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+  text-transform: none;
+  /* Keep natural case for lesson titles if preferred, but user screenshot shows bold */
+}
+
+.subject-info {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.subject-status {
+  margin-top: auto;
+}
+
+.subject-status,
+.lesson-card .number {
+  font-size: 0.8rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.lesson-desc {
+  font-size: 0.9rem;
+  color: #444;
+  line-height: 1.4;
+}
+
+/* Lesson Content */
+.back-link-class {
+  padding: 0.5rem 0;
+  color: var(--fg);
+  font-weight: normal;
+  transition: all 0.5s ease-in-out;
+}
+
+.back-link-class:hover {
+  text-decoration: underline;
+}
+
+.aula-badge {
+  display: none;
+  /* Removed as per screenshot showing title directly */
+}
+
+.code-container {
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+pre {
+  padding: 0.5rem;
+  overflow-x: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9rem;
+}
+
+.tip-box {
+  background: #000;
+  color: #fff;
+  padding: 2.5rem;
+  margin: 3rem 0;
+}
+
+.tip-box h3,
+.tip-box h4 {
+  color: #fff;
+  border-left: 10px solid #fff;
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 1.4rem;
+}
+
+.section-box {
+  border: 2px solid var(--border);
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+.section-box h2 {
+  border-left: 10px solid var(--border);
+  padding-left: 1rem;
+  margin-bottom: 2rem;
+  font-size: 1.6rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.section-box h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+/* Mermaid */
+.mermaid {
+  background: white;
+  padding: 1rem;
+  border: 1px solid #eee;
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  border: 2px solid var(--border);
+}
+
+th,
+td {
+  border: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+}
+
+th {
+  background-color: var(--fg);
+  color: var(--bg);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+/* Pagination */
+.lesson-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 4px solid var(--border);
+}
+
+.lesson-pagination > * {
+  flex: 1;
+  display: flex;
+}
+
+.lesson-pagination > :nth-child(1) {
+  justify-content: flex-start;
+}
+
+.lesson-pagination > :nth-child(2) {
+  justify-content: center;
+}
+
+.lesson-pagination > :nth-child(3) {
+  justify-content: flex-end;
+}
+
+.lesson-pagination a, .btn {
+  text-decoration: none;
+  font-weight: 800;
+  color: var(--fg);
+  text-transform: uppercase;
+  border: 2px solid var(--border);
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.lesson-pagination a:hover, .btn:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  padding: 2rem;
+  border-top: 1px solid #eee;
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.report-btn {
+  display: inline-block;
+  margin-bottom: 1rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #fff;
+  background: #c00;
+  border: 2px solid #c00;
+  padding: 0.5rem 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.report-btn:hover {
+  background: var(--bg);
+  color: #c00;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .section-box {
+    padding: 1.25rem;
+  }
+}
+
+/* Questionário Styles */
+
+.section-box input[type="radio"] {
+  margin-right: 0.5rem;
+  transform: scale(1.2);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 2px solid #000;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  background: transparent;
+  transition: all 0.5s ease;
+}
+
+.section-box input[type="radio"]:checked {
+  background: #000;
+}
+
+.section-box label {
+  display: block;
+  cursor: pointer;
+}
+
+#quiz-form button {
+  background: var(--fg);
+  color: var(--bg);
+  border: 2px solid var(--fg);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: all 0.2s ease;
+}
+
+#quiz-form button:hover {
+  background: var(--bg);
+  color: var(--fg);
+  border: 2px solid var(--fg);
+}
+
+#resultado {
+  display: none;
+  margin-top: 2rem;
+}
+
+.tip-box-instruction {
+  margin-top: 0;
+}
+
+/* Quiz: campo de nome */
+.quiz-name-label {
+  display: block;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.quiz-name-input {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.quiz-name-input:focus {
+  outline: none;
+  border-color: var(--fg);
+  box-shadow: 4px 4px 0px var(--fg);
+}
+
+.quiz-name-error {
+  display: none;
+  color: #c00;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  border-left: 4px solid #c00;
+  padding-left: 0.75rem;
+}
+
+/* Quiz: resultado */
+.quiz-result-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+/* Quiz: bloco de codigo de autenticidade */
+.quiz-auth-code-box {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 2px solid var(--border);
+  border-left: 8px solid var(--fg);
+  background: var(--accent);
+}
+
+.quiz-auth-code-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.quiz-auth-code {
+  display: block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9rem;
+  word-break: break-all;
+}
+
+#incorrect-feedback {
+  border: 2px solid #c00;
+  padding: 1rem;
+}
+
+.one-line-code {
+  display: inline;
+  font-family: "JetBrains Mono", monospace;
+  background-color: #e7e7e7;
+  padding: 0.1rem 0.2rem;
+  color: black;
+  border-radius: 0.1rem;
+  font-style: italic;
+  font-size: 0.9rem;
+}

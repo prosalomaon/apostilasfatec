@@ -1,0 +1,120 @@
+---
+layout: exercicio
+title: "Exercício 01 - ArrayList e Métodos de Coleção"
+exercicio_numero: "01"
+aula_numero: "07"
+description: "Atividade Prática: Gestor de Estoque 'Mercado Java'."
+---
+
+<section class="section-box">
+  <h2>1. Enunciado</h2>
+  <p>
+    Você foi contratado para desenvolver o protótipo de um sistema de inventário para um mercadinho de bairro. O sistema deve permitir que o dono do mercado cadastre produtos, remova itens que saíram de linha, verifique se um item está em estoque e exiba a lista organizada.
+  </p>
+</section>
+
+<section class="section-box">
+  <h2>2. Preparação</h2>
+  <p>Para realizar esta atividade, certifique-se de que:</p>
+  <ul>
+    <li>Ter o Java e um editor de código instalado.</li>
+    <li>O arquivo se chame <code class="one-line-code">GestorEstoque.java</code>.</li>
+    <li>
+      Você importou as bibliotecas necessárias:
+      <ul>
+        <li><code class="one-line-code">java.util.Scanner</code> (para leitura).</li>
+        <li><code class="one-line-code">java.util.ArrayList</code> e <code class="one-line-code">java.util.List</code> (para a coleção).</li>
+        <li><code class="one-line-code">java.util.Collections</code> (para ordenar a lista).</li>
+      </ul>
+    </li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>3. Código Base</h2>
+  <p>
+    Copie o esqueleto abaixo para começar. Ele já contém o menu estruturado para poupar tempo de digitação de interface.
+  </p>
+  <div class="code-container">
+    <pre><code class="language-java">import java.util.*;
+
+public class GestorEstoque {
+    public static void main(String[] args) {
+        Scanner leitor = new Scanner(System.in);
+        List&lt;String&gt; estoque = new ArrayList&lt;&gt;();
+        int opcao = -1;
+
+        while (opcao != 0) {
+            System.out.println("\n--- GESTOR DE ESTOQUE ---");
+            System.out.println("1. Adicionar Produto");
+            System.out.println("2. Listar Produtos");
+            System.out.println("3. Remover Produto");
+            System.out.println("4. Buscar Produto");
+            System.out.println("0. Sair");
+            System.out.print("Escolha: ");
+            opcao = leitor.nextInt();
+            leitor.nextLine(); // Limpar buffer
+
+            switch (opcao) {
+                case 1:
+                    // TODO: Implementar Adição
+                    break;
+                case 2:
+                    // TODO: Implementar Listagem
+                    break;
+                case 3:
+                    // TODO: Implementar Remoção
+                    break;
+                case 4:
+                    // TODO: Implementar Busca
+                    break;
+                case 0:
+                    System.out.println("Saindo...");
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        }
+        leitor.close();
+    }
+}</code></pre>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>4. O Desafio</h2>
+  <p>Sua tarefa é implementar a lógica dentro de cada <code class="one-line-code">case</code> seguindo os requisitos abaixo:</p>
+  
+  <h3>1. Adicionar Produto (Método <code class="one-line-code">add</code>)</h3>
+  <ul>
+    <li>O sistema deve pedir o nome do produto.</li>
+    <li><strong>Regra de Negócio:</strong> Antes de adicionar, verifique se o produto já existe na lista (use <code class="one-line-code">.contains()</code>). Se já existir, exiba "Produto já cadastrado!". Se não, adicione e confirme a operação.</li>
+  </ul>
+
+  <h3>2. Listar Produtos (Método <code class="one-line-code">size</code> e for-each)</h3>
+  <ul>
+    <li>Se a lista estiver vazia, exiba "Estoque vazio".</li>
+    <li>Se houver itens, ordene a lista em ordem alfabética usando <code class="one-line-code">Collections.sort()</code>.</li>
+    <li>Use um laço for-each para exibir cada item com um número ao lado (Ex: 1. Arroz).</li>
+  </ul>
+
+  <h3>3. Remover Produto (Método <code class="one-line-code">remove</code>)</h3>
+  <ul>
+    <li>Peça o nome do produto que deseja remover.</li>
+    <li>Verifique se o produto existe. Se sim, remova e avise o usuário. Se não, informe que o produto não foi encontrado.</li>
+  </ul>
+
+  <h3>4. Buscar Produto (Método <code class="one-line-code">indexOf</code>)</h3>
+  <ul>
+    <li>Peça o nome de um produto e informe ao usuário se ele está no estoque e em qual posição (índice) ele se encontra atualmente.</li>
+  </ul>
+</section>
+
+<div class="tip-box">
+  <h2>5. Orientações Finais</h2>
+  <ul>
+    <li><strong>Case Insensitive:</strong> Para uma experiência melhor, tente converter todas as entradas para maiúsculas (<code class="one-line-code">.toUpperCase()</code>) antes de salvar ou buscar. Assim, "arroz" e "ARROZ" serão tratados como o mesmo item.</li>
+    <li><strong>Manipulação de Memória:</strong> Lembre os alunos que o <code class="one-line-code">ArrayList</code> gerencia o array interno automaticamente. Quando removemos o item da posição 0, o Java "puxa" todos os outros itens para frente para não deixar buracos.</li>
+    <li><strong>Dica de Ouro:</strong> Se algum aluno terminar rápido, desafie-o a usar o método <code class="one-line-code">estoque.remove(indice)</code> em vez de remover pelo nome, pedindo ao usuário o número que aparece na listagem (lembrando de subtrair 1 do número exibido para chegar ao índice real).</li>
+  </ul>
+</div>

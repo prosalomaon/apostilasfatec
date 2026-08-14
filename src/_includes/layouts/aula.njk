@@ -1,0 +1,42 @@
+---
+layout: base
+
+---
+
+<article class="lesson-content">
+  <header class="lesson-header">
+    <a
+      href="{{ ['/componentes/', subject, '/'] | join | url }}"
+      class="back-link-class"
+    >← Voltar</a>
+    <h1>Aula {{ aula_numero }} - {{ title }}</h1>
+    {% if description %}
+      <p class="lesson-intro">{{ description }}</p>
+    {% endif %}
+  </header>
+
+  {{ content | safe }}
+</article>
+
+{% set previousAula = collections.aulas | getPreviousCollectionItem(page) %}
+{% set nextAula = collections.aulas | getNextCollectionItem(page) %}
+
+<nav class="lesson-pagination">
+  {% if previousAula and previousAula.data.subject == subject %}
+    <a href="{{ previousAula.url | url }}" class="prev">← Aula {{
+        previousAula.data.aula_numero
+      }}</a>
+  {% else %}
+    <span></span>
+  {% endif %}
+
+  <a href="{{ ['/componentes/', subject, '/'] | join | url }}" class="back"
+  >VOLTAR</a>
+
+  {% if nextAula and nextAula.data.subject == subject %}
+    <a href="{{ nextAula.url | url }}" class="next"
+    >Aula {{ nextAula.data.aula_numero }} →</a>
+  {% else %}
+    <span></span>
+  {% endif %}
+</nav>

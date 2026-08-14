@@ -1,0 +1,26 @@
+---
+layout: base
+title: "Portal de Apostilas Digitais"
+---
+
+<div class="portal-container">
+  <header class="portal-header">
+    <h1>Portal de Apostilas Digitais</h1>
+    <p>Acesse o conteúdo dos cursos de forma organizada e dinâmica.</p>
+  </header>
+
+  <div class="subject-grid">
+    {% for subject in collections.subjects %}
+    <a href="{{ subject.url | url }}" class="subject-card">
+      <div class="subject-info">
+        <h2>{{ subject.data.subject_title }}</h2>
+
+        <p>{{ subject.data.subject_description }}</p>
+        <span class="subject-status">{{ subject.data.subject_status or "Disponível" }}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+</div>
+

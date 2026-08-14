@@ -1,0 +1,166 @@
+---
+layout: base
+---
+
+<article class="lesson-content">
+  <header class="lesson-header">
+    <a href="../" class="back-link-class">← Voltar para Aula {{ aula_numero }}</a>
+    <h1>Exercício {{ exercicio_numero }} - {{ title }}</h1>
+    {% if description %}
+      <p class="lesson-intro">{{ description }}</p>
+    {% endif %}
+  </header>
+
+  <div class="tip-box tip-box-instruction">
+    <h4>Instruções</h4>
+    <ul>
+      <li>Leia cada pergunta com atenção.</li>
+      <li>Selecione apenas uma alternativa por pergunta.</li>
+      <li>Ao finalizar, clique em "Verificar Respostas" para ver sua pontuação.</li>
+    </ul>
+  </div>
+
+  <div class="section-box" id="student-name-box">
+    <label class="quiz-name-label" for="student-name"><strong>Seu nome completo:</strong></label>
+    <input
+      type="text"
+      id="student-name"
+      class="quiz-name-input"
+      placeholder="Digite seu nome completo antes de comecar..."
+      autocomplete="name"
+    />
+    <p id="student-name-error" class="quiz-name-error">Por favor, informe seu nome completo antes de verificar as respostas.</p>
+  </div>
+
+  <form id="quiz-form">
+    {% for pergunta in perguntas %}
+    {% set perguntaNum = loop.index %}
+    <div class="section-box">
+      <h2>{{ perguntaNum }}. {{ pergunta.texto }}</h2>
+      {% for alternativa in pergunta.alternativas %}
+      <label><input type="radio" name="q{{ perguntaNum }}" value="{{ alternativa.letra }}"> {{ alternativa.letra }}) {{ alternativa.texto }}</label><br>
+      {% endfor %}
+    </div>
+    {% endfor %}
+
+    <button type="button" onclick="verificarRespostas()">Verificar Respostas</button>
+  </form>
+
+  <div id="resultado" class="section-box">
+    <h2>Resultado:</h2>
+    <p id="nome-aluno-resultado" class="quiz-result-name"></p>
+    <p id="pontuacao"></p>
+    <p id="feedback"></p>
+    <div id="incorrect-feedback">
+      <h4>Respostas Incorretas</h4>
+      <p id="incorrect-questions"></p>
+    </div>
+    <div id="codigo-unico-box" class="quiz-auth-code-box">
+      <p class="quiz-auth-code-label">Codigo de autenticidade:</p>
+      <code id="codigo-unico" class="quiz-auth-code"></code>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Codifica o nome do aluno de forma determinística e reversível.
+     * Algoritmo: para cada caractere do nome normalizado, XOR com
+     * (posição + comprimento_do_nome) e converte para hex com 2 dígitos.
+     * Isso permite verificação posterior sem armazenar segredos.
+     */
+    function codificarNome(nome) {
+      const normalizado = nome.trim().toUpperCase();
+      const len = normalizado.length;
+      let resultado = '';
+      for (let i = 0; i < len; i++) {
+        const charCode = normalizado.charCodeAt(i);
+        const chave = (i + len) % 256;
+        resultado += ((charCode ^ chave) & 0xFF).toString(16).padStart(2, '0');
+      }
+      return resultado.toUpperCase();
+    }
+
+    function gerarCodigoUnico(nome) {
+      const timestamp = Date.now();
+      const componente = '{{ sigla_componente | default("XX") }}';
+      const nomeCodificado = codificarNome(nome);
+      return `${timestamp}:${componente}:${nomeCodificado}`;
+    }
+
+    function verificarRespostas() {
+      // Validar nome do aluno
+      const nomeInput = document.getElementById('student-name');
+      const nomeErro = document.getElementById('student-name-error');
+      const nome = nomeInput ? nomeInput.value.trim() : '';
+
+      if (!nome) {
+        nomeErro.style.display = 'block';
+        nomeInput.focus();
+        return;
+      }
+      nomeErro.style.display = 'none';
+
+      document.getElementById('incorrect-feedback').style.display = 'block';
+      const resultSection = document.getElementById('resultado');
+      const closeResultSectionText = "Fechar Respostas";
+      const showResultSectionText = "Verificar Respostas";
+      let incorrectFeedback = '';
+
+      if(resultSection.style.display === 'block') {
+        resultSection.style.display = 'none';
+        document.querySelector('#quiz-form button').textContent = showResultSectionText;
+        return;
+      }
+
+      const respostasCorretas = {
+        {% for pergunta in perguntas %}
+        q{{ loop.index }}: '{{ pergunta.resposta_correta }}'{{ "," if not loop.last else "" }}
+        {% endfor %}
+      };
+
+      let pontuacao = 0;
+      const totalPerguntas = Object.keys(respostasCorretas).length;
+
+      for (let pergunta in respostasCorretas) {
+        const selecionada = document.querySelector(`input[name="${pergunta}"]:checked`);
+        if (selecionada && selecionada.value === respostasCorretas[pergunta]) {
+          pontuacao++;
+        } else if(selecionada) {
+          incorrectFeedback += `${selecionada.name.slice(1)}, `;
+        }
+      }
+
+      const porcentagem = (pontuacao / totalPerguntas) * 100;
+      let feedback = '';
+
+      if (porcentagem >= 80) {
+        feedback = 'Excelente! Você dominou os conceitos.';
+      } else if (porcentagem >= 60) {
+        feedback = 'Bom trabalho! Mas revise alguns conceitos.';
+      } else {
+        feedback = 'Precisa revisar o conteúdo. Tente novamente.';
+      }
+
+      document.getElementById('nome-aluno-resultado').textContent = `Aluno(a): ${nome}`;
+      document.getElementById('pontuacao').textContent = `Você acertou ${pontuacao} de ${totalPerguntas} perguntas (${porcentagem.toFixed(0)}%).`;
+      document.getElementById('feedback').textContent = feedback;
+      document.getElementById('incorrect-questions').textContent = incorrectFeedback.slice(0, -2);
+      document.getElementById('codigo-unico').textContent = gerarCodigoUnico(nome);
+
+      if(!incorrectFeedback) {
+        document.getElementById('incorrect-feedback').style.display = 'none';
+      }
+      
+      // Resetar todas as seleções dos radio buttons
+      const radioButtons = document.querySelectorAll('#quiz-form input[type="radio"]');
+      radioButtons.forEach(radio => radio.checked = false);
+      
+      resultSection.style.display = 'block';
+      document.querySelector('#quiz-form button').textContent = closeResultSectionText;
+    }
+  </script>
+
+  <nav class="lesson-pagination">
+    <a href="../" class="back">VOLTAR PARA AULA</a>
+  </nav>
+</article>

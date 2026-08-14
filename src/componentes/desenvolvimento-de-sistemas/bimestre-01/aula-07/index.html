@@ -1,0 +1,347 @@
+---
+title: "Arrays e Coleções Dinâmicas (ArrayList)"
+aula_numero: "07"
+description: "Armazenamento de multiplicidade de dados em arrays de tamanho fixo e introdução ao uso de listas dinâmicas para gerenciar conjuntos de objetos."
+tags:
+  - aula
+  - bimestre-01
+---
+
+<section class="section-box">
+  <h2>Teoria & Conceitos</h2>
+  <p>
+    A manipulação de múltiplos dados relacionados é o que separa "scripts" de
+    "sistemas". No Java, evoluímos de estruturas rígidas para coleções
+    inteligentes.
+  </p>
+
+  <h3>1. Arrays (Vetores): A Base Rígida</h3>
+  <p>
+    Imagine um prédio com número fixo de apartamentos. Você não pode "puxar um
+    puxadinho" depois de construído.
+  </p>
+  <ul>
+    <li>
+      <strong>Contiguidade:</strong> Os dados ficam lado a lado na memória, o
+      que torna o acesso extremamente rápido.
+    </li>
+    <li>
+      <strong>Tamanho Imutável:</strong> O <code class="one-line-code">length</code> é definido no
+      nascimento.
+    </li>
+    <li>
+      <strong>Tipos Primitivos:</strong> É a única estrutura que aceita
+      <code class="one-line-code">int</code>, <code class="one-line-code">double</code>, etc., diretamente sem conversão.
+    </li>
+  </ul>
+
+  <p><strong>Exemplo básico:</strong></p>
+  <div class="code-container">
+    <pre><code class="language-java">// Criando um array de 5 posições para números inteiros
+int[] numeros = new int[5];
+numeros[0] = 10;
+numeros[1] = 20;
+numeros[2] = 30;
+
+// Acessando pelo índice
+System.out.println("Elemento no índice 0: " + numeros[0]); // Saída: 10
+
+// Iterando pelo array
+for (int num : numeros) {
+    System.out.println(num);
+}</code></pre>
+  </div>
+
+  <h3>2. ArrayList: A Lista Elástica</h3>
+  <p>
+    O ArrayList é, na verdade, um Array que "se vira nos trinta". Quando ele
+    enche, o Java cria um novo array maior nos bastidores, copia tudo e descarta
+    o antigo.
+  </p>
+  <ul>
+    <li>
+      <strong>Generics (&lt;T&gt;):</strong> O uso do diamante
+      <code class="one-line-code">&lt;String&gt;</code> evita que você misture "bananas com laranjas"
+      na mesma lista.
+    </li>
+    <li>
+      <strong>Wrapper Classes:</strong> Como coleções só guardam Objetos, não
+      podemos usar <code class="one-line-code">int</code>. Usamos <code class="one-line-code">Integer</code>. O Java faz a
+      conversão automática (Autoboxing).
+    </li>
+  </ul>
+
+  <p><strong>Exemplo básico:</strong></p>
+  <div class="code-container">
+    <pre><code class="language-java">// Criando um ArrayList que cresce automaticamente
+List&lt;String&gt; frutas = new ArrayList&lt;&gt;();
+
+// Adicionando elementos (sem definir tamanho prévio!)
+frutas.add("Maçã");
+frutas.add("Banana");
+frutas.add("Laranja");
+
+// Acessando um elemento
+System.out.println(frutas.get(0)); // Saída: Maçã
+
+// Obtendo o tamanho dinâmico
+System.out.println("Total de frutas: " + frutas.size()); // Saída: 3</code></pre>
+  </div>
+
+  <h3>3. Performance: ArrayList vs LinkedList</h3>
+  <p>Muitos alunos confundem os dois. Use esta regra de bolso:</p>
+  <ul>
+    <li>
+      <strong>ArrayList:</strong> É como uma fila de cadeiras. Para sentar
+      alguém no meio, todo mundo depois dele tem que levantar e pular uma
+      cadeira pro lado. (Lento para inserir no meio, rápido para achar alguém
+      pelo número da cadeira).
+    </li>
+    <li>
+      <strong>LinkedList:</strong> É como uma corrente de pessoas de mãos dadas.
+      Para colocar alguém no meio, basta soltar as mãos de dois vizinhos e dar a
+      mão para o novo integrante. (Rápido para inserir, lento para achar alguém,
+      pois tem que percorrer a corrente do início).
+    </li>
+  </ul>
+
+  <p><strong>Exemplos comparativos:</strong></p>
+  <div class="code-container">
+    <pre><code class="language-java">// ArrayList - Excelente para acesso rápido
+List&lt;Integer&gt; arrayList = new ArrayList&lt;&gt;();
+arrayList.add(1);
+arrayList.add(2);
+arrayList.add(3);
+int elemento = arrayList.get(0); // RÁPIDO - acesso direto
+
+// LinkedList - Excelente para inserções no meio
+List&lt;Integer&gt; linkedList = new LinkedList&lt;&gt;();
+linkedList.add(1);
+linkedList.add(2);
+linkedList.add(3);
+linkedList.add(1, 999); // RÁPIDO - insere no meio sem deslocar todos</code></pre>
+  </div>
+
+  <h3>4. Duelo de Gigantes: Qual Escolher?</h3>
+  <table
+    border="1"
+    cellpadding="8"
+    cellspacing="0"
+    style="width: 100%; border-collapse: collapse; margin-top: 1rem"
+  >
+    <tr style="background-color: #f0f0f0">
+      <th>Característica</th>
+      <th>Array ([])</th>
+      <th>ArrayList (List)</th>
+    </tr>
+    <tr>
+      <td>Tamanho</td>
+      <td>Fixo (Estático)</td>
+      <td>Dinâmico (Cresce sozinho)</td>
+    </tr>
+    <tr>
+      <td>Performance</td>
+      <td>Mais rápido (Menos memória)</td>
+      <td>Levemente mais lento (Mais recursos)</td>
+    </tr>
+    <tr>
+      <td>Tipos</td>
+      <td>Primitivos e Objetos</td>
+      <td>Apenas Objetos (Wrapper Classes)</td>
+    </tr>
+    <tr>
+      <td>Facilidade</td>
+      <td>Métodos manuais</td>
+      <td>Métodos prontos (add, remove, sort)</td>
+    </tr>
+  </table>
+
+  <h3>5. Diferentes Implementações de Listas</h3>
+  <p>A escolha da implementação impacta o desempenho dependendo da operação.</p>
+  <ul>
+    <li>
+      <strong>ArrayList:</strong> Rápida para acesso aleatório e iteração (busca
+      pelo índice).
+    </li>
+    <li>
+      <strong>LinkedList:</strong> Muito eficiente para inserções e remoções no
+      meio da lista ou nas extremidades.
+    </li>
+    <li>
+      <strong>Vector:</strong> Versão sincronizada (thread-safe) do ArrayList,
+      porém mais lenta devido ao custo de bloqueios.
+    </li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Exemplo de Código</h2>
+  <h3>Operações Completas do Dia a Dia</h3>
+  <div class="code-container">
+    <pre><code class="language-java">import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+
+public class SupermercadoArrayList {
+    public static void main(String[] args) {
+        List&lt;String&gt; carrinho = new ArrayList&lt;&gt;();
+
+        // --- ADIÇÃO ---
+        carrinho.add("Arroz");
+        carrinho.add("Feijão");
+        carrinho.add(0, "Azeite"); // Insere no topo, empurra o resto
+
+        // --- BUSCA E ACESSO ---
+        if (!carrinho.isEmpty()) {
+            System.out.println("Primeiro item: " + carrinho.get(0));
+            System.out.println("Posição do Feijão: " + carrinho.indexOf("Feijão"));
+        }
+
+        // --- REMOÇÃO ---
+        carrinho.remove("Arroz"); // Remove por valor
+        carrinho.remove(0);       // Remove por índice
+
+        // --- ORDENAÇÃO (O poder da classe Collections) ---
+        Collections.sort(carrinho); 
+        System.out.println("Carrinho Ordenado: " + carrinho);
+
+        // --- ITERAÇÃO MODERNA (For-Each) ---
+        for (String item : carrinho) {
+            System.out.println("Item no checkout: " + item);
+        }
+    }
+}</code></pre>
+  </div>
+
+  <h3>Estruturas Multi-Dimensionais</h3>
+  <p>
+    O Java permite criar tabelas de dados (linhas e colunas) organizando arrays
+    dentro de arrays ou coleções aninhadas.
+  </p>
+  <div class="code-container">
+    <pre><code class="language-java">// --- MATRIZ (Array Bidimensional Fixo) ---
+int[][] matriz = new int[3][3]; // 3 linhas e 3 colunas
+matriz[0][0] = 10; // Linha 0, Coluna 0
+matriz[1][2] = 25; // Linha 1, Coluna 2
+
+// --- MATRIZ IRREGULAR (Cada linha com tamanho diferente) ---
+int[][] irregular = { {1, 2}, {3, 4, 5}, {6} };
+
+// --- LISTA MULTI-DIMENSIONAL (Dinâmica) ---
+List&lt;List&lt;Integer&gt;&gt; lista2D = new ArrayList&lt;&gt;();
+lista2D.add(new ArrayList&lt;&gt;(List.of(1, 2, 3))); // Linha 0
+lista2D.add(new ArrayList&lt;&gt;(List.of(4, 5)));    // Linha 1
+
+int valor = lista2D.get(0).get(2); // Acessa o valor 3</code></pre>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>Representação Gráfica (Multi Dimensões)</h2>
+  <div class="mermaid">
+    graph TD
+      subgraph "Matriz (Array de Arrays)"
+        M[Matriz Ref] --> L0[Array Linha 0]
+        M --> L1[Array Linha 1]
+        L0 --> E00[Valor 0,0]
+        L0 --> E01[Valor 0,1]
+        L1 --> E10[Valor 1,0]
+        L1 --> E11[Valor 1,1]
+      end
+
+      subgraph "Lista Multidimensional"
+        LM[List Principal] --> SL0[ArrayList 1]
+        LM --> SL1[ArrayList 2]
+        SL0 --> D1[Dado A]
+        SL1 --> D2[Dado B]
+        SL1 --> D3[Dado C]
+      end
+  </div>
+</section>
+
+<div class="tip-box">
+  <h3>Dicas & Lembretes</h3>
+  <ul>
+    <li>
+      <strong>length vs size():</strong> Array usa a propriedade
+      <code class="one-line-code">.length</code> (sem parênteses). ArrayList usa o método
+      <code class="one-line-code">.size()</code> (com parênteses).
+    </li>
+    <li>
+      <strong>Índices:</strong> Ambos começam em 0. O último elemento está
+      sempre em tamanho - 1.
+    </li>
+    <li>
+      <strong>A Pegadinha do remove:</strong> Ao remover um item pelo índice em
+      um loop for tradicional, os índices dos itens restantes mudam! Sempre
+      prefira o for-each ou o Iterator se precisar remover durante a leitura.
+    </li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Como Aplicar na Prática</h2>
+  <ul>
+    <li>
+      <strong>Criação de Vetor:</strong> Crie um array de 10 posições para
+      armazenar nomes de produtos.
+    </li>
+    <li>
+      <strong>Leitura Dinâmica:</strong> Substitua o array por um
+      <code class="one-line-code">ArrayList&lt;String&gt;</code>. Use um loop while para permitir que
+      o usuário insira nomes até digitar "sair".
+    </li>
+    <li>
+      <strong>Processamento:</strong> Use o método <code class="one-line-code">contains</code> para
+      verificar se o usuário está tentando adicionar um produto duplicado antes
+      de usar o <code class="one-line-code">add</code>.
+    </li>
+    <li>
+      <strong>Relatório:</strong> Exiba a lista ordenada alfabeticamente usando
+      <code class="one-line-code">Collections.sort()</code> e o laço for aprimorado
+      <code class="one-line-code">for(String p : lista)</code>.
+    </li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>
+      <strong>Oracle:</strong>
+      <a
+        href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        >Arrays (Java Tutorials)</a
+      >
+    </li>
+    <li>
+      <strong>Oracle:</strong>
+      <a
+        href="https://docs.oracle.com/javase/tutorial/collections/interfaces/list.html"
+        >The List Interface</a
+      >
+    </li>
+    <li><strong>Deitel:</strong> Java: Como Programar, Capítulos 7 e 16.</li>
+    <li><strong>Caelum:</strong> Apostila Java e OO, Capítulos 5 e 16.</li>
+    <li>
+      <strong>Effective Java:</strong> Joshua Bloch - Item sobre "Prefira
+      interfaces a implementações".
+    </li>
+    <li>
+      <strong>Java Visualizer:</strong> Ferramenta online para ver os ponteiros
+      da LinkedList em tempo real.
+    </li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Para Praticar</h2>
+  <ul>
+    <li>
+      <a href="./exercicio-01">Exercício 01: Atividade Prática</a>
+    </li>
+    <li>
+      <a href="./exercicio-02">Exercício 02: Questionário</a>
+    </li>
+  </ul>
+</section>

@@ -1,0 +1,22 @@
+[
+  {
+    "tag": "bimestre-01",
+    "label": "1º Bimestre",
+    "description": "Implementação Física e Integridade"
+  },
+  {
+    "tag": "bimestre-02",
+    "label": "2º Bimestre",
+    "description": "Performance e Extração de Dados"
+  },
+  {
+    "tag": "bimestre-03",
+    "label": "3º Bimestre",
+    "description": "Programabilidade e Automação"
+  },
+  {
+    "tag": "bimestre-04",
+    "label": "4º Bimestre",
+    "description": "NoSQL e Inteligência de Dados"
+  }
+]

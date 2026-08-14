@@ -42,6 +42,12 @@ module.exports = function (eleventyConfig) {
     return getLessons(collection, subject, bimester);
   });
 
+  eleventyConfig.addNunjucksFilter("filterBySubject", function (collection, subject) {
+    return collection
+      .filter(item => item.data.subject === subject)
+      .sort((a, b) => parseInt(a.data.aula_numero) - parseInt(b.data.aula_numero));
+  });
+
   return {
     pathPrefix: "/apostilasfatec/",
     dir: {

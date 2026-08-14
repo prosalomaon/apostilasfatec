@@ -1,0 +1,12 @@
+{
+  "subject": "arquitetura-e-organizacao-de-computadores",
+  "subject_title": "Arquitetura e Organização de Computadores",
+  "subject_description": "Componente dedicado ao estudo do hardware e da organização interna dos sistemas computacionais: bases numéricas, lógica digital, memórias, processador, conjuntos de instruções, pipeline e arquiteturas modernas multicore.",
+  "subject_status": "20 Encontros",
+  "layout": "aula",
+  "tags": ["aula"],
+  "componente": "Arquitetura e Organização de Computadores",
+  "nav_text": "⮜ VOLTAR",
+  "unit_label": "Encontro",
+  "sem_bimestres": true
+}

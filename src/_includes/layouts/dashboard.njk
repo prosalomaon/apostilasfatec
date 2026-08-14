@@ -7,9 +7,25 @@ layout: base
   <p class="subject-intro">{{ subject_description }}</p>
 </div>
 
+{% set unit = unit_label | default("AULA") %}
+{% if sem_bimestres %}
+<section class="bimester-section">
+  <div class="lesson-grid">
+    {% set lessons = collections.aulas | filterBySubject(subject) %}
+    {% for post in lessons %}
+    <a href="{{ post.url | url }}" class="lesson-card">
+      <span class="number">{{ unit | upper }} {{ post.data.aula_numero }}</span>
+      <span class="title">{{ post.data.title }}</span>
+      <span class="lesson-desc">{{ post.data.description }}</span>
+    </a>
+    {% else %}
+    <p class="empty-state">Nenhum conteúdo cadastrado.</p>
+    {% endfor %}
+  </div>
+</section>
+{% else %}
 {% for bimester in bimesters %}
 {% set period_label = (bimester_labels | default({}))[bimester.tag] or bimester.label %}
-{% set unit = unit_label | default("AULA") %}
 <section class="bimester-section">
   <h2 class="bimester-title">
     {{ period_label }}{% if bimester_titles[bimester.tag] %}: {{ bimester_titles[bimester.tag] }}{% endif %}
@@ -28,4 +44,5 @@ layout: base
   </div>
 </section>
 {% endfor %}
+{% endif %}
 

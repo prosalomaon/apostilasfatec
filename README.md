@@ -38,6 +38,7 @@ Cada componente é uma apostila completa, localizada em `src/componentes/[slug-d
 | Slug | Componente |
 | :--- | :--- |
 | `analise-e-projeto-de-sistemas` | Análise e Projeto de Sistemas |
+| `arquitetura-e-organizacao-de-computadores` | Arquitetura e Organização de Computadores |
 | `banco-de-dados-i` | Banco de Dados I |
 | `banco-de-dados-ii` | Banco de Dados II |
 | `desenvolvimento-de-sistemas` | Desenvolvimento de Sistemas |
@@ -102,7 +103,7 @@ As aulas são numeradas de forma **contínua de 01 a 40** ao longo de todo o com
 
 Essa convenção facilita a navegação sequencial, a paginação anterior/próxima e a referência cruzada entre conteúdos relacionados.
 
-> **Variações:** a contagem e a nomenclatura são configuráveis por componente via `subject_status` (ex.: `"20 Encontros • 4 Blocos"`), `unit_label` (ex.: `"Encontro"`) e `bimester_labels` (ex.: `"Bloco 1"`). A estrutura de pastas (`bimestre-XX/aula-NN/`) e os metadados (`aula_numero`) permanecem os mesmos.
+> **Variações:** a contagem e a nomenclatura são configuráveis por componente via `subject_status` (ex.: `"20 Encontros • 4 Blocos"`), `unit_label` (ex.: `"Encontro"`), `bimester_labels` (ex.: `"Bloco 1"`) e `sem_bimestres` (exibe os encontros de forma contínua, sem divisão por períodos). A estrutura de pastas (`bimestre-XX/aula-NN/`) e os metadados (`aula_numero`) permanecem os mesmos.
 
 ### Estrutura de pastas de um componente
 
@@ -174,6 +175,7 @@ Este arquivo funciona como *directory data file* do Eleventy: os metadados dele 
 | `bimester_titles` | Sim | Título de cada bimestre usado no dashboard. |
 | `unit_label` | Não | Como chamar cada unidade de conteúdo. Padrão: `Aula` (ex.: `Encontro`). Afeta o dashboard, o título da página e a paginação. |
 | `bimester_labels` | Não | Rótulo de cada período, substituindo o `label` global de `bimesters.json`. Ex.: `{ "bimestre-01": "Bloco 1", ... }`. |
+| `sem_bimestres` | Não | Quando `true`, o dashboard lista todos os encontros em uma única seção contínua (sem divisão por períodos). As aulas ficam na pasta `bimestre-01/` e a tag de bimestre é omitida. |
 
 ### 2. Dashboard do componente (`index.njk`)
 

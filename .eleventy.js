@@ -43,7 +43,7 @@ module.exports = function (eleventyConfig) {
   });
 
   return {
-    pathPrefix: "/apostilas/",
+    pathPrefix: "/apostilasfatec/",
     dir: {
       input: "src",
       output: "_site"

@@ -5,8 +5,158 @@ description: "História da computação, da máquina IAS aos microprocessadores 
 tags:
   - aula
 ---
-<!-- TODO: Adicionar conteúdo para este encontro -->
 <section class="section-box">
   <h2>Teoria & Conceitos</h2>
-  <p>Conteúdo em construção.</p>
+
+  <h3>1. Primeira Geração: A Era das Válvulas (1946–1957)</h3>
+  <p>A primeira geração de computadores digitais foi construída com <strong>válvulas a vácuo</strong> como elementos de lógica e memória. Essas máquinas eram enormes, consumiam muita energia e geravam calor extremo.</p>
+  <ul>
+    <li><strong>Tecnologia Base:</strong> Válvulas a vácuo para lógica e memória.</li>
+    <li><strong>Marco Fundamental:</strong> O <strong>Computador IAS</strong>, protótipo de todos os computadores de propósito geral modernos, baseado no conceito de programa armazenado de Von Neumann.</li>
+    <li><strong>Analogia:</strong> Uma válvula funcionava como um interruptor de luz gigante que gerava muito calor e queimava com frequência. O ENIAC, precursor do IAS, usava anéis de 10 válvulas para representar um único dígito decimal — um método "esbanjador" comparado ao sistema binário.</li>
+    <li><strong>Detalhe Técnico:</strong> O IAS possuía uma memória de apenas 4.096 palavras de 40 bits. Hoje, um smartphone comum tem bilhões de vezes essa capacidade.</li>
+  </ul>
+
+  <h3>2. Segunda Geração: O Surgimento do Transistor (1957–1964)</h3>
+  <p>O <strong>transistor</strong> substituiu a válvula a vácuo como elemento de lógica. Feito de silício, era menor, mais barato, mais confiável e gerava muito menos calor.</p>
+  <ul>
+    <li><strong>Tecnologia Base:</strong> Transistores de estado sólido.</li>
+    <li><strong>Exemplo:</strong> O <strong>IBM 7094</strong>, que introduziu os <strong>Canais de Dados</strong>.</li>
+    <li><strong>Comparação:</strong> Enquanto na 1ª geração a CPU controlava tudo diretamente (como um maestro que também toca todos os instrumentos), na 2ª geração os canais de dados permitiram que a CPU delegasse tarefas de E/S — como um maestro que agora tem assistentes para cuidar da partitura e dos instrumentos.</li>
+  </ul>
+
+  <h3>3. Terceira Geração: Circuitos Integrados (1965–1971)</h3>
+  <p>A integração de milhares de transistores em um único chip de silício revolucionou a computação, tornando possível a criação de famlias de computadores compatíveis.</p>
+  <ul>
+    <li><strong>Tecnologia Base:</strong> Milhares de transistores encapsulados em um único chip de silício (integração em pequena e média escala — SSI/MSI).</li>
+    <li><strong>Destaque Corporativo:</strong> O <strong>IBM System/360</strong>, a primeira família de computadores planejada.</li>
+    <li><strong>Conceito de Família:</strong> Pela primeira vez, o software escrito para um modelo pequeno podia rodar em um modelo gigante da mesma série. Isso protegeu o investimento em software das empresas — algo que persiste hoje na arquitetura Intel x86.</li>
+    <li><strong>O Minicomputador:</strong> O <strong>DEC PDP-8</strong> surgiu nesta era como o primeiro computador de "baixo custo" (US$ 16.000) que podia ser colocado sobre uma bancada de laboratório, apelidado de <em>minicomputador</em> em referência à "minissaia", moda da época.</li>
+  </ul>
+  <figure>
+    <a href="anexo-01/">
+      <img src="https://assets.ibm.com/is/image/ibm/1965_System360_model44_2:16x9?dpr=on%2C1&fit=fit%2C1&wid=1584&hei=891" alt="Profissionais trabalhando em um IBM System/360 Model 44, em 1966">
+    </a>
+    <figcaption>IBM System/360 Model 44 — Duas pessoas trabalham em uma sala de computadores com o System/360. Lançado em 1964, o System/360 foi uma aposta de US$ 5 bilhões que unificou toda a linha de mainframes da IBM sob uma única arquitetura compatível. <a href="anexo-01/">Clique na imagem para um mergulho na tecnologia SLT por trás deste computador.</a></figcaption>
+  </figure>
+
+  <h3>4. A Lei de Moore e o Microprocessador (1971–Presente)</h3>
+  <p>Em 1971, a Intel criou o primeiro microprocessador, colocando uma CPU inteira em um único chip. A partir daí, a evolução passou a seguir uma tendência previsível.</p>
+  <ul>
+    <li><strong>O Salto:</strong> Em 1971, a Intel criou o <strong>4004</strong>, o primeiro microprocessador (CPU em um único chip).</li>
+    <li><strong>Lei de Moore:</strong> Gordon Moore previu que o número de transistores em um chip dobraria a cada 18 a 24 meses.</li>
+    <li><strong>Evolução Quantitativa:</strong>
+      <ul>
+        <li><strong>Intel 8086 (1978):</strong> 29.000 transistores, clock de 5 MHz.</li>
+        <li><strong>Core i7 EE 4960X (2013):</strong> 1,86 bilhão de transistores, clock de 4 GHz — um ganho de velocidade de 800 vezes e 64.000 vezes mais transistores que o 8086.</li>
+      </ul>
+    </li>
+    <li><strong>Analogia de Custo:</strong> Hoje, por menos de US$ 500, compra-se um PC com mais potência que um computador de US$ 1 milhão de 1985.</li>
+  </ul>
+
+  <h3>5. Gerações Posteriores e Tendências Modernas</h3>
+  <p>Com o avanço da microeletrônica, novos patamares de integração e novos paradigmas de processamento surgiram.</p>
+  <ul>
+    <li><strong>VLSI e ULSI:</strong> Integração de milhões (VLSI) e agora bilhões (ULSI) de componentes por chip.</li>
+    <li><strong>O Fim da "Corrida do Clock":</strong> Por volta de 2004, a Intel cancelou CPUs de 4 GHz devido à barreira térmica (dissipação de calor).</li>
+    <li><strong>A Era Multicore:</strong> Como não era mais possível aumentar a velocidade de um único núcleo sem derreter o chip, os arquitetos passaram a colocar vários núcleos (<em>cores</em>) em um único chip para processamento paralelo.</li>
+    <li><strong>Novas Classes:</strong> Além de desktops e servidores, surgiram os <strong>PMDs</strong> (Dispositivos Móveis Pessoais) como smartphones e os <strong>WSCs</strong> (Warehouse-Scale Computers) — clusters gigantescos que funcionam como um único computador para serviços em nuvem (Google, Amazon).</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Tabela Comparativa</h2>
+  <p><strong>Evolução: 1ª Geração vs. Computador Moderno</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Característica</th>
+        <th>1ª Geração (IAS)</th>
+        <th>Computador Moderno (Core i7)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Elemento Lógico</strong></td>
+        <td>Válvulas</td>
+        <td>Transistores de Silício</td>
+      </tr>
+      <tr>
+        <td><strong>Armazenamento</strong></td>
+        <td>4.096 palavras</td>
+        <td>Terabytes (SSD/Disco)</td>
+      </tr>
+      <tr>
+        <td><strong>Tamanho</strong></td>
+        <td>Uma sala inteira</td>
+        <td>Cabe na palma da mão</td>
+      </tr>
+      <tr>
+        <td><strong>Falhas</strong></td>
+        <td>Frequentemente (válvulas queimadas)</td>
+        <td>Raras (estado sólido)</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section-box">
+  <h2>Representação Gráfica</h2>
+  <p><strong>Linha do Tempo das Gerações</strong></p>
+  <div class="mermaid">
+    timeline
+        title Evolução dos Computadores
+        1ª Geração (1946-1957) : Válvulas a vácuo : Computador IAS : ENIAC
+        2ª Geração (1957-1964) : Transistores : IBM 7094 : Canais de Dados
+        3ª Geração (1965-1971) : Circuitos Integrados : IBM System/360 : DEC PDP-8
+        4ª Geração (1971-2004) : Microprocessadores : Intel 4004 : Lei de Moore
+        Era Moderna (2004- hoje) : Multicore : VLSI/ULSI : PMDs e WSCs
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>Representação Gráfica</h2>
+  <p><strong>Evolução do Número de Transistores (Lei de Moore)</strong></p>
+  <div class="mermaid">
+    xychart-beta
+        title "Transistores por Processador (escala log)"
+        x-axis ["4004 (1971)", "8086 (1978)", "80386 (1985)", "Pentium (1993)", "Core 2 (2006)", "Core i7 (2013)"]
+        y-axis "Transistores" 0 --> 2000000000
+        bar [2300, 29000, 275000, 3100000, 291000000, 1860000000]
+  </div>
+</section>
+
+<div class="tip-box">
+  <h4>Dicas & Lembretes</h4>
+  <ul>
+    <li><strong>Lei de Moore</strong> não é uma lei física — é uma observação empírica que guiou a indústria por décadas, mas está perdendo força à medida que atingimos limites físicos de miniaturização.</li>
+    <li>A transição de 1 para 2 núcleos (multicore) não veio de uma melhoria de fabricação, mas de uma <strong>necessidade</strong>: a barreira térmica impediu aumentos de clock.</li>
+    <li>O conceito de <strong>família de computadores</strong> (IBM System/360) é o ancestral da compatibilidade backward que a Intel mantém com a arquitetura x86 até hoje.</li>
+    <li>Os WSCs (Google, Amazon) são a evolução lógica dos clusters — a unidade de computação deixou de ser o chip e passou a ser o <strong>data center inteiro</strong>.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Como aplicar na Prática</h2>
+  <ul>
+    <li><strong>Compreender obsolescência:</strong> Entender as gerações ajuda a avaliar por que sistemas legados (que rodam em hardware antigo) são tão difíceis de manter e modernizar.</li>
+    <li><strong>Arquitetura de sistemas distribuídos:</strong> Os WSCs são a base da computação em nuvem. Projetar para cloud (AWS, Azure) é projetar para uma arquitetura de cluster em escala de depósito.</li>
+    <li><strong>Otimização para multicore:</strong> Programadores modernos precisam pensar em paralelismo. Código escrito para um único núcleo não aproveita o hardware disponível.</li>
+    <li><strong>Decisões de hardware:</strong> Conhecer a evolução ajuda a justificar investimentos — um upgrade de hardware pode trazer ganhos exponenciais, não lineares.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>STALLINGS, William. <em>Computer Organization and Architecture: Designing for Performance</em>. 10th ed. Pearson, 2016. Cap. 1.</li>
+    <li>HENNESSY, John L.; PATTERSON, David A. <em>Computer Architecture: A Quantitative Approach</em>. 6th ed. Morgan Kaufmann, 2017. Appendice A.</li>
+    <li>TANENBAUM, Andrew S.; BOS, Herbert. <em>Structured Computer Organization</em>. 6th ed. Pearson, 2013. Cap. 1.</li>
+    <li>MOORE, Gordon E. "Cramming More Components onto Integrated Circuits". <em>Electronics</em>, v. 38, n. 8, 1965.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Para Praticar</h2>
+  <p>Nenhum exercício disponível para este encontro.</p>
 </section>

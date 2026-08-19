@@ -1,0 +1,89 @@
+---
+layout: exercicio
+title: "Anexo 01: O Módulo SLT do IBM System/360"
+exercicio_numero: "01"
+aula_numero: "02"
+description: "Um mergulho na tecnologia Solid Logic por trás do System/360 — o que era aquele pequeno quadrado na foto e como ele se encaixa na arquitetura hierárquica do computador."
+---
+
+<section class="section-box">
+  <h2>O Módulo SLT: A Célula do Cérebro do System/360</h2>
+
+  <figure>
+    <img src="https://assets.ibm.com/is/image/ibm/fingers_holding_chip-copy?cropN=0.0%2C0.38981818181818184%2C1.0%2C0.409455&wid=1584&hei=891&fit=fit%2C1&dpr=on%2C1" alt="Dois dedos segurando um módulo SLT da IBM, mostrando seu tamanho minúsculo de meio polegada">
+    <figcaption>Um módulo SLT (Solid Logic Technology) da IBM segurado entre dois dedos. Apesar de seu tamanho minusculo — meio polegada de lado —, esse componente era a celula fundamental do System/360. Centenas deles eram montados em cartoes, que por sua vez se encaixavam em backplanes, formando a CPU inteira.</figcaption>
+  </figure>
+
+  <h3>1. O que é exatamente esse pequeno quadrado?</h3>
+  <p>Apesar de parecer um microchip moderno, o componente destacado na foto do System/360 Model 44 não é um circuito integrado monocristalino. Trata-se de um <strong>módulo SLT (Solid Logic Technology)</strong>, uma tecnologia híbrida desenvolvida pela IBM no início dos anos 1960.</p>
+  <p>O módulo SLT consistia em um substrato cerâmico de meio polegada ($1/2'' \times 1/2''$) sobre o qual eram montados transistores e diodos de silício discretos, além de resistores impressos por serigrafia e conexões de cobre. Não se tratava, portanto, de um chip integrado no sentido moderno da expressão — era uma miniaturização híbrida que combinava componentes discretos em um formato compacto e padronizado.</p>
+  <p>Cada módulo SLT continha apenas algumas poucas portas lógicas básicas (AND, OR, NOT). Para construir um circuito lógico complexo de CPU, eram necessárias centenas ou milhares desses módulos trabalhando em conjunto.</p>
+</section>
+
+<section class="section-box">
+  <h2>A Hierarquia Física: Do Módulo à Sala</h2>
+
+  <h3>2. Onde ele vai ali dentro e o que está mais próximo dele?</h3>
+  <p>Para transformar o módulo SLT no computador gigante da foto, a IBM montou uma arquitetura hierárquica bem definida:</p>
+
+  <div class="mermaid">
+    graph TD
+        A["Modulo SLT - meia polegada - portas logicas basicas"] -->|varios modulos| B["Cartao SLT - placa do tamanho de uma carta de baralho"]
+        B -->|dezenas de cartoes| C["Placa Backplane - painel de pinos e fiacao"]
+        C -->|varios paineis| D["Gabinete da CPU - racks dobraveis com seletores"]
+        D -->|perifericos| E["Sala System/360 - fitas, console, leitores"]
+
+        style A fill:#000,stroke:#000,color:#fff
+        style B fill:#fff,stroke:#000,color:#000
+        style C fill:#fff,stroke:#000,color:#000
+        style D fill:#fff,stroke:#000,color:#000
+        style E fill:#fff,stroke:#000,color:#000
+  </div>
+
+  <p><strong>Cartão SLT (SLT Card):</strong> O módulo possuía pinos metálicos na parte inferior. Vários desses módulos eram encaixados e soldados em uma pequena placa de circuito impresso do tamanho de uma carta de baralho.</p>
+  <p><strong>Placa Backplane (Motherboard/Frame):</strong> Dezenas de cartões SLT eram encaixados em um painel traseiro repleto de pinos. A fiação física entre esses pinos definia o fluxo de dados e instruções da CPU.</p>
+  <p><strong>Gabinete Central (CPU):</strong> Vários desses painéis eram instalados em racks dobráveis — portas giratórias — dentro do gabinete principal da CPU, aquele módulo grande com seletores, botões e luzes no painel frontal.</p>
+</section>
+
+<section class="section-box">
+  <h2>O Entorno do Módulo na Sala</h2>
+
+  <h3>3. O que está ao redor desse componente?</h3>
+  <p>Se fizermos um "zoom out" a partir do módulo SLT dentro daquela sala em 1966, encontramos:</p>
+
+  <p><strong>Vizinho Imediato:</strong> Outros módulos SLT idênticos ou similares no mesmo cartão, além de capacitores para estabilização de tensão.</p>
+  <p><strong>Dentro do Gabinete:</strong> Quilômetros de fios trançados e cabos coaxiais conectando os cartões do backplane, além dos módulos de memória de núcleo de ferrite (<em>magnetic core memory</em>).</p>
+  <p><strong>Na Sala (Periféricos):</strong></p>
+  <ul>
+    <li><strong>Fitas Magnéticas:</strong> As unidades altas com dois carretéis ao fundo, responsáveis pelo armazenamento de dados em massa.</li>
+    <li><strong>Console de Operação:</strong> A mesa com a impressora/teclado (Selectric) onde o operador interagia diretamente com o sistema.</li>
+    <li><strong>Leitores/Perfuradores de Cartão e Discos:</strong> Gabinetes dedicados à entrada e saída de dados via cartões perfurados ou discos magnéticos do tamanho de pratos.</li>
+  </ul>
+</section>
+
+<div class="tip-box">
+  <h4>Em Resumo</h4>
+  <ul>
+    <li>O módulo SLT é o equivalente a uma "célula" cerebral desse computador.</li>
+    <li>O computador precisava ocupar uma sala inteira não porque o módulo em si era grande, mas porque era necessário conectá-los aos milhares para formar os registradores, a ULA (Unidade Lógica e Aritmética) e as rotinas de controle.</li>
+    <li>Ao módulo SLT somavam-se os gigantescos sistemas de refrigeração e alimentação elétrica necessários para manter tudo funcionando.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li><a href="https://www.ibm.com/history/system-360" target="_blank" rel="noopener noreferrer">IBM History — The IBM System/360</a>. Disponível em: &lt;https://www.ibm.com/history/system-360&gt;. Acesso em: 2026.</li>
+    <li>SELLERS, Frank W. <em>IBM System/360 Illustrated Parts Catalog</em>. IBM Corporation, 1970.</li>
+    <li>PALM, John N. <em>An Introduction to Computer Architecture</em>. IBM Corporation, 1972.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Como aplicar na Prática</h2>
+  <ul>
+    <li><strong>Entender miniaturização:</strong> Comparar o módulo SLT com um processador moderno ajuda a dimensionar o que a Lei de Moore produziu em 50 anos — de componentes discretos montados manualmente a bilhões de transistores em um único chip.</li>
+    <li><strong>Arquitetura hierárquica:</strong> O conceito de módulo → cartão → placa → gabinete é a base da organização de hardware moderna, do desktop ao data center.</li>
+    <li><strong>Manutenção e Diagnóstico:</strong> A modularidade do SLT permitia substituir cartões com defeito sem descartar o sistema inteiro — um princípio que permanece nos servidores atuais com slots hot-swap.</li>
+  </ul>
+</section>

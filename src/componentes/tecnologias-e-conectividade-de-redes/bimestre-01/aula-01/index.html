@@ -1,0 +1,203 @@
+---
+title: "Introdução à Conectividade e Evolução do Padrão Ethernet"
+aula_numero: "01"
+description: "Apresentação da disciplina e análise histórica do padrão IEEE 802.3, abordando o papel da conectividade na interoperabilidade de sistemas."
+tags:
+  - aula
+---
+<section class="section-box">
+  <h2>Teoria & Conceitos</h2>
+
+  <h3>1. Visão Geral da Disciplina e Competências</h3>
+  <p>Este componente curricular foca no desenvolvimento da capacidade de implementar, configurar e administrar redes locais (LAN) e de longa distância (WAN), assegurando a interoperabilidade entre sistemas heterogêneos.</p>
+  <p>Ao longo do curso, serão analisados desde protocolos de acesso ao meio até o impacto da conectividade no desenvolvimento de Cidades Inteligentes (<em>Smart Cities</em>) e na gestão de resíduos eletrônicos.</p>
+  <p>As principais áreas de atuação que este componente prepara incluem:</p>
+  <ul>
+    <li><strong>Redes Locais (LAN):</strong> Configuração e manutenção de redes corporativas, incluindo VLANs, switching e roteamento inter-VLAN.</li>
+    <li><strong>Redes de Longa Distância (WAN):</strong> Implementação de links de acesso remoto (PPP, PPPoE, DSL, HFC, fibra óptica).</li>
+    <li><strong>Conectividade Urbana:</strong> Infraestrutura para Smart Cities, IoT e sustentabilidade.</li>
+    <li><strong>Gestão e Segurança:</strong> Protocolos, vulnerabilidades e responsabilidade socioambiental com resíduos eletrônicos.</li>
+  </ul>
+
+  <h3>2. Introdução à Conectividade e Redes de Computadores</h3>
+  <p>A fusão entre computadores e comunicações alterou profundamente a organização dos sistemas, substituindo o antigo modelo de "centros de computação" isolados por <strong>redes de computadores</strong> — definidas como um conjunto de dispositivos autônomos interconectados.</p>
+  <p>A conectividade permite o compartilhamento de recursos, tornando dados e equipamentos acessíveis independentemente da localização física do usuário.</p>
+  
+  <figure>
+    <a href="anexo-01/">
+      <img src="https://teleco.com.br/imagens/tutoriais/tutorialfibraplast1_figura13.gif" alt="Desenho da arquitetura conceitual e física original da Ethernet clássica (padrão IEEE 802.3 em topologia de barramento)">
+    </a>
+    <figcaption>Rascunho da primeira rede Ethernet. <a href="https://teleco.com.br/tutoriais/tutorialfibraplast1/pagina_4.asp" target="_blank">Redes Ópticas I: Redes Ethernet.</a></figcaption>
+  </figure>
+  
+  <p><strong>Lei de Metcalfe:</strong> Bob Metcalfe, inventor da Ethernet, postulou que o valor de uma rede aumenta proporcionalmente ao quadrado do número de seus usuários ($V \propto n^2$). Isso significa que, se uma rede com 10 usuários tem valor 100, ao dobrar para 20 usuários, o valor sobe para 400 — não para 200. É o quejustifica o crescimento exponencial de redes sociais, plataformas colaborativas e ecossistemas de IoT.</p>
+
+  <div class="code-container">
+    <pre><code>Exemplo da Lei de Metcalfe:
+  10 dispositivos  -> 10²  =   100 de valor
+  50 dispositivos  -> 50²  = 2.500 de valor
+  100 dispositivos -> 100² = 10.000 de valor</code></pre>
+  </div>
+
+  <h3>3. Evolução Histórica do Padrão Ethernet (<a href="anexo-02/">IEEE 802.3</a>)</h3>
+  <p>A história da Ethernet começou na década de 1970 no <strong>Xerox PARC (Palo Alto Research Center)</strong>, onde Bob Metcalfe e David Boggs desenvolveram a primeira rede local inspirada no sistema sem fio <strong>ALOHA</strong> da Universidade do Havaí.</p>
+  <figure>
+    <a href="anexo-01/">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Holmes_Hall_Manoa_ALOHAnet_IEEE_Milestone.jpg" alt="Holmes Hall Manoa ALOHAnet IEEE Milestone Plaque">
+    </a>
+    <figcaption>Marco Histórico IEEE no térreo do Holmes Hall, na Universidade do Havaí em Mānoa. <a href="https://en.wikipedia.org/wiki/ALOHAnet" target="_blank">Wikipedia.</a></figcaption>
+  </figure>
+  <p>O sucesso do projeto levou à criação do padrão <strong>DIX (Digital-Intel-Xerox)</strong> em 1978, operando a 10 Mbps, que posteriormente foi formalizado pelo IEEE como o padrão <strong>802.3</strong> em 1983.</p>
+  <ul>
+    <li><strong>Ethernet Clássica:</strong> Em suas primeiras versões, a rede operava com um único cabo longo (coaxial grosso ou fino) ao qual todos os computadores eram conectados em um <strong>barramento compartilhado</strong>.</li>
+    <li><strong>Ethernet Comutada:</strong> Com o tempo, a arquitetura evoluiu para uma topologia em <strong>estrela</strong>, utilizando hubs e, mais tarde, switches, que dedicam um enlace ponto a ponto para cada estação, eliminando colisões e aumentando a segurança.</li>
+  </ul>
+
+  <p><strong>Curiosidade:</strong> O cabo coaxial grosso (10BASE5) da Ethernet original era tão espesso que não podia ser dobrado — os conectores eram perfurados diretamente no cabo com uma ferramenta especial chamada <em>vampire tap</em> (tampa de vampiro).</p>
+
+  <figure>
+    <a href="anexo-01/">
+      <img src="https://techmattmillman.s3.dualstack.us-east-1.amazonaws.com/wp-content/uploads/2014/04/ST500-01-800x542.jpg" alt="Cabletron ST500-01">
+    </a>
+    <figcaption>Cabletron ST500-01. <a href="https://www.mattmillman.com/projects/10base5/" target="_blank">Building a 10BASE5 “Thick Ethernet” network.</a></figcaption>
+  </figure>
+
+  <h3>4. Interoperabilidade e Longevidade do Padrão</h3>
+  <p>A Ethernet sobreviveu por mais de quatro décadas devido à sua simplicidade, flexibilidade e baixo custo de manutenção. Um fator crucial para sua dominância é a capacidade de interoperar com o conjunto de protocolos <strong>TCP/IP</strong>, que é a base da Internet moderna.</p>
+  <p>Os padrões definidos pelo IEEE garantem que dispositivos de diferentes fabricantes possam se comunicar, o que amplia o mercado e permite a evolução contínua da tecnologia:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Padrão</th>
+        <th>Ano</th>
+        <th>Velocidade</th>
+        <th>Meio Físico</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Ethernet Clássico (DIX)</strong></td>
+        <td>1978</td>
+        <td>10 Mbps</td>
+        <td>Coaxial grosso (10BASE5)</td>
+      </tr>
+      <tr>
+        <td><strong>10BASE-T</strong></td>
+        <td>1990</td>
+        <td>10 Mbps</td>
+        <td>Par trançado Cat 3</td>
+      </tr>
+      <tr>
+        <td><strong>Fast Ethernet</strong></td>
+        <td>1995</td>
+        <td>100 Mbps</td>
+        <td>Par trançado Cat 5</td>
+      </tr>
+      <tr>
+        <td><strong>Gigabit Ethernet</strong></td>
+        <td>1999</td>
+        <td>1 Gbps</td>
+        <td>Par trançado Cat 5e/6 ou fibra</td>
+      </tr>
+      <tr>
+        <td><strong>10 Gigabit Ethernet</strong></td>
+        <td>2002</td>
+        <td>10 Gbps</td>
+        <td>Par trançado Cat 6a ou fibra</td>
+      </tr>
+      <tr>
+        <td><strong>40/100 Gigabit Ethernet</strong></td>
+        <td>2010</td>
+        <td>40–100 Gbps</td>
+        <td>Fibra óptica multimodo/monomodo</td>
+      </tr>
+      <tr>
+        <td><strong>400 Gigabit Ethernet</strong></td>
+        <td>2017</td>
+        <td>400 Gbps</td>
+        <td>Fibra óptica de alta densidade</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Comparação:</strong> Em 1978, uma Ethernet de 10 Mbps era considerada rápida o suficiente para conectar impressoras e terminais em um escritório. Hoje, uma conexão doméstica de 400 Gbps (40.000 vezes a taxa de transferência) conseguiria transferir o conteúdo completo de um DVD (4,7 GB) em menos de 0,1 segundo.</p>
+</section>
+
+<section class="section-box">
+  <h2>Representação Gráfica</h2>
+  <p><strong>Evolução da Topologia Ethernet: Barramento vs. Estrela</strong></p>
+  <div class="mermaid">
+    graph TD
+        subgraph "Ethernet Clássica - Barramento Compartilhado"
+            B1[PC 1] --- B2[PC 2] --- B3[PC 3] --- B4[PC 4]
+            B2 --- BC((Coaxial))
+            B3 --- BC
+        end
+
+        subgraph "Ethernet Comutada - Estrela com Switch"
+            S((Switch))
+            S --- A1[PC 1]
+            S --- A2[PC 2]
+            S --- A3[PC 3]
+            S --- A4[PC 4]
+        end
+
+        style BC fill:#000,stroke:#000,color:#fff
+        style S fill:#000,stroke:#000,color:#fff
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>Representação Gráfica</h2>
+  <p><strong>Linha do Tempo da Ethernet</strong></p>
+  <div class="mermaid">
+    timeline TD
+        title Evolucao do Padrao Ethernet
+        1973 : Xerox PARC - Metcalfe e Boggs : Rede ALOHA como inspiracao
+        1978 : Padrao DIX : 10 Mbps via coaxial grosso
+        1983 : IEEE 802.3 : Formalizacao do padrao
+        1990 : 10BASE-T : Ethernet via par trancado
+        1995 : Fast Ethernet : Salto para 100 Mbps
+        1999 : Gigabit Ethernet : 1 Gbps em Cat 5e
+        2002 : 10 Gigabit : 10 Gbps
+        2010 : 40-100 Gigabit : Fibra optica de alta velocidade
+        2017 : 400 Gigabit : Data centers e nuvem
+  </div>
+</section>
+
+<div class="tip-box">
+  <h4>Dicas & Lembretes</h4>
+  <ul>
+    <li><strong>Lei de Metcalfe</strong> ($V \propto n^2$) é a razão pela qual redes sociais e plataformas de messaging investem em atrair o maior número de usuários — cada novo usuário aumenta o valor exponencialmente.</li>
+    <li>A Ethernet dominou porque o IEEE padronizou apenas o <strong>nível físico e de enlace</strong> (Camadas 1 e 2 do modelo OSI), deixando livre a implementação de protocolos superiores (TCP/IP).</li>
+    <li>A transição de barramento para estrela não foi apenas topológica — eliminou o problema de <strong>colisões</strong> que plagava a Ethernet clássica.</li>
+    <li>Hoje, a Ethernet está presente em quase todos os dispositivos conectados: roteadores, switches, câmeras IP, smart TVs e até carregadores veiculares.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Como aplicar na Prática</h2>
+  <ul>
+    <li><strong>Planejamento de rede corporativa:</strong> Entender a evolução da Ethernet ajuda a escolher o equipamento correto. Uma rede Fast Ethernet (100 Mbps) pode ser suficiente para escritórios pequenos, mas data centers exigem 10/40/100 Gbps.</li>
+    <li><strong>Compatibilidade de hardware:</strong> A interoperabilidade garantida pelo IEEE 802.3 permite misturar equipamentos de diferentes fabricantes (Cisco, TP-Link, Intel, Broadcom) sem problemas de comunicação.</li>
+    <li><strong>Redes domésticas:</strong> O cabo Cat 5e que chega na sua casa suporta Gigabit Ethernet — suficiente para a maioria dos planos de banda larga atuais.</li>
+    <li><strong>Migração para fibra:</strong> Provedores de FTTH (Fiber to the Home) utilizam PON (Passive Optical Network), que é a evolução natural da Ethernet para acesso de longa distância.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>IEEE. <em>IEEE Standard for Ethernet</em>. IEEE Std 802.3-2022.</li>
+    <li>TANENBAUM, Andrew S.; WETHERALL, David J. <em>Computer Networks</em>. 5th ed. Pearson, 2011. Cap. 3.</li>
+    <li>STALLINGS, William. <em>Data and Computer Communications</em>. 10th ed. Pearson, 2014. Cap. 13.</li>
+    <li>METCALFE, Robert M.; BOGGS, David R. "Ethernet: Distributed Packet Switching for Local Computer Networks". <em>Communications of the ACM</em>, v. 19, n. 7, 1976.</li>
+    <li><a href="https://www.cpdee.ufmg.br/~luizt/seixas/PaginaSDA/Download/DownloadFiles/Ethernet.PDF" target="_blank">Industrial Ethernet - Constantino Seixas Filho / UFMG – Departamento de Engenharia Eletrônica</a></li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Para Praticar</h2>
+  <p>Nenhum exercício disponível para este encontro.</p>
+</section>

@@ -1,0 +1,12 @@
+{
+  "subject": "tecnologias-e-conectividade-de-redes",
+  "subject_title": "Tecnologias e Conectividade de Redes",
+  "subject_description": "Implementação e administração de redes locais e de longa distância: Ethernet, VLANs, roteamento inter-VLAN, tecnologias WAN (PPP, DSL, HFC, PON/FTTH), conectividade urbana, Smart Cities, IoT sustentável e gestão de e-waste.",
+  "subject_status": "20 Encontros",
+  "layout": "aula",
+  "tags": ["aula"],
+  "componente": "Tecnologias e Conectividade de Redes",
+  "nav_text": "⮜ VOLTAR",
+  "unit_label": "Encontro",
+  "sem_bimestres": true
+}

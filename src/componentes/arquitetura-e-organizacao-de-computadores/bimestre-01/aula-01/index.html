@@ -5,8 +5,133 @@ description: "Definições fundamentais, níveis de computação e visão funcio
 tags:
   - aula
 ---
-<!-- TODO: Adicionar conteúdo para este encontro -->
 <section class="section-box">
   <h2>Teoria & Conceitos</h2>
-  <p>Conteúdo em construção.</p>
+
+  <h3>1. Definições Fundamentais: Arquitetura vs. Organização</h3>
+  <p>Embora frequentemente usados como sinônimos, há uma distinção técnica importante entre os termos:</p>
+  <ul>
+    <li><strong>Arquitetura de Computadores</strong> — Refere-se aos atributos de um sistema visíveis ao programador, ou seja, aqueles que têm impacto direto na execução lógica de um programa. Exemplos incluem o conjunto de instruções (ISA), o número de bits para representação de dados, mecanismos de E/S e técnicas de endereçamento de memória.</li>
+    <li><strong>Organização de Computadores</strong> — Refere-se às unidades operacionais e suas interconexões que implementam as especificações da arquitetura. Envolve detalhes de hardware transparentes ao programador, como sinais de controle, interfaces com periféricos e a tecnologia de memória utilizada.</li>
+  </ul>
+  <p><strong>Exemplo Prático:</strong> Decidir se um computador terá uma instrução de multiplicação é uma questão de <em>arquitetura</em>; decidir se essa instrução será executada por uma unidade de multiplicação dedicada ou por somas repetidas na unidade de adição é uma questão de <em>organização</em>.</p>
+
+  <h3>2. Visão Funcional do Computador</h3>
+  <p>Um computador digital pode ser descrito por meio de quatro funções básicas que ele desempenha sobre os dados:</p>
+  <ul>
+    <li><strong>Processamento de Dados</strong> — Ampla gama de operações sobre as informações.</li>
+    <li><strong>Armazenamento de Dados</strong> — Inclui o armazenamento de curto prazo (em execução) e de longo prazo (arquivos para recuperação posterior).</li>
+    <li><strong>Movimentação de Dados</strong> — Transferência entre o computador e o ambiente externo (E/S) ou comunicação com dispositivos remotos.</li>
+    <li><strong>Controle</strong> — Gerenciamento dos recursos e coordenação das partes funcionais em resposta às instruções.</li>
+  </ul>
+
+  <h3>3. Estrutura de Alto Nível (Abordagem Top-Down)</h3>
+  <p>O sistema computacional é caracterizado por sua natureza hierárquica, consistindo em um conjunto inter-relacionado de componentes que podem ser decompostos em subcomponentes. Os quatro componentes estruturais principais de um computador são:</p>
+  <ul>
+    <li><strong>Unidade Central de Processamento (CPU)</strong> — Controla a operação do computador e realiza o processamento de dados.</li>
+    <li><strong>Memória Principal</strong> — Responsável pelo armazenamento dos dados.</li>
+    <li><strong>Entrada/Saída (E/S)</strong> — Move dados entre o computador e seu ambiente externo.</li>
+    <li><strong>Sistema de Interconexão (Barramento)</strong> — Mecanismo que provê a comunicação entre a CPU, a memória e os módulos de E/S.</li>
+  </ul>
+
+  <h3>4. Níveis de Abstração e Microarquitetura</h3>
+  <p>A arquitetura moderna expandiu-se para incluir o projeto do sistema inteiro. Neste contexto, Hennessy define a arquitetura como abrangendo três aspectos:</p>
+  <ul>
+    <li><strong>ISA (Instruction Set Architecture)</strong> — Serve como interface entre o software e o hardware.</li>
+    <li><strong>Microarquitetura</strong> — Aspectos de alto nível do projeto, como o sistema de memória e o projeto interno da CPU.</li>
+    <li><strong>Hardware</strong> — Refere-se ao projeto lógico detalhado e à tecnologia de fabricação (como o silício).</li>
+  </ul>
+
+  <h3>5. Classes de Computadores Modernos</h3>
+  <p>O conteúdo inicial também deve contextualizar onde essas arquiteturas são aplicadas hoje, variando conforme o mercado e os requisitos de potência e desempenho:</p>
+  <ul>
+    <li><strong>Dispositivos Pessoais Móveis (PMDs)</strong> — Foco em custo e eficiência energética (ex: ARM).</li>
+    <li><strong>Computadores Desktop</strong> — Foco no desempenho para o usuário final.</li>
+    <li><strong>Servidores</strong> — Ênfase em largura de banda de memória e confiabilidade.</li>
+    <li><strong>Clusters / Warehouse-Scale Computers (WSCs)</strong> — Dezenas de milhares de servidores funcionando como um único computador para serviços de nuvem (SaaS).</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Representação Gráfica</h2>
+  <p><strong>Componentes Estruturais de um Computador</strong></p>
+  <div class="mermaid">
+    graph TD
+        A["Sistema Computacional"] --> B["CPU"]
+        A --> C["Memória Principal"]
+        A --> D["Entrada/Saída (E/S)"]
+        A --> E["Sistema de Interconexão (Barramento)"]
+
+        B --> B1["Unidade de Controle"]
+        B --> B2["Unidade Lógica Aritmética (ULA)"]
+        B --> B3["Registradores"]
+
+        E --> E1["Barramento de Dados"]
+        E --> E2["Barramento de Endereço"]
+        E --> E3["Barramento de Controle"]
+
+        style A fill:#000,stroke:#000,color:#fff
+        style B fill:#fff,stroke:#000,color:#000
+        style C fill:#fff,stroke:#000,color:#000
+        style D fill:#fff,stroke:#000,color:#000
+        style E fill:#fff,stroke:#000,color:#000
+  </div>
+
+  <p><strong>Níveis de Abstração</strong></p>
+  <div class="mermaid">
+    graph TD
+        subgraph "Níveis de Abstração"
+            L1["Hardware (Silício)"]
+            L2["Microarquitetura"]
+            L3["ISA (Conjunto de Instruções)"]
+            L4["Sistema Operacional"]
+            L5["Linguagem de Montagem"]
+            L6["Linguagem de Alto Nível"]
+            L7["Aplicativos"]
+        end
+
+        L1 --> L2
+        L2 --> L3
+        L3 --> L4
+        L4 --> L5
+        L5 --> L6
+        L6 --> L7
+
+        style L1 fill:#000,stroke:#000,color:#fff
+        style L7 fill:#000,stroke:#000,color:#fff
+  </div>
+</section>
+
+<div class="tip-box">
+  <h4>Dicas & Lembretes</h4>
+  <ul>
+    <li><strong>Conceito Chave:</strong> A estrutura é "como os componentes são interligados" e a função é "a operação individual de cada componente".</li>
+    <li>A distinção entre arquitetura e organização é fundamental: arquitetura é o que o programador vê; organização é como o hardware implementa isso internamente.</li>
+    <li>Dois computadores podem ter a <strong>mesma arquitetura</strong> (mesmo ISA) e <strong>diferentes organizações</strong> (desempenho, custo, consumo de energia).</li>
+    <li>O ISA atua como o contrato entre software e hardware — ele define o que o processador deve fazer, mas não como.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Como aplicar na Prática</h2>
+  <ul>
+    <li><strong>Escolha de plataforma:</strong> Entender a diferença entre arquitetura e organização ajuda a escolher a plataforma correta para cada projeto. Aplicativos móveis priorizam eficiência energética (ARM), enquanto servidores priorizam throughput e confiabilidade (x86-64).</li>
+    <li><strong>Programação de baixo nível:</strong> Conhecer o ISA é essencial para otimizar código em linguagens como C ou Assembly, pois a seleção de instruções afeta diretamente o desempenho.</li>
+    <li><strong>Virtualização e nuvem:</strong> Servidores em cloud (AWS, Azure) são clusters de milhares de máquinas — o conceito de WSC é a base da infraestrutura moderna.</li>
+    <li><strong>Evolution CISC vs. RISC:</strong> O Intel x86 (CISC) e o ARM (RISC) ilustram como diferentes filosofias de arquitetura atendem a mercados distintos — desktop/servidor vs. dispositivos móveis.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>STALLINGS, William. <em>Computer Organization and Architecture: Designing for Performance</em>. 10th ed. Pearson, 2016.</li>
+    <li>HENNESSY, John L.; PATTERSON, David A. <em>Computer Architecture: A Quantitative Approach</em>. 6th ed. Morgan Kaufmann, 2017.</li>
+    <li>TANENBAUM, Andrew S.; BOS, Herbert. <em>Structured Computer Organization</em>. 6th ed. Pearson, 2013.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Para Praticar</h2>
+  <p>Nenhum exercício disponível para este encontro.</p>
 </section>

@@ -1,0 +1,93 @@
+---
+layout: exercicio
+title: "Anexo 01: Arquitetura da Ethernet Clássica"
+exercicio_numero: "01"
+aula_numero: "01"
+description: "Análise da arquitetura conceitual e física original da Ethernet em topologia de barramento, projetada por Robert Metcalfe na Xerox PARC."
+tags: []
+---
+
+<section class="section-box">
+  <h2>A Ethernet Clássica: A Origem da Conectividade</h2>
+
+  <figure>
+    <a href="anexo-01/">
+      <img src="https://teleco.com.br/imagens/tutoriais/tutorialfibraplast1_figura13.gif" alt="Desenho da arquitetura conceitual e física original da Ethernet clássica (padrão IEEE 802.3 em topologia de barramento)">
+    </a>
+    <figcaption>Rascunho da primeira rede Ethernet. <a href="https://teleco.com.br/tutoriais/tutorialfibraplast1/pagina_4.asp" target="_blank">Redes Ópticas I: Redes Ethernet.</a></figcaption>
+  </figure>
+
+  <h3>1. Contexto Histórico</h3>
+  <p>Essa imagem ilustra a arquitetura conceitual e física original da Ethernet clássica (padrão IEEE 802.3 em topologia de barramento), desenhada por Robert Metcalfe quando criou a tecnologia na Xerox PARC nos anos 70.</p>
+  <p>A Ethernet nasceu da necessidade de conectar múltiplos computadores em um ambiente de pesquisa, permitindo o compartilhamento de dados e recursos de forma eficiente.</p>
+</section>
+
+<section class="section-box">
+  <h2>Componentes da Arquitetura</h2>
+
+  <h3>2. Os Elementos Fundamentais</h3>
+
+  <p><strong>The Ether (O Barramento/Cabo Coaxial):</strong> É o meio físico compartilhado (a linha amarela na ilustração original) por onde todos os dados trafegam na forma de sinais elétricos. Todos os dispositivos conectados tinham acesso ao mesmo cabo.</p>
+
+  <p><strong>Terminator (Terminador):</strong> Fica nas extremidades do cabo para absorver os sinais elétricos e evitar que eles façam "eco" (reflexão) de volta pelo barramento, o que causaria interferência e corrupção de dados.</p>
+
+  <p><strong>Tap (Vampire Tap / Conector):</strong> Um conector físico perfurante que se fixa ao cabo coaxial central sem precisar cortá-lo, fazendo contato direto com o condutor interno.</p>
+
+  <p><strong>Transceiver (Transceptor / X):</strong> Dispositivo acoplado ao tap que converte os sinais digitais do computador em sinais elétricos para o barramento físico, além de detectar colisões no meio transmitido (CSMA/CD).</p>
+
+  <p><strong>Interface Cable (Cabo AUI):</strong> Cabo de interface transceptora que liga o transceiver até a placa de rede da estação de trabalho.</p>
+
+  <p><strong>Station / Interface / Controller (Estação e Controlador):</strong> Representa o computador hospedeiro (Station) e sua placa de interface de rede (Interface/Controller - I/C), responsável por empacotar os quadros Ethernet e controlar o acesso ao meio.</p>
+
+  <p><strong>Outras Estações:</strong> Os três blocos menores apontando para o cabo representam outras estações/computadores conectados simultaneamente ao mesmo barramento compartilhado.</p>
+</section>
+
+<section class="section-box">
+  <h2>Diagrama da Arquitetura</h2>
+
+  <div class="mermaid">
+    graph LR
+        subgraph "Barramento Compartilhado"
+            T1[Terminador] --- E((Ether / Cabo Coaxial)) --- T2[Terminador]
+        end
+
+        E --- X1[Transceiver]
+        E --- X2[Transceiver]
+        E --- X3[Transceiver]
+        E --- X4[Transceiver]
+
+        X1 --- AUI1[Cabo AUI] --- PC1[PC 1 - Station/Interface/Controller]
+        X2 --- AUI2[Cabo AUI] --- PC2[PC 2]
+        X3 --- AUI3[Cabo AUI] --- PC3[PC 3]
+        X4 --- AUI4[Cabo AUI] --- PC4[PC 4]
+
+        style T1 fill:#333,stroke:#000,color:#fff
+        style T2 fill:#333,stroke:#000,color:#fff
+        style E fill:#f1c40f,stroke:#000,color:#000,stroke-width:4px
+        style X1 fill:#e74c3c,stroke:#000,color:#fff
+        style X2 fill:#e74c3c,stroke:#000,color:#fff
+        style X3 fill:#e74c3c,stroke:#000,color:#fff
+        style X4 fill:#e74c3c,stroke:#000,color:#fff
+  </div>
+
+  <p><strong>Nota:</strong> A topologia de barramento compartilhado significa que quando um computador transmite, todos os outros recebem o sinal. Se dois computadores transmitirem ao mesmo tempo, ocorre uma <strong>colisão</strong>, que é detectada pelo transceiver e tratada pelo protocolo CSMA/CD.</p>
+</section>
+
+<div class="tip-box">
+  <h4>Características Importantes</h4>
+  <ul>
+    <li><strong>Topologia de Barramento:</strong> Todos os dispositivos compartilham o mesmo meio de transmissão.</li>
+    <li><strong>CSMA/CD:</strong> Carrier Sense Multiple Access with Collision Detection — o protocolo que gerencia o acesso ao meio e resolve colisões.</li>
+    <li><strong>Vampire Tap:</strong> O nome "tampa de vampiro" vem do fato de o conector "morder" o cabo coaxial para fazer contato elétrico.</li>
+    <li><strong>Velocidade Original:</strong> 10 Mbps — considerada rápida para a época, mas insuficiente para aplicações modernas.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>METCALFE, Robert M.; BOGGS, David R. "Ethernet: Distributed Packet Switching for Local Computer Networks". <em>Communications of the ACM</em>, v. 19, n. 7, 1976.</li>
+    <li>IEEE. <em>IEEE Standard for Ethernet</em>. IEEE Std 802.3-2022.</li>
+    <li>SPARKS, Robert. <em>Historical Ethernet Equipment</em>. Disponível em: &lt;https://www.cablesandkits.com/learn/ethernet-history/&gt;. Acesso em: 2026.</li>
+  </ul>
+</section>

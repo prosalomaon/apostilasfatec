@@ -91,6 +91,14 @@ hr {
   margin: 1.5rem 0;
 }
 
+figure {
+  margin-bottom: 1.5rem;
+}
+
+figcaption {
+  font-size: 0.8rem;
+}
+
 .nav-header {
   border-bottom: 3px solid #000;
 }

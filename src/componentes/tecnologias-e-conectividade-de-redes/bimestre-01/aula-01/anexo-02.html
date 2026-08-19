@@ -1,0 +1,97 @@
+---
+layout: exercicio
+title: "Anexo 02: O IEEE e a Padronização de Redes"
+exercicio_numero: "02"
+aula_numero: "01"
+description: "Conhecendo o Instituto de Engenheiros Elétricos e Eletrônicos e seu papel fundamental na criação de padrões que garantem a interoperabilidade entre dispositivos de rede."
+tags: []
+---
+
+<section class="section-box">
+  <h2>O que é o IEEE?</h2>
+
+  <h3>1. A Maior Organização Profissional de Tecnologia do Mundo</h3>
+  <p>O <strong>IEEE (Institute of Electrical and Electronics Engineers)</strong> é a maior organização profissional do mundo dedicada ao avanço da tecnologia em áreas como engenharia elétrica, eletrônica, computação e telecomunicações.</p>
+  <p>Além de publicar revistas científicas e promover conferências, o IEEE é um dos principais órgãos responsáveis pela criação de <strong>padrões (normas formais)</strong> que garantem a interoperabilidade entre dispositivos de diferentes fabricantes.</p>
+  <p>Sem essas normas, um roteador Cisco não conseguiria se comunicar com um adaptador Intel, ou um access point TP-Link não funcionaria com um MacBook Apple.</p>
+</section>
+
+<section class="section-box">
+  <h2>O Comitê 802</h2>
+
+  <h3>2. Padrões para Redes Locais e Metropolitanas</h3>
+  <p>No contexto de redes de computadores, o IEEE é amplamente conhecido pelo seu <strong>comitê 802</strong>, que padronizou diversos tipos de redes locais (LANs) e metropolitanas (MANs). Alguns dos padrões mais importantes desenvolvidos por este comitê incluem:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Padrão</th>
+        <th>Nome Popular</th>
+        <th>Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>IEEE 802.3</strong></td>
+        <td>Ethernet</td>
+        <td>Formalizado em 1983, define as especificações para redes locais cabeadas.</td>
+      </tr>
+      <tr>
+        <td><strong>IEEE 802.11</strong></td>
+        <td>Wi-Fi</td>
+        <td>O padrão para redes locais sem fio.</td>
+      </tr>
+      <tr>
+        <td><strong>IEEE 802.1Q</strong></td>
+        <td>VLAN</td>
+        <td>Define as normas para a implementação de VLANs (LANs Virtuais), permitindo a segmentação lógica de redes.</td>
+      </tr>
+      <tr>
+        <td><strong>IEEE 802.15</strong></td>
+        <td>Bluetooth / Zigbee</td>
+        <td>Padroniza redes de área pessoal sem fio.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section-box">
+  <h2>O OUI e os Endereços MAC</h2>
+
+  <h3>3. Identificação Única de Dispositivos</h3>
+  <p>Além da padronização técnica, o IEEE desempenha uma função administrativa vital ao gerenciar o <strong>OUI (Organizationally Unique Identifier)</strong>.</p>
+  <p>O OUI é um número único de <strong>24 bits</strong> atribuído aos fabricantes de hardware. Esses bits formam a primeira parte do endereço MAC de cada placa de rede, garantindo que nenhum dispositivo no mundo tenha um endereço físico idêntico a outro.</p>
+
+  <div class="code-container">
+    <pre><code>Estrutura de um endereço MAC (48 bits):
+
+  OUI (24 bits)              | Identificador do Dispositivo (24 bits)
+  ───────────────────────────┼──────────────────────────────────────
+  Exemplo: 00:1A:2B          | 3C:4D:5E
+  Fabricante Intel           | Placa específica
+
+  Total: 6 bytes = 48 bits = 2^48 = 281 trilhões de endereços únicos</code></pre>
+  </div>
+
+  <p>Quando você compra um notebook Dell, a placa de rede já vem com o OUI da Dell gravado em hardware. Mesmo que você tenha 1 milhão de notebooks Dell do mesmo modelo, cada um terá um endereço MAC diferente porque os 24 bits restantes são únicos para cada unidade fabricada.</p>
+</section>
+
+<div class="tip-box">
+  <h4>Por que isso importa na prática?</h4>
+  <ul>
+    <li><strong>Interoperabilidade:</strong> Um cabo Cat 6 de qualquer fabricante funciona em qualquer porta Ethernet porque todos seguem o IEEE 802.3.</li>
+    <li><strong>Segurança:</strong> O OUI permite rastrear qual fabricante produziu um dispositivo específico, mesmo sem其他 informações.</li>
+    <li><strong>Resolução de problemas:</strong> Ao analisar tráfego de rede, os primeiros 3 octetos do MAC identificam o fabricante, ajudando a diagnosticar falhas em hardware específico.</li>
+    <li><strong>Filtragem:</strong> Muitos roteadores permitem filtrar dispositivos pelo endereço MAC, usando o OUI para identificar fabricantes de dispositivos não autorizados.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>IEEE. <em>IEEE Standards Association</em>. Disponível em: &lt;https://standards.ieee.org/&gt;. Acesso em: 2026.</li>
+    <li>IEEE. <em>IEEE Standard for Ethernet</em>. IEEE Std 802.3-2022.</li>
+    <li>IEEE. <em>IEEE Standard for Information Technology — Telecommunications and Information Exchange between Systems — Local and Metropolitan Area Networks</em>. IEEE Std 802.11-2020.</li>
+    <li>IEEE. <em>IEEE Standards Association — OUI Lookup</em>. Disponível em: &lt;https://standards.ieee.org/brand/std10000001/&gt;. Acesso em: 2026.</li>
+  </ul>
+</section>

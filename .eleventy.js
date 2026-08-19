@@ -14,7 +14,7 @@ module.exports = function (eleventyConfig) {
   // Universal Collection for Lessons
   eleventyConfig.addCollection("aulas", function (collectionApi) {
     return collectionApi.getFilteredByTag("aula")
-      .filter(item => item.data.aula_numero)
+      .filter(item => item.data.aula_numero && !item.inputPath.includes("anexo"))
       .sort((a, b) => {
         const subjectA = a.data.subject || "";
         const subjectB = b.data.subject || "";

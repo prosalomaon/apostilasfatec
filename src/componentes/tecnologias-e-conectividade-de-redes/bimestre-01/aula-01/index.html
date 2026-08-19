@@ -42,9 +42,7 @@ tags:
   <h3>3. Evolução Histórica do Padrão Ethernet (<a href="anexo-02/">IEEE 802.3</a>)</h3>
   <p>A história da Ethernet começou na década de 1970 no <strong>Xerox PARC (Palo Alto Research Center)</strong>, onde Bob Metcalfe e David Boggs desenvolveram a primeira rede local inspirada no sistema sem fio <strong>ALOHA</strong> da Universidade do Havaí.</p>
   <figure>
-    <a href="anexo-01/">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Holmes_Hall_Manoa_ALOHAnet_IEEE_Milestone.jpg" alt="Holmes Hall Manoa ALOHAnet IEEE Milestone Plaque">
-    </a>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Holmes_Hall_Manoa_ALOHAnet_IEEE_Milestone.jpg" alt="Holmes Hall Manoa ALOHAnet IEEE Milestone Plaque">
     <figcaption>Marco Histórico IEEE no térreo do Holmes Hall, na Universidade do Havaí em Mānoa. <a href="https://en.wikipedia.org/wiki/ALOHAnet" target="_blank">Wikipedia.</a></figcaption>
   </figure>
   <p>O sucesso do projeto levou à criação do padrão <strong>DIX (Digital-Intel-Xerox)</strong> em 1978, operando a 10 Mbps, que posteriormente foi formalizado pelo IEEE como o padrão <strong>802.3</strong> em 1983.</p>
@@ -56,9 +54,7 @@ tags:
   <p><strong>Curiosidade:</strong> O cabo coaxial grosso (10BASE5) da Ethernet original era tão espesso que não podia ser dobrado — os conectores eram perfurados diretamente no cabo com uma ferramenta especial chamada <em>vampire tap</em> (tampa de vampiro).</p>
 
   <figure>
-    <a href="anexo-01/">
-      <img src="https://techmattmillman.s3.dualstack.us-east-1.amazonaws.com/wp-content/uploads/2014/04/ST500-01-800x542.jpg" alt="Cabletron ST500-01">
-    </a>
+    <img src="https://techmattmillman.s3.dualstack.us-east-1.amazonaws.com/wp-content/uploads/2014/04/ST500-01-800x542.jpg" alt="Cabletron ST500-01">
     <figcaption>Cabletron ST500-01. <a href="https://www.mattmillman.com/projects/10base5/" target="_blank">Building a 10BASE5 “Thick Ethernet” network.</a></figcaption>
   </figure>
 
@@ -127,29 +123,30 @@ tags:
 <section class="section-box">
   <h2>Representação Gráfica</h2>
   <p><strong>Evolução da Topologia Ethernet: Barramento vs. Estrela</strong></p>
+  <p><strong>Ethernet Clássica - Barramento Compartilhado</strong></p>
   <div class="mermaid">
-    graph TD
-        subgraph "Ethernet Clássica - Barramento Compartilhado"
-            B1[PC 1] --- B2[PC 2] --- B3[PC 3] --- B4[PC 4]
-            B2 --- BC((Coaxial))
-            B3 --- BC
-        end
-
-        subgraph "Ethernet Comutada - Estrela com Switch"
-            S((Switch))
-            S --- A1[PC 1]
-            S --- A2[PC 2]
-            S --- A3[PC 3]
-            S --- A4[PC 4]
-        end
+    graph LR
+        T1[Terminador] --- BC((Coaxial)) --- T2[Terminador]
+        BC --- B1[PC 1]
+        BC --- B2[PC 2]
+        BC --- B3[PC 3]
+        BC --- B4[PC 4]
 
         style BC fill:#000,stroke:#000,color:#fff
+  </div>
+
+  <p><strong>Ethernet Comutada - Estrela com Switch</strong></p>
+  <div class="mermaid">
+    graph TD
+        A1[PC 1] --- S((Switch))
+        A2[PC 2] --- S
+        A3[PC 3] --- S
+        A4[PC 4] --- S
+        A5[PC 5] --- S
+
         style S fill:#000,stroke:#000,color:#fff
   </div>
-</section>
 
-<section class="section-box">
-  <h2>Representação Gráfica</h2>
   <p><strong>Linha do Tempo da Ethernet</strong></p>
   <div class="mermaid">
     timeline TD
@@ -199,5 +196,10 @@ tags:
 
 <section class="section-box">
   <h2>Para Praticar</h2>
-  <p>Nenhum exercício disponível para este encontro.</p>
+  <a href="questionario">Questionário</a>
+</section>
+
+<section class="section-box">
+  <h2>Para Próxima Aula</h2>
+  <iframe src="https://www.youtube.com/embed/TkOVgkcrvbg" title="Ethernet (50th Birthday) - Computerphile" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </section>

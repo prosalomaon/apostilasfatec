@@ -25,9 +25,11 @@ module.exports = function (eleventyConfig) {
 
   // Collection for Subjects (Dashboards)
   eleventyConfig.addCollection("subjects", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("src/componentes/*/index.njk").sort((a, b) => {
-      return (a.data.subject_title || "").localeCompare(b.data.subject_title || "");
-    });
+    return collectionApi.getFilteredByGlob("src/componentes/*/index.njk")
+      .filter(item => !item.data.hidden)
+      .sort((a, b) => {
+        return (a.data.subject_title || "").localeCompare(b.data.subject_title || "");
+      });
   });
 
 

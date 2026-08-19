@@ -8,6 +8,7 @@
   "componente": "Projeto Integrador em Redes de Computadores II",
   "nav_text": "⮜ VOLTAR",
   "unit_label": "Encontro",
+  "hidden": true,
   "bimester_labels": {
     "bimestre-01": "Bloco 1",
     "bimestre-02": "Bloco 2",

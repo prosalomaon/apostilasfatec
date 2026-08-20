@@ -1,12 +1,231 @@
 ---
 title: "Bases Numéricas e Codificação de Dados"
 aula_numero: "03"
-description: "Representação de dados binários, aritmética de inteiros e padrões de ponto flutuante."
+description: "Sistemas posicionais, conversão entre bases, complemento de dois e codificações de caracteres."
 tags:
   - aula
 ---
-<!-- TODO: Adicionar conteúdo para este encontro -->
 <section class="section-box">
   <h2>Teoria & Conceitos</h2>
-  <p>Conteúdo em construção.</p>
+
+  <h3>1. Por que Estudar Bases Numéricas em um Curso de Redes?</h3>
+  <p>Antes de qualquer fórmula, vale responder à pergunta mais importante: <em>"por que um futuro técnico em redes precisa disso?"</em>. A resposta é direta: <strong>toda comunicação em rede se resume à troca de sequências de bits</strong>, e o profissional de redes precisa interpretar essas sequências todos os dias. Veja onde as bases numéricas aparecem na prática:</p>
+  <ul>
+    <li><strong>Endereços IP:</strong> Um endereço IPv4 como <code>192.168.10.77</code> é, para o roteador, o número binário <code>11000000 10101000 00001010 01001101</code>. Sem enxergar o binário por trás do decimal, é impossível entender o que o equipamento realmente "vê".</li>
+    <li><strong>Máscaras de sub-rede e CIDR:</strong> Planejar sub-redes, calcular faixas de hosts válidos e interpretar notações como /24 ou /26 exige converter entre binário e decimal com fluência. A operação fundamental do roteamento — o AND bit a bit entre o IP e a máscara — só faz sentido quando olhamos os endereços em binário.</li>
+    <li><strong>Endereços MAC:</strong> São escritos em hexadecimal (ex.: <code>A4:5E:60:B2:1F:C8</code>) porque cada par hexadecimal representa exatamente 1 byte — a leitura hexadecimal é a forma "humana" de ver os bits que trafegam no cabo.</li>
+    <li><strong>Análise de protocolos:</strong> Ferramentas como o Wireshark exibem os pacotes capturados em blocos hexadecimais. Inspecionar cabeçalhos Ethernet, IP ou TCP sem ler hexadecimal é praticamente inviável.</li>
+    <li><strong>IPv6:</strong> Escrito inteiramente em hexadecimal (ex.: <code>2001:0db8::1</code>) — a base 16 deixa de ser opcional na transição para o novo protocolo.</li>
+    <li><strong>Administração de sistemas:</strong> Permissões octais no Linux (<code>chmod 755</code>), flags e códigos de erro em hexadecimal, dimensionamento de memória e armazenamento em potências de 2 — tudo isso herda diretamente o conteúdo desta aula.</li>
+  </ul>
+  <p>Em resumo: <strong>o técnico que não domina bases numéricas enxerga apenas "números soltos"; quem domina, enxerga a estrutura da rede</strong> — onde uma sub-rede começa, onde termina, quantos hosts ela comporta e por que um pacote segue por determinado caminho. O restante desta aula constrói exatamente essa habilidade.</p>
+
+  <h3>2. Sistemas Numéricos Posicionais: O Conceito de "Peso"</h3>
+  <p>Antes de entender como o hardware armazena dados, precisamos compreender como representamos números. No nosso cotidiano, utilizamos quase universalmente o sistema decimal (base 10). Mas o que realmente torna um sistema "posicional"?</p>
+  <p><strong>Definição:</strong> Em um sistema numérico posicional, cada número é representado por uma cadeia de caracteres (dígitos) na qual cada posição do dígito possui um peso associado dependente da base ou raiz ($r$) do sistema.</p>
+  <p><strong>A "Balança" de Pesos:</strong> Pense em um número posicional como uma balança que utiliza pesos predefinidos de tamanhos diferentes. No número decimal $4.728_{10}$, por exemplo, cada dígito tem um peso baseado em potências de 10:</p>
+  <div class="code-container">
+    <pre><code>4.728 = (4 × 10³) + (7 × 10²) + (2 × 10¹) + (8 × 10⁰)</code></pre>
+  </div>
+  <p>O dígito "4" tem um peso posicional infinitamente maior do que o dígito "8", por ocupar a casa dos milhares em vez das unidades.</p>
+  <p><strong>O Caso Geral:</strong> Matematicamente, o valor de qualquer número em uma base $r$ é dado por uma soma ponderada de seus dígitos ($a_i$) pelas potências da base ($r^i$) — consulte o <a href="anexo-01/">Anexo 01</a> para uma revisão completa de potenciação:</p>
+  <div class="code-container">
+    <pre><code>[... + a₃r³ + a₂r² + a₁r¹ + a₀r⁰ + a₋₁r⁻¹ + a₋₂r⁻² + ...]</code></pre>
+  </div>
+  <p>onde cada dígito $a_i$ deve estar no intervalo fechado de $0$ a $r-1$. Se utilizássemos uma base não convencional como a base 7, por exemplo, os dígitos válidos seriam apenas de $0$ a $6$, e os pesos das posições seriam potências de 7 (como $7^0 = 1$, $7^1 = 7$, $7^2 = 49$, etc.).</p>
+
+  <h3>3. O Sistema Binário (Base 2) e o Hexadecimal (Base 16)</h3>
+  <p>Por conta da natureza física dos circuitos integrados — que operam medindo variações de tensão elétrica (sinais altos ou baixos) —, a CPU opera internamente usando apenas o sistema binário (base 2), cujos únicos dígitos são 0 e 1.</p>
+  <p><strong>A Escrita Binária:</strong> Assim como no decimal, cada posição de um bit (dígito binário) possui um peso baseado em potências de 2. Para valores fracionários, utilizam-se as potências negativas da base.</p>
+  <p><strong>Exemplo:</strong> O valor binário $1001,101_2$ equivale a:</p>
+  <div class="code-container">
+    <pre><code>(1 × 2³) + (0 × 2²) + (0 × 2¹) + (1 × 2⁰) + (1 × 2⁻¹) + (0 × 2⁻²) + (1 × 2⁻³)
+= 8 + 0 + 0 + 1 + 0,5 + 0 + 0,125
+= 9,625₁₀</code></pre>
+  </div>
+  <p><strong>O "Nibble" e o Hexadecimal:</strong> Para os programadores e engenheiros de computação, lidar diretamente com cadeias gigantescas de zeros e uns (como 110111100001) é extremamente difícil e propenso a erros. Para compactar essa visualização, adota-se o sistema hexadecimal (base 16).</p>
+  <ul>
+    <li>Os bits de um número são agrupados de 4 em 4 (um agrupamento de 4 bits é chamado de <strong>nibble</strong>).</li>
+    <li>Cada combinação de nibble (de 0000 a 1111) é representada por um dos 16 símbolos hexadecimais ($0$ a $9$ e de $A$ a $F$).</li>
+    <li>A conversão mental é direta: o binário <code>1101 1110 0001</code> vira rapidamente <code>DE1</code> na base 16, porque $1101_2 = D_{16}$, $1110_2 = E_{16}$ e $0001_2 = 1_{16}$.</li>
+  </ul>
+
+  <h3>4. Algoritmos Práticos de Conversão</h3>
+  <p><strong>Binário para Decimal:</strong> Multiplica-se cada dígito pela sua potência de 2 correspondente e somam-se os resultados.</p>
+  <p><strong>Decimal para Binário:</strong></p>
+  <ul>
+    <li><strong>Parte Inteira (Divisões Sucessivas):</strong> Divide-se o valor decimal sucessivamente por 2. O quociente é dividido novamente até chegar a zero, e os restos gerados nas divisões formam os dígitos binários, lidos na ordem inversa da geração (do menos significativo ao mais significativo).</li>
+  </ul>
+  <div class="code-container">
+    <pre><code>Exemplo: Converter 11₁₀ para binário
+
+11 ÷ 2 = 5  resto 1  ↑
+ 5 ÷ 2 = 2  resto 1  ↑
+ 2 ÷ 2 = 1  resto 0  ↑
+ 1 ÷ 2 = 0  resto 1  ↑
+
+Lendo de baixo para cima: 1011₂</code></pre>
+  </div>
+  <ul>
+    <li><strong>Parte Fracionária (Multiplicações Sucessivas):</strong> Multiplica-se a parte decimal fracionária por 2. O dígito à esquerda da vírgula do produto (0 ou 1) será o bit fracionário. Repete-se o processo multiplicando apenas a parte fracionária restante por 2.</li>
+  </ul>
+  <p><strong>Atenção:</strong> Nem todas as frações são exatas em binário. A fração finita $0,81_{10}$ resulta em uma dízima periódica em binário ($0,110011..._2$), exigindo que o algoritmo seja interrompido após o limite de precisão do sistema.</p>
+
+  <h3>5. Codificação de Inteiros Negativos: Sinal e Magnitude vs. Complemento de Dois</h3>
+  <p>Para representar inteiros negativos no computador, onde não dispomos de um caractere físico de "-" para gravação, o bit mais à esquerda (o mais significativo, MSB) é reservado como o bit de sinal (onde 0 indica positivo e 1 indica negativo).</p>
+  <p><strong>Método A: Sinal-Magnitude</strong></p>
+  <ul>
+    <li>Os $n-1$ bits mais à direita representam puramente o valor absoluto (a magnitude) do número.</li>
+    <li><strong>Exemplo:</strong> Em uma palavra de 8 bits, $+18_{10} = 00010010_2$ e $-18_{10} = 10010010_2$.</li>
+    <li><strong>Desvantagens:</strong>
+      <ul>
+        <li>A CPU precisaria de circuitos complexos que checassem constantemente os sinais antes de realizar operações.</li>
+        <li>O sistema possui dois zeros diferentes: o $+0$ (00000000) e o $-0$ (10000000). Isso desperdiça uma combinação de bits e torna testes condicionais de detecção de zero mais lentos.</li>
+      </ul>
+    </li>
+  </ul>
+  <p><strong>Método B: Complemento de Dois (O Padrão da Indústria)</strong></p>
+  <ul>
+    <li>Para eliminar as desvantagens da representação de magnitude, os processadores modernos adotam o complemento de dois. Nele, o bit de sinal tem um peso negativo de $-2^{n-1}$.</li>
+    <li><strong>A Grande Vantagem:</strong> A subtração de números pode ser feita utilizando o mesmo hardware de adição. Para fazer $A - B$, a CPU simplesmente soma $A$ com o negativo de $B$ ($A + (-B)$) sem precisar de um circuito de subtração dedicado.</li>
+  </ul>
+  <p><strong>Como Negar um Número em Complemento de Dois (ex: $+18 \rightarrow -18$):</strong></p>
+  <ol>
+    <li>Inverta todos os bits do número positivo (o complemento booleano bit a bit): <code>00010010</code> vira <code>11101101</code>.</li>
+    <li>Some 1 ao resultado, tratando-o como inteiro sem sinal: <code>11101101 + 1 = 11101110</code> (que equivale a $-18_{10}$ em complemento de dois).</li>
+  </ol>
+
+  <h3>6. Codificação de Dados Não Numéricos (Texto e Controle)</h3>
+  <p>Nem toda informação armazenada em um barramento são números puros. Também precisamos codificar texto e caracteres alfanuméricos:</p>
+  <ul>
+    <li><strong>Padrão ASCII / IRA (International Reference Alphabet):</strong> Utiliza uma codificação de 7 bits (geralmente armazenada em bytes de 8 bits, com o oitavo bit atuando como controle de paridade contra erros de transmissão) para mapear 128 caracteres, incluindo letras, dígitos de 0 a 9 e códigos de controle (como o <em>carriage return</em>).</li>
+    <li><strong>Padrão EBCDIC:</strong> Código de 8 bits amplamente adotado e historicamente consolidado pela IBM em seus computadores de grande porte (mainframes).</li>
+    <li><strong>Unicode (16 bits):</strong> Criado para internacionalizar os sistemas, permitindo mapear milhares de símbolos de diferentes escritas globais simultaneamente (padrão muito adotado por linguagens modernas).</li>
+    <li><strong>Decimal Compactado (BCD - Binary Coded Decimal):</strong> Muito comum em sistemas comerciais de intensa movimentação de dados de entrada/saída. Ele armazena os dígitos de 0 a 9 em grupos de 4 bits diretamente, permitindo acomodar dois dígitos decimais por byte (evitando o gargalo computacional de conversão constante entre decimal e binário). Os sinais positivo ($+$) e negativo ($-$) são indicados no final da cadeia por nibbles de controle como 1100 e 1101, respectivamente.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Tabela Comparativa</h2>
+  <p><strong>Resumo dos Sistemas Numéricos</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Sistema</th>
+        <th>Base</th>
+        <th>Dígitos Válidos</th>
+        <th>Exemplo</th>
+        <th>Principal Uso</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Decimal</strong></td>
+        <td>10</td>
+        <td>0–9</td>
+        <td>4728₁₀</td>
+        <td>Cálculos cotidianos</td>
+      </tr>
+      <tr>
+        <td><strong>Binário</strong></td>
+        <td>2</td>
+        <td>0, 1</td>
+        <td>10011010₂</td>
+        <td>Armazenamento interno (CPU)</td>
+      </tr>
+      <tr>
+        <td><strong>Octal</strong></td>
+        <td>8</td>
+        <td>0–7</td>
+        <td>232₈</td>
+        <td>Representação compacta (legado)</td>
+      </tr>
+      <tr>
+        <td><strong>Hexadecimal</strong></td>
+        <td>16</td>
+        <td>0–9, A–F</td>
+        <td>9A₁₆</td>
+        <td>Endereços de memória, debug</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section-box">
+  <h2>Representação Gráfica</h2>
+  <p><strong>Conversão Decimal → Binário (Divisões Sucessivas)</strong></p>
+  <div class="mermaid">
+    graph TD
+        A["11 ÷ 2 = 5"] -->|"resto 1"| B["5 ÷ 2 = 2"]
+        B -->|"resto 1"| C["2 ÷ 2 = 1"]
+        C -->|"resto 0"| D["1 ÷ 2 = 0"]
+        D -->|"resto 1"| E["Fim"]
+        E --> F["Resultado: 1011₂ (↑ ler de baixo para cima)"]
+
+        style A fill:#fff,stroke:#000,color:#000
+        style E fill:#000,stroke:#000,color:#fff
+  </div>
+
+  <p><strong>Complemento de Dois: Processo de Negação</strong></p>
+  <div class="mermaid">
+    graph LR
+        A["+18₁₀<br/>00010010"] -->|"Inverter bits"| B["Complemento<br/>11101101"]
+        B -->|"Somar 1"| C["-18₁₀<br/>11101110"]
+
+        style A fill:#fff,stroke:#000,color:#000
+        style C fill:#000,stroke:#000,color:#fff
+  </div>
+
+  <p><strong>Visão Geral: Codificação de Dados</strong></p>
+  <div class="mermaid">
+    graph TD
+        D["Dados"] --> N["Numéricos"]
+        D --> T["Não Numéricos"]
+        N --> P["Posicionais<br/>(Decimal, Binário, Hex)"]
+        N --> C["Complemento de Dois"]
+        T --> TX["Texto<br/>(ASCII, EBCDIC, Unicode)"]
+        T --> BCD["Decimal<br/>(BCD)"]
+
+        style D fill:#000,stroke:#000,color:#fff
+  </div>
+</section>
+
+<div class="tip-box">
+  <h4>Dicas & Lembretes</h4>
+  <ul>
+    <li><strong>Memória de Nibble:</strong> Um nibble = 4 bits. Dois nibbles formam um byte (8 bits). Saber isso acelera a conversão hexadecimal → binário e vice-versa.</li>
+    <li><strong>Complemento de Dois é padrão:</strong> Todos os processadores modernos (x86, ARM, RISC-V) usam complemento de dois para representar inteiros negativos.</li>
+    <li><strong>BCD é útil em sistemas financeiros:</strong> Evita erros de arredondamento que ocorrem na conversão decimal → binário, garantindo precisão exata em cálculos monetários.</li>
+    <li><strong>ASCII vs. Unicode:</strong> ASCII original (7 bits) mapeia apenas 128 caracteres — insuficiente para idiomas como chinês ou árabe. O Unicode (16 bits ou mais) resolve isso.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Como aplicar na Prática</h2>
+  <ul>
+    <li><strong>Debug de redes e protocolos:</strong> Ao analisar pacotes de rede (Wireshark), endereços MAC e IPs são representados em hexadecimal — entender a conversão binário ↔ hexadecimal é essencial.</li>
+    <li><strong>Programação de baixo nível:</strong> Em Assembly e C, operações bit a bit (AND, OR, XOR, shifts) dependem do entendimento da representação binária.</li>
+    <li><strong>Sistemas embarcados e IoT:</strong> Microcontroladores Arduino e ESP32 operam diretamente com registradores de 8 e 32 bits — manipular bits é uma necessidade diária.</li>
+    <li><strong>Compressão e codificação:</strong> Formatos como UTF-8 (Unicode variável) e BCD são usados em bancos de dados, APIs e sistemas legados que precisam de interoperação.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>STALLINGS, William. <em>Computer Organization and Architecture: Designing for Performance</em>. 10th ed. Pearson, 2016. Cap. 9.</li>
+    <li>TANENBAUM, Andrew S.; BOS, Herbert. <em>Structured Computer Organization</em>. 6th ed. Pearson, 2013. Cap. 4.</li>
+    <li>PATTERSON, David A.; HENNESSY, John L. <em>Computer Organization and Design: The Hardware/Software Interface</em>. 5th ed. Morgan Kaufmann, 2013.</li>
+    <li>IEEE. <em>IEEE Standard for Floating-Point Arithmetic</em>. IEEE Std 754-2019.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Anexos</h2>
+  <a href="anexo-01">Fundamentos de Potenciação</a>
+</section>
+
+<section class="section-box">
+  <h2>Para Praticar</h2>
+  <a href="questionario">Questionário — Prática de Conversão entre Bases Numéricas</a>
 </section>

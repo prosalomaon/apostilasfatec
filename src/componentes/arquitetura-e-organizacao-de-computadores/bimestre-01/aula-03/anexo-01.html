@@ -1,0 +1,198 @@
+---
+layout: exercicio
+title: "Anexo 01: Fundamentos de Potenciação"
+exercicio_numero: "01"
+aula_numero: "03"
+description: "Referência completa de potenciação: definição, regras de sinais, propriedades operatórias, expoentes negativos e fracionários — a base matemática dos sistemas posicionais."
+---
+
+<section class="section-box">
+  <h2>Definição e Anatomia de uma Potência</h2>
+
+  <p>Potenciação é a forma abreviada de escrever uma multiplicação de fatores iguais.</p>
+  <div class="code-container">
+    <pre><code>aⁿ = a · a · a · … · a  (n fatores)</code></pre>
+  </div>
+  <ul>
+    <li><strong>$a$ (Base):</strong> O número que se repete.</li>
+    <li><strong>$n$ (Expoente):</strong> A quantidade de vezes que a base é multiplicada por si mesma.</li>
+    <li><strong>$a^n$ (Potência):</strong> O resultado da operação.</li>
+  </ul>
+
+  <h3>Casos Notáveis Básicos</h3>
+  <ul>
+    <li>$a^1 = a$ — Qualquer número elevado a $1$ é ele mesmo.</li>
+    <li>$a^0 = 1$ (para $a \neq 0$).</li>
+    <li>$0^0$ é uma indeterminação matemática.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Regras de Sinais (Bases Negativas)</h2>
+
+  <p>O sinal do resultado depende de a base estar entre parênteses e da paridade do expoente:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Expressão</th>
+        <th>Expoente</th>
+        <th>Análise / Expansão</th>
+        <th>Resultado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>(-3)²</code></td>
+        <td>Par</td>
+        <td>(-3) · (-3)</td>
+        <td>+9</td>
+      </tr>
+      <tr>
+        <td><code>(-3)³</code></td>
+        <td>Ímpar</td>
+        <td>(-3) · (-3) · (-3)</td>
+        <td>-27</td>
+      </tr>
+      <tr>
+        <td><code>-3²</code></td>
+        <td>Par</td>
+        <td>-(3 · 3) — o sinal não está elevado</td>
+        <td>-9</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul>
+    <li><strong>Base negativa + Expoente Par</strong> → Resultado Positivo.</li>
+    <li><strong>Base negativa + Expoente Ímpar</strong> → Resultado Negativo.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Propriedades Operatórias</h2>
+
+  <p>As propriedades funcionam como ferramentas para simplificar expressões algébricas sem a necessidade de calcular valores astronômicos.</p>
+
+  <h3>P1. Produto de potências de mesma base</h3>
+  <p>Conserva a base e soma os expoentes.</p>
+  <div class="code-container">
+    <pre><code>aᵐ · aⁿ = aᵐ⁺ⁿ</code></pre>
+  </div>
+  <p><strong>Exemplo:</strong> $2^3 \cdot 2^4 = 2^{3+4} = 2^7 = 128$</p>
+
+  <h3>P2. Divisão de potências de mesma base</h3>
+  <p>Conserva a base e subtrai os expoentes.</p>
+  <div class="code-container">
+    <pre><code>aᵐ / aⁿ = aᵐ⁻ⁿ   (a ≠ 0)</code></pre>
+  </div>
+  <p><strong>Exemplo:</strong> $\frac{5^6}{5^2} = 5^{6-2} = 5^4 = 625$</p>
+
+  <h3>P3. Potência de Potência</h3>
+  <p>Conserva a base e multiplica os expoentes.</p>
+  <div class="code-container">
+    <pre><code>(aᵐ)ⁿ = aᵐ · ⁿ</code></pre>
+  </div>
+  <p><strong>Exemplo:</strong> $(3^2)^3 = 3^{2 \cdot 3} = 3^6 = 729$</p>
+  <p><strong>Atenção ao parêntese:</strong> $3^{2^3} = 3^8 = 6561 \neq (3^2)^3$.</p>
+
+  <h3>P4. Distributiva na Multiplicação</h3>
+  <div class="code-container">
+    <pre><code>(a · b)ⁿ = aⁿ · bⁿ</code></pre>
+  </div>
+  <p><strong>Exemplo:</strong> $(2 \cdot 5)^3 = 2^3 \cdot 5^3 = 8 \cdot 125 = 1000$</p>
+
+  <h3>P5. Distributiva na Divisão</h3>
+  <div class="code-container">
+    <pre><code>(a/b)ⁿ = aⁿ / bⁿ   (b ≠ 0)</code></pre>
+  </div>
+  <p><strong>Exemplo:</strong> $\left(\frac{3}{2}\right)^3 = \frac{3^3}{2^3} = \frac{27}{8}$</p>
+</section>
+
+<section class="section-box">
+  <h2>Expoente Negativo e Expoente Fracionário</h2>
+
+  <h3>Expoente Negativo (Inversão de Base)</h3>
+  <p>Um expoente negativo indica que a base deve ser invertida e o sinal do expoente trocado para positivo.</p>
+  <div class="code-container">
+    <pre><code>a⁻ⁿ = (1/a)ⁿ = 1/aⁿ
+(a/b)⁻ⁿ = (b/a)ⁿ</code></pre>
+  </div>
+  <ul>
+    <li><strong>Exemplo 1:</strong> $2^{-3} = \frac{1}{2^3} = \frac{1}{8}$</li>
+    <li><strong>Exemplo 2:</strong> $\left(\frac{2}{3}\right)^{-2} = \left(\frac{3}{2}\right)^2 = \frac{9}{4}$</li>
+  </ul>
+
+  <h3>Expoente Fracionário (Ponte para Radiciação)</h3>
+  <p>O expoente fracionário transforma uma potência em um radical: "o que está por cima (numerador) vai para dentro; o que está por baixo (denominador) vai para fora".</p>
+  <div class="code-container">
+    <pre><code>a^(m/n) = ⁿ√(aᵐ)</code></pre>
+  </div>
+  <ul>
+    <li><strong>Exemplo 1:</strong> $8^{\frac{2}{3}} = \sqrt[3]{8^2} = \sqrt[3]{64} = 4$</li>
+    <li><strong>Exemplo 2:</strong> $9^{\frac{1}{2}} = \sqrt[2]{9^1} = \sqrt{9} = 3$</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Aplicação em Ciência da Computação: Notação Posicional</h2>
+
+  <p>A potenciação é a base dos sistemas numéricos (Base 2, Base 8, Base 10, Base 16). O valor de cada dígito em uma posição $k$ é determinado por $a_k \cdot r^k$, onde $r$ é a base (radix) e $k$ é a potência associada à posição.</p>
+
+  <p><strong>Exemplo:</strong> O valor do número binário $1101_2$ convertido para base 10:</p>
+  <div class="code-container">
+    <pre><code>1101₂ = (1 × 2³) + (1 × 2²) + (0 × 2¹) + (1 × 2⁰)
+1101₂ = (1 × 8) + (1 × 4) + (0 × 2) + (1 × 1)
+1101₂ = 8 + 4 + 0 + 1 = 13₁₀</code></pre>
+  </div>
+</section>
+
+<div class="tip-box">
+  <h4>Resumo das Propriedades</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Propriedade</th>
+        <th>Regra</th>
+        <th>Memória Visual</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Produto (mesma base)</td>
+        <td>$a^m \cdot a^n = a^{m+n}$</td>
+        <td>Mesma base → soma expoentes</td>
+      </tr>
+      <tr>
+        <td>Divisão (mesma base)</td>
+        <td>$\frac{a^m}{a^n} = a^{m-n}$</td>
+        <td>Mesma base → subtrai expoentes</td>
+      </tr>
+      <tr>
+        <td>Potência de potência</td>
+        <td>$(a^m)^n = a^{m \cdot n}$</td>
+        <td>Expoente sob expoente → multiplica</td>
+      </tr>
+      <tr>
+        <td>Distributiva (multiplicação)</td>
+        <td>$(a \cdot b)^n = a^n \cdot b^n$</td>
+        <td>Distribui o expoente</td>
+      </tr>
+      <tr>
+        <td>Distributiva (divisão)</td>
+        <td>$\left(\frac{a}{b}\right)^n = \frac{a^n}{b^n}$</td>
+        <td>Distribui o expoente</td>
+      </tr>
+      <tr>
+        <td>Expoente negativo</td>
+        <td>$a^{-n} = \frac{1}{a^n}$</td>
+        <td>Negativo = inverte</td>
+      </tr>
+      <tr>
+        <td>Expoente fracionário</td>
+        <td>$a^{\frac{m}{n}} = \sqrt[n]{a^m}$</td>
+        <td>Numerador = dentro, denominador = fora</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

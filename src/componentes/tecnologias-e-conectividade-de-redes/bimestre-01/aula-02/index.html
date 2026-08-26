@@ -1,61 +1,193 @@
 ---
-title: "Mecanismos de Acesso ao Meio: CSMA/CD e CSMA/CA"
+title: "Protocolos de Acesso Múltiplo ao Meio (MAC)"
 aula_numero: "02"
-description: "Estudo detalhado dos protocolos de detecção e prevenção de colisão em redes cabeadas e sem fio."
+description: "Estudo dos protocolos MAC: ALOHA, CSMA, protocolos livres de colisão, disputa limitada e redes sem fio."
 tags:
   - aula
 ---
+
 <section class="section-box">
   <h2>Teoria & Conceitos</h2>
 
   <h3>1. O Problema da Alocação de Canais</h3>
-  <p>Em redes onde o meio é compartilhado (como um cabo coaxial ou o ar), o desafio central é determinar quem tem o direito de transmitir quando há disputa pelo canal. A alocação estática (como FDM ou TDM) é ineficiente para o tráfego de dados, que ocorre tipicamente em rajadas, pois desperdiça capacidade quando um usuário está ocioso. Por isso, utilizam-se protocolos de acesso múltiplo com detecção de portadora (CSMA), baseados no princípio de <strong>"ouvir antes de falar"</strong>.</p>
+  <p>Em redes de broadcast, o desafio central é determinar qual estação tem o direito de usar o canal comum quando há disputa por ele. Métodos de multiplexação estática (como FDM e TDM) dividem a largura de banda de forma ineficiente para tráfego em rajadas — que é o padrão em redes de computadores — pois desperdiçam capacidade quando um usuário está ocioso. Por isso, utilizam-se os <strong>protocolos de acesso múltiplo (MAC)</strong> para gerenciar o compartilhamento dinâmico do canal.</p>
 </section>
 
 <section class="section-box">
-  <h2>CSMA/CD</h2>
-  <p><strong>Carrier Sense Multiple Access with Collision Detection</strong></p>
+  <h2>1. ALOHA</h2>
 
-  <h3>2. Base das Redes Ethernet Clássicas</h3>
-  <p>O CSMA/CD foca na detecção de colisões durante a transmissão.</p>
+  <h3>Origem Histórica</h3>
+  <p>O ALOHA foi desenvolvido na <strong>Universidade do Havaí</strong> no início da década de 1970 por <strong>Norman Abramson</strong>. O sistema foi criado para conectar ilhas havaianas via rádio, permitindo que computadores em campus separados geograficamente se comunicassem por um canal de rádio compartilhado — um dos primeiros exemplos práticos de rede sem fio.</p>
+
+  <h3>ALOHA Original (Puro)</h3>
+  <p>As estações transmitem seus quadros de dados a qualquer momento, de maneira arbitrária. Se dois quadros tentam ocupar o canal de forma simultânea, ocorre uma <strong>colisão</strong> que destrói ambos, exigindo que sejam retransmitidos posteriormente.</p>
+  <p><strong>Eficiência:</strong> O throughput normalizado máximo é de <strong>$G = 0,5$</strong>, resultando em uma eficiência de <strong>$S = 1/(2e) \approx 18,4\%$</strong> do canal.</p>
+
+  <h3>ALOHA Segmentado (Slotted ALOHA)</h3>
+  <p>Divide o tempo em intervalos discretos chamados <em>slots</em>. As estações são obrigadas a iniciar suas transmissões estritamente no início de um slot. Essa sincronização reduz a probabilidade de colisões pela metade, aumentando a eficiência máxima do canal para <strong>$1/e \approx 36,8\%$</strong>.</p>
+</section>
+
+<section class="section-box">
+  <h2>2. Protocolos com Detecção de Portadora (CSMA)</h2>
+  <p>Permitem que as estações <strong>escutem o canal antes</strong> de iniciar uma transmissão — o princípio do <em>"ouvir antes de falar"</em>. Mesmo assim, colisões ainda podem ocorrer devido ao atraso de propagação do sinal.</p>
+
+  <h3>CSMA 1-persistente</h3>
+  <ul>
+    <li>Se o canal estiver desocupado, a estação transmite com <strong>probabilidade 1</strong>.</li>
+    <li>Se estiver ocupado, ela espera continuamente até que o canal fique livre e, então, transmite imediatamente.</li>
+    <li>Se houver colisão, aguarda um intervalo de tempo aleatório e reinicia o processo.</li>
+    <li><strong>Problema:</strong> O atraso de propagação do sinal pode causar colisões se uma estação transmitir antes de o sinal de outra ter alcançado sua posição física.</li>
+  </ul>
+
+  <h3>CSMA não persistente</h3>
+  <ul>
+    <li>Tenta ser menos agressivo: se o canal estiver ocupado, a estação <strong>não fica ouvindo o tempo todo</strong>.</li>
+    <li>Em vez disso, aguarda um tempo aleatório e repete o algoritmo.</li>
+    <li>Proporciona melhor eficiência sob cargas mais altas, mas gera atrasos maiores.</li>
+  </ul>
+
+  <h3>CSMA p-persistente</h3>
+  <ul>
+    <li>Aplicado a canais segmentados (slotted).</li>
+    <li>Se o canal estiver livre, a estação transmite com probabilidade $p$ ou adia a tentativa para o próximo slot com probabilidade $q = 1 - p$.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>3. CSMA/CD — com Detecção de Colisões</h2>
+  <p><strong>Carrier Sense Multiple Access with Collision Detection</strong> — Base da <strong>Ethernet clássica (IEEE 802.3)</strong>.</p>
 
   <p><strong>Funcionamento Detalhado:</strong></p>
   <ul>
     <li><strong>Detecção de Portadora:</strong> A estação escuta o canal. Se estiver ocupado, espera; se estiver livre, transmite.</li>
     <li><strong>Transmissão e Monitoramento:</strong> Enquanto transmite, a estação continua monitorando o sinal no cabo. Se o sinal lido for diferente do sinal enviado, uma colisão foi detectada.</li>
     <li><strong>Interrupção e Jam:</strong> Ao detectar a colisão, a estação interrompe o quadro imediatamente e envia um sinal ruidoso (<em>jam signal</em>) de 48 bits para garantir que todas as outras estações percebam a colisão.</li>
-    <li><strong>Recuo (Backoff):</strong> A estação espera um tempo aleatório antes de tentar novamente, usando o algoritmo Backoff Exponencial Binário.</li>
+    <li><strong>Recuo (Backoff):</strong> A estação espera um tempo aleatório antes de tentar novamente.</li>
   </ul>
 
-  <p><strong>Backoff Exponencial Binário:</strong> Após $i$ colisões, a estação escolhe um número aleatório entre $0$ e $2^i - 1$ slots de tempo para esperar. Isso adapta a rede dinamicamente ao número de competidores: poucas colisões geram esperas curtas; muitas colisões aumentam o intervalo para evitar novos conflitos.</p>
+  <p>No pior cenário, uma estação só tem certeza de ter obtido o controle do canal após transmitir pelo período correspondente ao <strong>tempo de ida e volta do sinal ($2\tau$)</strong>. Se o quadro for muito curto, a transmissão pode acabar antes da colisão ser detectada — por isso a Ethernet exige um <strong>tamanho mínimo de quadro (64 bytes)</strong>.</p>
 
-  <div class="code-container">
-    <pre><code>Exemplo de Backoff Exponencial Binário:
-  Colisão 1: aguardar entre 0 e 1 slots  ($2^1 - 1 = 1$)
-  Colisão 2: aguardar entre 0 e 3 slots  ($2^2 - 1 = 3$)
-  Colisão 3: aguardar entre 0 e 7 slots  ($2^3 - 1 = 7$)
-  Colisão 4: aguardar entre 0 e 15 slots ($2^4 - 1 = 15$)</code></pre>
+  <h3>Backoff Exponencial Binário (BEB)</h3>
+  <p>Após $i$ colisões, a estação escolhe um número aleatório entre $0$ e $2^i - 1$ slots de tempo para esperar. Isso adapta a rede dinamicamente ao número de competidores: poucas colisões geram esperas curtas; muitas colisões aumentam o intervalo para evitar novos conflitos.</p>
+
+  <p><strong>Exemplo:</strong></p>
+  <ul>
+    <li>Colisão 1: aguardar entre 0 e 1 slots ($2^1 - 1 = 1$)</li>
+    <li>Colisão 2: aguardar entre 0 e 3 slots ($2^2 - 1 = 3$)</li>
+    <li>Colisão 3: aguardar entre 0 e 7 slots ($2^3 - 1 = 7$)</li>
+    <li>Colisão 4: aguardar entre 0 e 15 slots ($2^4 - 1 = 15$)</li>
+  </ul>
+
+  <div class="mermaid">
+    graph TD
+        A[Estação quer transmitir] --> B{Canal livre?}
+        B -->|Sim| C[Transmite e monitora]
+        B -->|Não| A
+        C --> D{Colisão detectada?}
+        D -->|Não| E[Transmissão bem-sucedida]
+        D -->|Sim| F[Interrompe e envia Jam]
+        F --> G[Espera Backoff Aleatório]
+        G --> A
+
+        style A fill:#2c3e50,stroke:#34495e,color:#fff
+        style B fill:#2980b9,stroke:#3498db,color:#fff
+        style C fill:#27ae60,stroke:#2ecc71,color:#fff
+        style D fill:#2980b9,stroke:#3498db,color:#fff
+        style E fill:#27ae60,stroke:#2ecc71,color:#fff
+        style F fill:#c0392b,stroke:#e74c3c,color:#fff
+        style G fill:#f39c12,stroke:#f1c40f,color:#000
   </div>
-
-  <p><strong>Exemplo Prático:</strong> Em um cabo de 1 km, uma colisão pode levar até $2\tau$ (tempo de ida e volta do sinal) para ser percebida por quem iniciou a transmissão. Se o quadro for muito curto, a transmissão pode acabar antes da colisão ser detectada, por isso a Ethernet exige um tamanho mínimo de quadro (64 bytes).</p>
 </section>
 
 <section class="section-box">
-  <h2>CSMA/CA</h2>
-  <p><strong>Carrier Sense Multiple Access with Collision Avoidance</strong></p>
+  <h2>4. Protocolos Livres de Colisão</h2>
+  <p>Eliminam por completo a ocorrência de colisões, mesmo durante as disputas.</p>
 
-  <h3>3. Base das Redes Sem Fio (IEEE 802.11)</h3>
-  <p>Utilizado em redes sem fio, onde a detecção de colisões no hardware é inviável, pois o sinal transmitido encobre qualquer sinal recebido no rádio (half-duplex).</p>
+  <h3>Protocolo Bit-map (Protocolo de Reserva)</h3>
+  <p>Cada período de disputa consiste em exatamente $N$ slots de 1 bit (onde $N$ é o número de estações). A estação $j$ transmite um bit 1 em seu slot correspondente para indicar que deseja enviar dados. Terminado o bit-map, as estações transmitem seus quadros em ordem numérica sem qualquer interferência.</p>
+
+  <h3>Passagem de Tokens</h3>
+  <p>Uma mensagem de controle chamada <strong>token</strong> (ou sinal) é passada de uma estação para a outra em ordem predefinida. A posse do token representa a permissão exclusiva para transmitir dados.</p>
+
+  <h3>Contagem Regressiva Binária</h3>
+  <p>As estações ativas transmitem seus endereços em formato binário (do bit mais significativo ao menos significativo) simultaneamente. O canal realiza uma operação lógica OR nos bits. Se uma estação transmitir um bit 0, mas detectar um bit 1 no canal, ela desiste da disputa naquele ciclo. A estação ativa de <strong>maior endereço binário</strong> sempre vence a disputa.</p>
+</section>
+
+<section class="section-box">
+  <h2>5. Protocolos de Disputa Limitada</h2>
+  <p>Combinam as vantagens de protocolos de disputa sob cargas leves (baixo atraso) e de protocolos livres de colisão sob cargas pesadas (alta eficiência). Dividem as estações em grupos de forma dinâmica para limitar o número de concorrentes por slot.</p>
+
+  <h3>Protocolo Adaptativo Tree-Walk (Caminho em Árvore)</h3>
+  <p>Organiza as estações como folhas de uma árvore binária.</p>
+  <ul>
+    <li>Sob carga leve, todas disputam juntas no mesmo slot.</li>
+    <li>Se houver colisão, a árvore é dividida em ramos: apenas as estações da <strong>metade esquerda</strong> (nó esquerdo) disputam o slot seguinte.</li>
+    <li>Se essa busca resultar em canal livre ou transmissão bem-sucedida, passa-se para o exame recursivo do <strong>nó direito</strong>, podando a busca nos ramos sem estações ativas.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>6. Protocolos de LANs Sem Fio</h2>
+  <p>As redes sem fio operam em <strong>half-duplex</strong> e não conseguem detectar colisões diretamente enquanto transmitem, pois o sinal enviado sobressai-se à recepção no rádio. Por isso, dependem de confirmações (ACKs) para validar o recebimento de dados.</p>
+
+  <h3>Problema do Terminal Oculto</h3>
+  <p>Ocorre quando uma estação C quer enviar dados a B, mas não consegue ouvir que a estação A já está transmitindo para B por estar fora de seu alcance de rádio, provocando <strong>colisões destrutivas no receptor</strong>.</p>
+
+  <h3>Problema do Terminal Exposto</h3>
+  <p>Ocorre quando uma estação C ouve a transmissão de B para A e conclui incorretamente que não pode enviar dados para D, <strong>desperdiçando recursos de banda</strong>.</p>
+
+  <h3>MACA (Multiple Access with Collision Avoidance)</h3>
+  <p>Utiliza pacotes curtos de sinalização para que o transmissor estimule o receptor a liberar o canal antes de iniciar o envio:</p>
+  <ul>
+    <li>O transmissor envia um quadro <strong>RTS (Request to Send)</strong>.</li>
+    <li>O receptor responde com um <strong>CTS (Clear to Send)</strong>.</li>
+    <li>Estações próximas ao transmissor ouvem o RTS e calam-se até o retorno do CTS.</li>
+    <li>Estações próximas ao receptor ouvem o CTS e mantêm-se em silêncio durante o envio subsequente do quadro de dados principal, eliminando conflitos perto do destino.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>7. CSMA/CA — Base do Wi-Fi (IEEE 802.11)</h2>
+  <p><strong>Carrier Sense Multiple Access with Collision Avoidance</strong> — o protocolo real implementado no padrão IEEE 802.11. O MACA, descrito acima, é um precursor conceitual; o CSMA/CA é a implementação padronizada com mecanismos adicionais.</p>
 
   <p><strong>Funcionamento Detalhado:</strong></p>
   <ul>
     <li><strong>Prevenção Ativa:</strong> Diferente do Ethernet, o Wi-Fi inicia um recuo aleatório antes de transmitir se o canal estiver ocupado, reduzindo a chance de colisões simultâneas quando o canal for liberado.</li>
     <li><strong>Confirmações (ACKs):</strong> Como colisões não são detectadas no ar, o transmissor assume que houve sucesso apenas se receber um quadro ACK imediato do destino. Se não receber, dobra o tempo de recuo e retransmite.</li>
-    <li><strong>NAV (Vetor de Alocação de Rede):</strong> Um mecanismo de detecção virtual. Cada quadro contém um campo NAV que informa por quanto tempo o canal estará ocupado (incluindo o tempo para o ACK final). Outras estações "ajustam seus cronômetros" internos e ficam em silêncio durante esse período.</li>
+    <li><strong>NAV (Vetor de Alocação de Rede):</strong> Mecanismo de detecção virtual. Cada quadro contém um campo NAV que informa por quanto tempo o canal estará ocupado (incluindo o tempo para o ACK final). Outras estações ajustam seus cronômetros internos e ficam em silêncio durante esse período.</li>
   </ul>
 
-  <p><strong>Mecanismo RTS/CTS (Opcional):</strong></p>
-  <p>Para resolver o problema do terminal oculto (quando A e C não se ouvem, mas ambos interferem em B), o transmissor envia um <em>Request to Send</em> (RTS) e o receptor responde com um <em>Clear to Send</em> (CTS). Qualquer estação que ouça o CTS sabe que deve ficar em silêncio, pois há uma recepção em andamento nas proximidades.</p>
+  <p><strong>Mecanismo RTS/CTS (Opcional):</strong> Para resolver o problema do terminal oculto, o transmissor envia um RTS e o receptor responde com um CTS. Qualquer estação que ouça o CTS sabe que deve ficar em silêncio, pois há uma recepção em andamento nas proximidades. Em redes domésticas, o RTS/CTS é geralmente <strong>desativado</strong> por aumentar o overhead.</p>
+
+  <h3>Backoff Exponencial Binário no Wi-Fi</h3>
+  <p>O mesmo mecanismo BEB do CSMA/CD é utilizado no CSMA/CA: após cada falha (timeout sem ACK), a estação dobra o tamanho da janela de backoff, adaptando-se à contention da rede.</p>
+
+  <div class="mermaid">
+    graph TD
+        A[Estação quer transmitir] --> B{Canal livre?}
+        B -->|Sim| C[Aguarda DIFS + Backoff]
+        B -->|Não| D[Lê NAV e espera]
+        C --> E[Envia RTS]
+        E --> F{Recebeu CTS?}
+        F -->|Sim| G[Transmite dados]
+        F -->|Não| H[Dobra Backoff e tenta]
+        G --> I{Recebeu ACK?}
+        I -->|Sim| J[Transmissão confirmada]
+        I -->|Não| H
+        H --> A
+        D --> A
+
+        style A fill:#2c3e50,stroke:#34495e,color:#fff
+        style B fill:#2980b9,stroke:#3498db,color:#fff
+        style C fill:#8e44ad,stroke:#9b59b6,color:#fff
+        style D fill:#f39c12,stroke:#f1c40f,color:#000
+        style E fill:#2980b9,stroke:#3498db,color:#fff
+        style F fill:#2980b9,stroke:#3498db,color:#fff
+        style G fill:#27ae60,stroke:#2ecc71,color:#fff
+        style H fill:#c0392b,stroke:#e74c3c,color:#fff
+        style I fill:#2980b9,stroke:#3498db,color:#fff
+        style J fill:#27ae60,stroke:#2ecc71,color:#fff
+  </div>
 </section>
 
 <section class="section-box">
@@ -70,6 +202,11 @@ tags:
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td><strong>Padrão</strong></td>
+        <td>IEEE 802.3 (Ethernet)</td>
+        <td>IEEE 802.11 (Wi-Fi)</td>
+      </tr>
       <tr>
         <td><strong>Ação na Colisão</strong></td>
         <td>Detecta e interrompe a transmissão.</td>
@@ -99,75 +236,27 @@ tags:
   </table>
 </section>
 
-<section class="section-box">
-  <h2>Representação Gráfica</h2>
-
-  <p><strong>Fluxo CSMA/CD (Ethernet):</strong></p>
-  <div class="mermaid">
-    graph TD
-        A[Estação quer transmitir] --> B{Canal livre?}
-        B -->|Sim| C[Transmite e monitora]
-        B -->|Não| A
-        C --> D{Colisão detectada?}
-        D -->|Não| E[Transmissão bem-sucedida]
-        D -->|Sim| F[Interrompe e envia Jam]
-        F --> G[Espera Backoff Aleatório]
-        G --> A
-
-        style A fill:#2c3e50,stroke:#34495e,color:#fff
-        style B fill:#2980b9,stroke:#3498db,color:#fff
-        style C fill:#27ae60,stroke:#2ecc71,color:#fff
-        style D fill:#2980b9,stroke:#3498db,color:#fff
-        style E fill:#27ae60,stroke:#2ecc71,color:#fff
-        style F fill:#c0392b,stroke:#e74c3c,color:#fff
-        style G fill:#f39c12,stroke:#f1c40f,color:#000
-  </div>
-
-  <p><strong>Fluxo CSMA/CA (Wi-Fi):</strong></p>
-  <div class="mermaid">
-    graph TD
-        A[Estação quer transmitir] --> B{Canal livre?}
-        B -->|Sim| C[Aguarda DIFS + Backoff]
-        B -->|Não| D[Lê NAV e espera]
-        C --> E[Envia RTS]
-        E --> F{Recebeu CTS?}
-        F -->|Sim| G[Transmite dados]
-        F -->|Não| H[Dobra Backoff e tenta]
-        G --> I{Recebeu ACK?}
-        I -->|Sim| J[Transmissão confirmada]
-        I -->|Não| H
-        H --> A
-        D --> A
-
-        style A fill:#2c3e50,stroke:#34495e,color:#fff
-        style B fill:#2980b9,stroke:#3498db,color:#fff
-        style C fill:#8e44ad,stroke:#9b59b6,color:#fff
-        style D fill:#f39c12,stroke:#f1c40f,color:#000
-        style E fill:#2980b9,stroke:#3498db,color:#fff
-        style F fill:#2980b9,stroke:#3498db,color:#fff
-        style G fill:#27ae60,stroke:#2ecc71,color:#fff
-        style H fill:#c0392b,stroke:#e74c3c,color:#fff
-        style I fill:#2980b9,stroke:#3498db,color:#fff
-        style J fill:#27ae60,stroke:#2ecc71,color:#fff
-  </div>
-</section>
-
 <div class="tip-box">
   <h4>Dicas & Lembretes</h4>
   <ul>
-    <li><strong>CSMA/CD:</strong> "Ouça antes de falar, e se alguém falar ao mesmo tempo, pare e tente de novo."</li>
-    <li><strong>CSMA/CA:</strong> "Antes de falar, avise que vai falar e espere confirmação."</li>
-    <li>O CSMA/CD está obsoleto em redes modernas porque switches eliminam colisões, mas ainda é o fundamento teórico do Ethernet.</li>
-    <li>O CSMA/CA é essencial para entender o comportamento do Wi-Fi e por que ele pode ser instável em ambientes com muitos dispositivos.</li>
+    <li><strong>ALOHA:</strong> Puro = transmite a qualquer momento (18,4%). Slotted = sincroniza em slots (36,8%). Foi criado para conectar ilhas havaianas via rádio.</li>
+    <li><strong>CSMA 1-persistente:</strong> "Ouça, e se livre, fale já. Se ocupado, fique ouvindo e fale assim que puder."</li>
+    <li><strong>CSMA/CD:</strong> "Ouça antes de falar, e se alguém falar ao mesmo tempo, pare e tente de novo." Backoff: $0$ a $2^i - 1$.</li>
+    <li><strong>CSMA/CA:</strong> "Antes de falar, avise que vai falar e espere confirmação." Usa NAV para detecção virtual.</li>
+    <li>O CSMA/CD está obsoleto em redes modernas porque switches eliminam colisões (domínios de colisão individuais), mas é o fundamento teórico do Ethernet (IEEE 802.3).</li>
+    <li>O CSMA/CA é essencial para entender o comportamento do Wi-Fi (IEEE 802.11) e por que ele pode ser instável em ambientes com muitos dispositivos.</li>
     <li>O mecanismo RTS/CTS é opcional e geralmente desativado em redes domésticas por aumentar o overhead.</li>
+    <li><strong>Throughput normalizado (S):</strong> representa a fração do canal efetivamente utilizada com sucesso. Varia de 0 a 1. ALOHA puro atinge $S \approx 0,184$; Slotted ALOHA, $S \approx 0,368$.</li>
   </ul>
 </div>
 
 <section class="section-box">
   <h2>Exemplos Práticos de Aplicação</h2>
   <ul>
-    <li><strong>Cenário 1 (CSMA/CD):</strong> Dois computadores em um hub Ethernet tentam enviar arquivos ao mesmo tempo. Eles detectam o aumento de tensão no cabo, param, enviam o sinal de jam e cada um escolhe um tempo aleatório diferente para re-tentar.</li>
-    <li><strong>Cenário 2 (CSMA/CA):</strong> Um smartphone (A) quer enviar dados ao roteador (B), mas um tablet (C) está enviando um vídeo. O smartphone (A) lê o campo NAV no cabeçalho do pacote do tablet, percebe que o canal estará ocupado por mais 500ms e entra em modo de espera antes mesmo de tentar transmitir.</li>
+    <li><strong>Cenário 1 (ALOHA):</strong> Duas estações havaianas tentam enviar dados simultaneamente via rádio. Os quadros colidem no ar e ambos devem retransmitir após um tempo aleatório.</li>
+    <li><strong>Cenário 2 (CSMA/CD):</strong> Dois computadores em um hub Ethernet tentam enviar arquivos ao mesmo tempo. Eles detectam o aumento de tensão no cabo, param, enviam o sinal de jam e cada um escolhe um tempo aleatório diferente para re-tentar.</li>
+    <li><strong>Cenário 3 (CSMA/CA):</strong> Um smartphone (A) quer enviar dados ao roteador (B), mas um tablet (C) está enviando um vídeo. O smartphone (A) lê o campo NAV no cabeçalho do pacote do tablet, percebe que o canal estará ocupado por mais 500ms e entra em modo de espera antes mesmo de tentar transmitir.</li>
+    <li><strong>Cenário 4 (Terminal Oculto):</strong> Estações A e C estão fora do alcance de rádio uma da outra, mas ambas enviam dados para B. Suas transmissões colidem no receptor B, sem que A e C saibam.</li>
   </ul>
 </section>
 
@@ -175,7 +264,7 @@ tags:
   <h2>Referências</h2>
   <ul>
     <li>IEEE. <em>IEEE Standard for Ethernet</em>. IEEE Std 802.3-2022.</li>
-    <li>IEEE. <em>IEEE Standard for Information Technology — Telecommunications and Information Exchange between Systems — Local and Metropolitan Area Networks</em>. IEEE Std 802.11-2020.</li>
+    <li>IEEE. <em>IEEE Standard for Information Technology — Telecommunications and Information Exchange between Systems — Local and Metropolitan Area Networks — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications</em>. IEEE Std 802.11-2020.</li>
     <li>TANENBAUM, Andrew S.; WETHERALL, David J. <em>Computer Networks</em>. 5th ed. Pearson, 2011. Cap. 4.</li>
     <li>STALLINGS, William. <em>Data and Computer Communications</em>. 10th ed. Pearson, 2014. Cap. 13.</li>
   </ul>

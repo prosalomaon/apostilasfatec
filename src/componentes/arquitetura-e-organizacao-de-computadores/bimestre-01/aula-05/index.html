@@ -5,8 +5,242 @@ description: "Estudo de multiplexadores, decodificadores, flip-flops e contadore
 tags:
   - aula
 ---
-<!-- TODO: Adicionar conteúdo para este encontro -->
+
 <section class="section-box">
   <h2>Teoria & Conceitos</h2>
-  <p>Conteúdo em construção.</p>
+  <p>A arquitetura de computadores é construída sobre dois pilares fundamentais de circuitos lógicos digitais: os <strong>circuitos combinacionais</strong> e os <strong>circuitos sequenciais</strong>. Este encontro detalha o funcionamento, as diferenças estruturais e a aplicação prática dos blocos construtivos mais importantes de cada categoria.</p>
+</section>
+
+<section class="section-box">
+  <h2>1. A Divisão Fundamental: Combinacional vs. Sequencial</h2>
+
+  <h3>Circuitos Combinacionais</h3>
+  <p>Consistem em um conjunto de portas lógicas interconectadas cuja saída, em qualquer instante de tempo, depende <strong>exclusivamente</strong> dos valores aplicados às entradas nesse mesmo instante. Eles <strong>não possuem memória ou estado interno</strong>. A saída é atualizada após um atraso físico de propagação das portas lógicas.</p>
+  <p><strong>Exemplos:</strong> Multiplexadores, decodificadores, somadores e portas lógicas básicas.</p>
+
+  <h3>Circuitos Sequenciais</h3>
+  <p>São circuitos cuja saída atual depende <strong>não apenas das entradas atuais, mas também do histórico de entradas anteriores</strong>. Em outras palavras, eles possuem <strong>memória</strong> e um <strong>estado interno</strong>. Eles utilizam elementos de realimentação onde as saídas são conectadas de volta às entradas por meio de dispositivos de armazenamento.</p>
+  <p><strong>Exemplos:</strong> Flip-flops, registradores, contadores e memórias RAM.</p>
+</section>
+
+<section class="section-box">
+  <h2>2. Estudo de Circuitos Combinacionais</h2>
+
+  <h3>A. Multiplexadores (MUX)</h3>
+  <p>O multiplexador é um circuito combinacional que atua como uma <strong>chave seletora de dados multidirecional</strong>. Ele conecta múltiplas linhas de entrada a uma única linha de saída. A seleção de qual entrada será transmitida para a saída é ditada por um conjunto de linhas de seleção (ou controle).</p>
+
+  <h4>A Regra da Proporção</h4>
+  <p>Para selecionar uma entre $2^n$ entradas de dados, são necessárias exatamente <strong>$n$ linhas de seleção</strong>:</p>
+  <ul>
+    <li><strong>MUX 2 para 1:</strong> 2 entradas de dados, 1 linha de seleção ($2^1 = 2$).</li>
+    <li><strong>MUX 4 para 1:</strong> 4 entradas de dados ($D_0$ a $D_3$), 2 linhas de seleção ($S_1, S_2$).</li>
+    <li><strong>MUX 8 para 1:</strong> 8 entradas de dados, 3 linhas de seleção ($2^3 = 8$).</li>
+  </ul>
+
+  <h4>Exemplo Detalhado: MUX 4 para 1</h4>
+  <p>O MUX 4 para 1 possui quatro entradas de dados ($D_0, D_1, D_2, D_3$), duas entradas de seleção ($S_2, S_1$) e uma saída $F$.</p>
+
+  <p><strong>Tabela Verdade Resumida:</strong></p>
+  <table>
+    <thead>
+      <tr><th>$S_2$</th><th>$S_1$</th><th>Saída $F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>$D_0$</td></tr>
+      <tr><td>0</td><td>1</td><td>$D_1$</td></tr>
+      <tr><td>1</td><td>0</td><td>$D_2$</td></tr>
+      <tr><td>1</td><td>1</td><td>$D_3$</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Equação Booleana Canônica:</strong></p>
+  <p>$$F = \bar{S_2}\bar{S_1}D_0 + \bar{S_2}S_1D_1 + S_2\bar{S_1}D_2 + S_2S_1D_3$$</p>
+
+  <p><strong>Implementação Física:</strong> O circuito é montado utilizando quatro portas AND (uma para cada termo de produto) conectadas a uma porta OR de quatro entradas. As linhas de seleção são conectadas diretamente ou invertidas (via NOT) às portas AND de modo que, para qualquer combinação de $S_2$ e $S_1$, três das portas AND produzirão saída lógica 0, enquanto a quarta porta AND repassará o valor exato da entrada de dados correspondente ($D_x$).</p>
+
+  <div class="mermaid">
+    graph TD
+        subgraph MUX 4:1
+            SEL[S1 S2]
+            D0["D0"] --> AND0[("AND 0")]
+            D1["D1"] --> AND1[("AND 1")]
+            D2["D2"] --> AND2[("AND 2")]
+            D3["D3"] --> AND3[("AND 3")]
+            AND0 --> OR[("OR 4 entradas")]
+            AND1 --> OR
+            AND2 --> OR
+            AND3 --> OR
+            OR --> F[Saída F]
+        end
+  </div>
+
+  <div class="tip-box">
+    <h4>Aplicação Prática no Processador</h4>
+    <p>O <strong>Contador de Programa (PC)</strong> de uma CPU precisa ser atualizado a partir de diferentes origens de dados. Um multiplexador é usado para selecionar qual valor carregar no PC no final de um ciclo:</p>
+    <ul>
+      <li>A saída de um contador incremental (para a próxima instrução sequencial).</li>
+      <li>O campo de endereço do Registrador de Instruções (IR) (para desvios/saltos diretos).</li>
+      <li>A saída da Unidade Lógica e Aritmética (ALU) (para desvios calculados por modos de deslocamento).</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>B. Decodificadores</h2>
+  <p>Um decodificador é um circuito combinacional com <strong>$n$ linhas de entrada e $2^n$ linhas de saída</strong>. Sua função é ativar exclusivamente uma única linha de saída de cada vez, baseando-se no padrão binário apresentado em suas entradas.</p>
+
+  <h4>Exemplo Detalhado: Decodificador de 3 para 8 ($3 \times 8$)</h4>
+  <p>Possui 3 entradas ($A, B, C$) e 8 saídas ($D_0$ a $D_7$). Se a entrada for $011_2$ (3 em decimal), apenas a saída $D_3$ será forçada para o estado lógico alto (1), enquanto todas as outras saídas permanecerão em 0.</p>
+
+  <h4>Aplicações Práticas Cruciais na CPU</h4>
+  <p><strong>Decodificação de Instruções (Opcodes):</strong> Quando a CPU busca uma instrução, o código de operação (opcode) é enviado ao decodificador da Unidade de Controle. O decodificador ativa uma única linha de saída que dispara a sequência de micro-operações e sinais de controle físicos específicos daquela instrução (como somar, ler ou desviar).</p>
+
+  <p><strong>Mapeamento de Memória (Memory Mapping):</strong> Suponha que desejamos construir um bloco de memória unificada de 1 kB utilizando quatro chips de RAM de 256 bytes cada.</p>
+  <ul>
+    <li>Cada chip de 256 bytes necessita de 8 linhas de endereço físicas ($2^8 = 256$).</li>
+    <li>Para gerenciar o espaço total de 1 kB, necessitamos de 10 linhas de endereço ($2^{10} = 1024$).</li>
+  </ul>
+
+  <p><strong>A Solução:</strong> Os 8 bits de menor ordem do endereço são ligados em paralelo aos quatro chips. Os 2 bits de maior ordem são conectados às entradas de um decodificador de 2 para 4. Cada uma das quatro saídas do decodificador é ligada ao pino de habilitação (Chip Select ou Enable) de um chip de RAM. Assim, a CPU ativa eletronicamente apenas o chip correto para leitura ou escrita com base no endereço de memória de 10 bits.</p>
+
+  <div class="mermaid">
+    graph TD
+        END[Endereço de 10 bits A9-A0] --> DEC[Decodificador 2:4]
+        DEC -->|CS 0| R0[RAM 0]
+        DEC -->|CS 1| R1[RAM 1]
+        DEC -->|CS 2| R2[RAM 2]
+        DEC -->|CS 3| R3[RAM 3]
+        END ---|A7-A0 compartilhados| R0
+        END ---|A7-A0 compartilhados| R1
+        END ---|A7-A0 compartilhados| R2
+        END ---|A7-A0 compartilhados| R3
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>3. Estudo de Circuitos Sequenciais</h2>
+
+  <h3>A. Flip-Flops</h3>
+  <p>O flip-flop (ou latch) é a <strong>menor unidade de armazenamento digital</strong>, capaz de reter 1 bit de informação (0 ou 1) por tempo indeterminado até que uma nova entrada altere seu estado.</p>
+
+  <h4>1. Latch S-R (Set-Reset) Assíncrono</h4>
+  <p>Construído com duas portas NOR interconectadas em malha fechada (realimentação). Possui duas entradas, $S$ (Set) e $R$ (Reset), e duas saídas complementares, $Q$ e $\bar{Q}$.</p>
+
+  <table>
+    <thead>
+      <tr><th>$S$</th><th>$R$</th><th>Próximo Estado $Q_{n+1}$</th><th>Descrição</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>$Q_n$</td><td>Memorização (Retém o estado anterior)</td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td>Reset (Limpa a saída)</td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td>Set (Escreve "1" lógico)</td></tr>
+      <tr><td>1</td><td>1</td><td>Proibido</td><td>Indeterminado (saídas $Q$ e $\bar{Q}$ tentam ir a 0)</td></tr>
+    </tbody>
+  </table>
+
+  <h4>2. Flip-Flop D (Data / Delay)</h4>
+  <p>Para evitar o estado proibido ($S=1, R=1$), o flip-flop D utiliza um circuito inversor (NOT) entre as linhas de controle de entrada. Ele possui uma única entrada de dados ($D$) e uma entrada de clock ($Ck$).</p>
+  <p><strong>Funcionamento:</strong> Quando o pulso de clock ocorre, o valor presente na entrada $D$ é transferido diretamente para a saída $Q$ ($Q_{n+1} = D$). Ele serve como um atrasador de sinal e elemento estável de armazenamento. É a base para a construção de registradores paralelos de CPU (onde vários FFs D são atualizados simultaneamente por um sinal comum de load).</p>
+
+  <h4>3. Flip-Flop J-K</h4>
+  <p>É o flip-flop mais versátil. Suas três primeiras linhas de operação são idênticas ao Latch S-R, mas ele resolve o estado proibido introduzindo a função de <strong>chaveamento (toggle)</strong>.</p>
+  <p>Se $J=1$ e $K=1$: A saída é invertida a cada pulso de clock ($Q_{n+1} = \bar{Q_n}$). Isso o torna o elemento ideal para a construção de contadores e divisores de frequência.</p>
+
+  <p><strong>Símbolos Gráficos dos Flip-Flops Fundamentais:</strong></p>
+
+  <div class="mermaid">
+    graph LR
+        subgraph Latch SR
+            S1[S] --> SR
+            R1[R] --> SR
+            SR -->|Q| Q1[Q]
+            SR -->|Q barrado| Qb1[Q]
+        end
+        subgraph Flip-Flop D
+            D1[D] --> FD
+            CK1[Ck] --> FD
+            FD -->|Q| Q2[Q]
+            FD -->|Q barrado| Qb2[Q]
+        end
+        subgraph Flip-Flop JK
+            J1[J] --> FJK
+            CK2[Ck] --> FJK
+            K1[K] --> FJK
+            FJK -->|Q| Q3[Q]
+            FJK -->|Q barrado| Qb3[Q]
+        end
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>B. Contadores</h2>
+  <p>Um contador é um circuito sequencial projetado como um registrador cujos estados transitam por uma sequência numérica predeterminada (geralmente binária pura ou código Gray) a cada pulso de clock. Eles são compostos por flip-flops cascateados.</p>
+
+  <h3>1. Contadores Assíncronos (de Propagação / Ripple Counters)</h3>
+  <p><strong>Funcionamento:</strong> O sinal de clock externo é conectado apenas ao primeiro flip-flop (geralmente o bit menos significativo, $Q_0$). A saída de cada estágio serve como sinal de clock para o flip-flop subsequente.</p>
+
+  <div class="tip-box">
+    <h4>Analogia Física</h4>
+    <p>Pense em um <strong>efeito dominó</strong>: o clock derruba o primeiro dominó, que por sua vez empurra o segundo, e assim por diante.</p>
+  </div>
+
+  <p><strong>Desvantagem Crítica:</strong> Cada flip-flop introduz um pequeno atraso elétrico de porta (propagation delay). Em contadores longos (por exemplo, de 32 bits), o tempo acumulado para que o último bit seja atualizado é tão alto que pode fazer o circuito operar de forma instável ou limitar drasticamente a velocidade máxima de clock do sistema.</p>
+
+  <h3>2. Contadores Síncronos (O Padrão de Alto Desempenho)</h3>
+  <p><strong>Funcionamento:</strong> Todos os flip-flops no contador compartilham o <strong>mesmo sinal de clock simultaneamente</strong>.</p>
+  <p><strong>A Lógica de Projeto:</strong> Para que eles mudem de estado de forma coordenada sem propagação em cascata, utiliza-se lógica combinacional prévia (portas AND e OR) conectada às entradas de controle ($J$ e $K$ ou $D$) de cada estágio, baseando-se nas tabelas de excitação.</p>
+  <p><strong>Vantagem:</strong> Todas as transições de bits ocorrem exatamente no mesmo instante de tempo (sincronizadas pela borda do clock), permitindo frequências de operação altíssimas (GigaHertz) nas CPUs modernas.</p>
+</section>
+
+<section class="section-box">
+  <h2>4. Exercício Prático / Estudo de Caso para a Aula</h2>
+  <p><strong>Proposta:</strong> Analisar o circuito de um <strong>Contador Síncrono de 3 bits com Flip-Flops J-K</strong>.</p>
+  <ul>
+    <li>Mostre aos alunos como montar a tabela verdade de transição de estados ($CBA \rightarrow C_{n+1}B_{n+1}A_{n+1}$).</li>
+    <li>Aplique as tabelas de excitação do FF J-K para determinar as entradas necessárias para cada um dos 3 flip-flops.</li>
+    <li>Utilize Mapas de Karnaugh para deduzir as equações das entradas de controle.</li>
+  </ul>
+
+  <h4>Equações de Excitação Resultantes</h4>
+  <ul>
+    <li>$J_A = K_A = 1$</li>
+    <li>$J_B = K_B = A$</li>
+    <li>$J_C = K_C = A \cdot B$</li>
+  </ul>
+</section>
+
+<div class="tip-box">
+  <h4>Dicas & Lembretes</h4>
+  <ul>
+    <li><strong>Combinacional:</strong> Saída depende apenas das entradas atuais — <em>sem memória</em>.</li>
+    <li><strong>Sequencial:</strong> Saída depende das entradas atuais + histórico — <em>com memória/estado</em>.</li>
+    <li><strong>MUX:</strong> $2^n$ entradas de dados precisam de $n$ linhas de seleção.</li>
+    <li><strong>Decodificador:</strong> $n$ entradas geram $2^n$ saídas, ativando apenas uma por vez.</li>
+    <li><strong>Latch S-R:</strong> Por <strong>NOR</strong>, a combinação $S=R=1$ é um estado proibido.</li>
+    <li><strong>FF D:</strong> $Q_{n+1} = D$ — ideal para registradores paralelos com sinal de load.</li>
+    <li><strong>FF J-K:</strong> Com $J=K=1$ faz <strong>toggle</strong> — base dos contadores.</li>
+    <li><strong>Contador síncrono:</strong> Todos os FFs compartilham o clock (alto desempenho, GHz).</li>
+    <li><strong>Contador assíncrono (ripple):</strong> Clock em cascata — atrasa e limita a frequência.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Como Aplicar na Prática</h2>
+  <ul>
+    <li><strong>Unidade de Controle:</strong> Decodificadores traduzem opcodes em sinais de controle das micro-operações.</li>
+    <li><strong>Atualização do PC:</strong> Multiplexadores selecionam a próxima instrução (sequencial, desvio ou ALU).</li>
+    <li><strong>Registradores da CPU:</strong> Bancos de flip-flops D atualizados em paralelo por um sinal comum de load.</li>
+    <li><strong>Mapeamento de memória:</strong> Decodificadores 2:4 habilitam o chip de RAM correto via Chip Select.</li>
+    <li><strong>Divisão de frequência e timers:</strong> Contadores síncronos baseados em flip-flops J-K em modo toggle.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>MANO, M. Morris; CILETTI, Michael D. <em>Digital Design</em>. 5th ed. Pearson, 2013. Caps. 4 e 5.</li>
+    <li>HARRIS, Sarah L.; HARRIS, David Money. <em>Digital Design and Computer Architecture</em>. 2nd ed. Morgan Kaufmann, 2012. Cap. 3.</li>
+    <li>TANENBAUM, Andrew S. <em>Structured Computer Organization</em>. 6th ed. Pearson, 2012. Cap. 2.</li>
+    <li>PATTERSON, David A.; HENNESSY, John L. <em>Computer Organization and Design</em>. 5th ed. Morgan Kaufmann, 2013.</li>
+  </ul>
 </section>

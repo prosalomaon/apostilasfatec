@@ -1,12 +1,275 @@
 ---
 title: "Fundamentos de Lógica Digital"
 aula_numero: "04"
-description: "Álgebra booleana, portas lógicas e simplificação de circuitos com mapas de Karnaugh."
+description: "Álgebra booleana, portas lógicas, circuitos combinacionais e simplificação com mapas de Karnaugh."
 tags:
   - aula
 ---
-<!-- TODO: Adicionar conteúdo para este encontro -->
+
 <section class="section-box">
   <h2>Teoria & Conceitos</h2>
-  <p>Conteúdo em construção.</p>
+
+  <h3>1. Álgebra Booleana: O Fundamento Matemático</h3>
+  <p>A operação de qualquer computador digital moderno é baseada no armazenamento e no processamento de dados binários. Para compreender como o hardware realiza essas funções, é necessário estudar a matemática por trás dos circuitos digitais e como as portas físicas realizam esses cálculos.</p>
+  <p>A matemática que analisa e projeta circuitos digitais é a <strong>Álgebra Booleana</strong>, proposta originalmente pelo matemático <strong>George Boole em 1854</strong> e adaptada em <strong>1938 por Claude Shannon</strong> para resolver problemas de projetos de circuitos com comutadores. Ela serve como ferramenta indispensável em duas frentes:</p>
+  <ul>
+    <li><strong>Análise:</strong> Descreve de forma matemática e econômica o comportamento e a função de um circuito digital.</li>
+    <li><strong>Projeto:</strong> Permite simplificar uma função lógica para encontrar a implementação de circuito mais barata e eficiente possível.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Variáveis e Operações Fundamentais</h2>
+  <p>Ao contrário da álgebra tradicional, as variáveis booleanas assumem apenas <strong>dois estados lógicos</strong>: <strong>1</strong> (verdadeiro) ou <strong>0</strong> (falso). As três operações lógicas básicas são:</p>
+
+  <h3>AND (E)</h3>
+  <p>Representada por um ponto ($\cdot$) ou concatenação ($AB$). A saída é 1 <strong>se e somente se</strong> todas as variáveis de entrada forem 1.</p>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$A \cdot B$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>OR (OU)</h3>
+  <p>Representada pelo sinal de adição ($A + B$). A saída é 1 se <strong>pelo menos um</strong> dos operandos de entrada for 1.</p>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$A + B$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>NOT (NÃO / Inversão)</h3>
+  <p>Representada por uma barra ou apóstrofo ($\bar{A}$ ou $A'$). É uma operação unária que inverte o valor de entrada: se $A = 0$, então $\bar{A} = 1$.</p>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$\bar{A}$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td><strong>0</strong></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section-box">
+  <h2>Operadores Adicionais Úteis</h2>
+
+  <h3>XOR (OU Exclusivo — $\oplus$)</h3>
+  <p>Produz saída 1 se <strong>exatamente um</strong> dos dois operandos for 1. Caso haja mais entradas, a saída é 1 se o conjunto de entradas contiver um número <strong>ímpar</strong> de uns.</p>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$A \oplus B$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td><strong>0</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>NAND</h3>
+  <p>É o complemento direto da operação AND: $\overline{A \cdot B}$. Considerada uma porta <strong>universal</strong> — qualquer função booleana pode ser implementada apenas com portas NAND.</p>
+
+  <h3>NOR</h3>
+  <p>É o complemento direto da operação OR: $\overline{A + B}$. Também é uma porta <strong>universal</strong>.</p>
+</section>
+
+<section class="section-box">
+  <h2>Identidades e Teoremas Fundamentais</h2>
+  <p>A Álgebra Booleana conta com leis essenciais para simplificar expressões. As relações de AND e OR apresentam propriedades duais:</p>
+
+  <table>
+    <thead>
+      <tr><th>Propriedade</th><th>AND ($\cdot$)</th><th>OR ($+$)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Comutativa</strong></td><td>$A \cdot B = B \cdot A$</td><td>$A + B = B + A$</td></tr>
+      <tr><td><strong>Associativa</strong></td><td>$A(BC) = (AB)C$</td><td>$A + (B + C) = (A + B) + C$</td></tr>
+      <tr><td><strong>Identidade</strong></td><td>$1 \cdot A = A$</td><td>$0 + A = A$</td></tr>
+      <tr><td><strong>Inversão</strong></td><td>$A \cdot \bar{A} = 0$</td><td>$A + \bar{A} = 1$</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Distributiva</h3>
+  <ul>
+    <li>$A \cdot (B + C) = (A \cdot B) + (A \cdot C)$ — equivalente à álgebra comum.</li>
+    <li>$A + (B \cdot C) = (A + B) \cdot (A + C)$ — <strong>importante:</strong> esta lei <strong>não possui equivalente</strong> na álgebra matemática comum e é muito útil para simplificação.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Teoremas de DeMorgan</h2>
+  <p>Os teoremas de DeMorgan são cruciais para converter a lógica de um circuito. Eles estabelecem que:</p>
+  <ul>
+    <li>O complemento de um <strong>produto</strong> é igual à <strong>soma dos complementos</strong>: $\overline{A \cdot B} = \bar{A} + \bar{B}$</li>
+    <li>O complemento de uma <strong>soma</strong> é igual ao <strong>produto dos complementos</strong>: $\overline{A + B} = \bar{A} \cdot \bar{B}$</li>
+  </ul>
+
+  <div class="tip-box">
+    <h4>Memória Visual de DeMorgan</h4>
+    <p>Ao passar uma barra de negação sobre um operador, ele se inverte: <strong>AND vira OR</strong> e <strong>OR vira AND</strong>. Cada variável também ganha sua barra individual.</p>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>Portas Lógicas: Os Blocos de Construção do Hardware</h2>
+  <p>As portas lógicas são circuitos eletrônicos que realizam as funções booleanas no mundo físico. Quando os sinais de entrada mudam, o sinal de saída é atualizado quase instantaneamente, sofrendo apenas um atraso mínimo conhecido como <strong>atraso de porta (gate delay)</strong>.</p>
+
+  <p><strong>Símbolos Esquemáticos (IEEE Std 91):</strong></p>
+
+  <figure>
+      <img src="{{ '/imagens/portas_logicas.jpg' | url }}" alt="Lista de portas lógicas com seus símbolos esquemáticos e tabelas verdade correspondentes.">
+    <figcaption>Portas Lógicas</figcaption>
+  </figure>
+
+  <p><em>O pequeno círculo na saída ou entrada representa a inversão lógica.</em></p>
+</section>
+
+<section class="section-box">
+  <h2>Conjuntos Funcionalmente Completos</h2>
+  <p>Um conjunto de portas é <strong>funcionalmente completo</strong> se for possível implementar absolutamente qualquer função booleana utilizando apenas portas desse conjunto. Os conjuntos mais conhecidos são:</p>
+  <ul>
+    <li>$\{\text{AND}, \text{OR}, \text{NOT}\}$ — o conjunto clássico.</li>
+    <li>$\{\text{AND}, \text{NOT}\}$ — já que, por DeMorgan: $A + B = \overline{\bar{A} \cdot \bar{B}}$.</li>
+    <li>$\{\text{OR}, \text{NOT}\}$ — análogo ao anterior.</li>
+    <li><strong>$\{\text{NAND}\}$ apenas</strong> — porta universal.</li>
+    <li><strong>$\{\text{NOR}\}$ apenas</strong> — porta universal.</li>
+  </ul>
+
+  <p>As portas NAND e NOR são consideradas <strong>universais</strong>. Por exemplo, uma porta NAND pode funcionar como NOT (se suas entradas forem unidas), como AND (conectando uma NAND como NOT após a primeira) ou como OR. Isso confere uma grande regularidade de hardware no processo de manufatura de circuitos integrados.</p>
+
+  <div class="tip-box">
+    <h4>Por que NAND é universal?</h4>
+    <ul>
+      <li><strong>NAND como NOT:</strong> Junte as duas entradas — $\overline{A \cdot A} = \bar{A}$.</li>
+      <li><strong>NAND como AND:</strong> Aplique NOT (NAND com entradas unidas) na saída de outra NAND — $\overline{\overline{A \cdot B}} = A \cdot B$.</li>
+      <li><strong>NAND como OR:</strong> Inverta cada entrada individualmente com NAND (como NOT) e depois aplique NAND — $\overline{\bar{A} \cdot \bar{B}} = A + B$ (DeMorgan).</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>Circuitos Combinacionais e Formas de Expressão</h2>
+  <p>Um <strong>circuito combinacional</strong> consiste em uma interconexão de portas lógicas onde os valores de saída em um determinado instante dependem <strong>unicamente</strong> dos valores aplicados na entrada nesse mesmo instante. Ele pode ser representado por uma tabela verdade, símbolos gráficos de portas e equações booleanas.</p>
+  <p>Toda especificação funcional em uma tabela verdade pode ser mapeada em equações por duas abordagens canônicas fundamentais:</p>
+
+  <h3>A. Soma de Produtos (SOP — Sum of Products)</h3>
+  <p>Expressa que a saída é 1 se qualquer combinação de termos de produto (AND) resultar em verdadeiro. Cada termo AND representa uma linha da tabela verdade onde a saída deve ser 1.</p>
+
+  <p><strong>Exemplo:</strong></p>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$C$</th><th>Saída $F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+    </tbody>
+  </table>
+
+  <p>Mapeando as linhas de resultado "1", a equação SOP é:</p>
+  <p>$$F = \bar{A}B\bar{C} + A\bar{B}C$$</p>
+
+  <h3>B. Produto de Somas (POS — Product of Sums)</h3>
+  <p>Expressa que a saída só é 1 se nenhuma das combinações de termos de soma que geram 0 for verdadeira. É obtida multiplicando os termos OR relativos às linhas de resultado "0" na tabela verdade.</p>
+  <p>No circuito acima, as saídas em "0" geram o POS:</p>
+  <p>$$F = (A + B + C)(A + \bar{B} + \bar{C})(\bar{A} + B + C)(\bar{A} + \bar{B} + \bar{C})$$</p>
+</section>
+
+<section class="section-box">
+  <h2>Simplificação de Circuitos: Mapas de Karnaugh</h2>
+  <p>Implementar diretamente as formas canônicas brutas (SOP ou POS) sem simplificação resulta no desperdício de portas lógicas, elevando os custos de manufatura, aumentando o atraso de sinal e consumindo mais potência. A simplificação algébrica ajuda, mas para circuitos pequenos (até 4 variáveis) adota-se o método visual dos <strong>Mapas de Karnaugh</strong>.</p>
+  <p>O Mapa de Karnaugh é uma matriz onde células adjacentes diferem em apenas <strong>uma única variável booleana</strong> (princípio do <strong>Código Gray</strong>: 00, 01, 11, 10).</p>
+
+  <h3>Estrutura de Mapa para 4 Variáveis ($AB$ vs $CD$)</h3>
+  <table>
+    <thead>
+      <tr><th></th><th>$CD = 00$</th><th>$CD = 01$</th><th>$CD = 11$</th><th>$CD = 10$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>$AB = 00$</strong></td><td>$m_0$</td><td>$m_1$</td><td>$m_3$</td><td>$m_2$</td></tr>
+      <tr><td><strong>$AB = 01$</strong></td><td>$m_4$</td><td>$m_5$</td><td>$m_7$</td><td>$m_6$</td></tr>
+      <tr><td><strong>$AB = 11$</strong></td><td>$m_{12}$</td><td>$m_{13}$</td><td>$m_{15}$</td><td>$m_{14}$</td></tr>
+      <tr><td><strong>$AB = 10$</strong></td><td>$m_8$</td><td>$m_9$</td><td>$m_{11}$</td><td>$m_{10}$</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Como Funciona a Simplificação Visual</h3>
+  <p>Como as células adjacentes diferem em apenas 1 bit, se agruparmos dois quadrados vizinhos contendo "1", a variável que muda de estado pode ser eliminada.</p>
+  <p><strong>Exemplo Matemático:</strong> Se temos $ABCD + ABC\bar{D}$, por fatoração temos $ABC(D + \bar{D}) = ABC \cdot 1 = ABC$. No mapa, esse par seria agrupado de forma direta, eliminando a variável $D$.</p>
+
+  <h3>Regras de Ouro de Agrupamento</h3>
+  <ul>
+    <li><strong>Tamanho dos Blocos:</strong> Os grupos devem conter quantidades que sejam <strong>potências de 2</strong> (1, 2, 4, 8 ou 16 células).</li>
+    <li><strong>Maximização:</strong> Crie laços tão grandes quanto possível. Um grupo de 2 elimina 1 variável; um grupo de 4 elimina 2; um grupo de 8 elimina 3.</li>
+    <li><strong>Adjacência Circular:</strong> As extremidades do mapa são consideradas vizinhas (bordas esquerda/direita e superior/inferior se encostam como um toro).</li>
+    <li><strong>Minimização de Laços:</strong> Use o menor número de laços possível para cobrir todos os "1"s. Valores já agrupados podem ser reusados.</li>
+    <li><strong>Exclua Laços Redundantes:</strong> Se todos os "1"s de um laço pequeno já estiverem cobertos por laços maiores, ele é descartado.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Condições "Don't Care" (Não Importa)</h2>
+  <p>Em diversos projetos, certas combinações de entradas nunca ocorrem na prática (por exemplo, no código BCD de 4 bits, os valores binários de $1010$ a $1111$ não são utilizados).</p>
+  <p>Essas saídas impossíveis são marcadas com a letra <strong>"d"</strong> no mapa de Karnaugh. No processo de simplificação, você pode tratar o "d" <strong>livremente como 1 ou como 0</strong>. Se ele ajudar a aumentar o tamanho de um laço de "1"s vizinho, trate-o como 1; caso contrário, ignore-o como 0 para gerar um circuito ainda mais simples.</p>
+</section>
+
+<section class="section-box">
+  <h2>O Limite do Mapa e Alternativa Tabular</h2>
+  <p>Os mapas de Karnaugh funcionam perfeitamente para <strong>até 4 variáveis</strong>. Para 5 variáveis, o método exige tabelas sobrepostas em 3D, e para 6 variáveis necessita de quatro matrizes complexas. Para esses casos, os engenheiros utilizam o <strong>Método de Quine-McCluskey</strong>, que é uma técnica puramente tabular excelente para ser traduzida em algoritmos de computador e automatizar o projeto de circuitos digitais de larga escala.</p>
+</section>
+
+<div class="tip-box">
+  <h4>Dicas & Lembretes</h4>
+  <ul>
+    <li><strong>AND:</strong> Saída 1 só se <strong>todas</strong> as entradas forem 1. Pense em interruptores em série.</li>
+    <li><strong>OR:</strong> Saída 1 se <strong>pelo menos uma</strong> entrada for 1. Pense em interruptores em paralelo.</li>
+    <li><strong>NOT:</strong> Inverte o valor. É o único operador unário.</li>
+    <li><strong>DeMorgan:</strong> Ao passar a barra, inverte o operador (AND↔OR) e coloca barra em cada variável.</li>
+    <li><strong>NAND e NOR são universais:</strong> Qualquer circuito pode ser construído com apenas um desses dois tipos de porta.</li>
+    <li><strong>SOP vs. POS:</strong> SOP usa linhas onde $F=1$ (termos AND somados); POS usa linhas onde $F=0$ (termos OR multiplicados).</li>
+    <li><strong>K-map:</strong> Agrupe potências de 2, maximize os laços, aproveite a adjacência circular e elimine redundâncias.</li>
+    <li><strong>Don't Care (d):</strong> Use como 1 ou 0 conforme conveniente para simplificar ao máximo.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Como Aplicar na Prática</h2>
+  <ul>
+    <li><strong>Projeto de circuits integrados:</strong> A álgebra booleana e os mapas de Karnaugh são a base para o projeto de microprocessadores, FPGAs e ASICs, onde milhares de portas lógicas devem ser otimizadas.</li>
+    <li><strong>Decodificadores e multiplexadores:</strong> Circuitos combinacionais como decodificadores BCD e MUX são construídos diretamente a partir de tabelas verdade e equações SOP/POS.</li>
+    <li><strong>Verificação de segurança:</strong> A análise de circuitos digitais permite detectar condições de race hazard (condições de corrida) que podem causar glitches em sinais críticos.</li>
+    <li><strong>Automação industrial:</strong> Controladores lógicos programáveis (PLCs) utilizam a mesma álgebra booleana para implementar lógicas de controle de máquinas e processos.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>SHANNON, Claude E. "A Symbolic Analysis of Relay and Switching Circuits". <em>Transactions of the AIEE</em>, v. 57, n. 12, 1938.</li>
+    <li>MANO, M. Morris; CILETTI, Michael D. <em>Digital Design</em>. 5th ed. Pearson, 2013. Cap. 2.</li>
+    <li>HARRIS, Sarah L.; HARRIS, David Money. <em>Digital Design and Computer Architecture</em>. 2nd ed. Morgan Kaufmann, 2012. Cap. 2.</li>
+    <li>TANENBAUM, Andrew S. <em>Structured Computer Organization</em>. 6th ed. Pearson, 2012. Cap. 2.</li>
+    <li>FLEISCHER, Peter E.; MEAD, Carver; CONWAY, Lynn. <em>Introduction to VLSI Systems</em>. Addison-Wesley, 1980.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Para Praticar</h2>
+  <a href="questionario">Questionário — Fundamentos de Lógica Digital</a>
 </section>

@@ -22,6 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Initialize WaveDrom if present
+  if (typeof WaveDrom !== 'undefined') {
+    WaveDrom.ProcessAll();
+  }
+
   // Smooth scroll for internal links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {

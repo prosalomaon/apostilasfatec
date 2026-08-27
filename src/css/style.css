@@ -405,6 +405,64 @@ pre {
   justify-content: center;
 }
 
+/* WaveDrom */
+.wavedrom {
+  background: #fff;
+  padding: 1rem;
+  border: 1px solid #eee;
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.wavedrom svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.wavedrom svg .gate {
+  fill: #fff;
+}
+
+.wavedrom svg .gate:hover {
+  fill: var(--accent);
+}
+
+/* Exercícios: cada questão */
+.exercise-question {
+  border: 2px solid var(--border);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.exercise-question h3 {
+  margin-top: 0;
+}
+
+/* Exercícios: resposta recolhível */
+.answer-box {
+  border: 2px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+.answer-box summary {
+  cursor: pointer;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--border);
+  user-select: none;
+}
+
+.answer-box[open] summary {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.answer-box .answer-content {
+  padding: 1rem 1.5rem 1.5rem;
+}
+
 /* Tables */
 table {
   width: 100%;

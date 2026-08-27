@@ -1,0 +1,282 @@
+---
+layout: exercicio
+title: "Circuitos Lógicos: Saída, Expressão e Esquema"
+exercicio_numero: "01"
+aula_numero: "04"
+mostrar_respostas: false
+eleventyExcludeFromCollections: true
+description: "Lista de exercícios com circuitos gerados por WaveDrom: calcular o valor da saída, converter circuito em expressão booleana e converter expressão em circuito."
+---
+
+<div class="tip-box tip-box-instruction">
+  <h4>Orientações</h4>
+  <ul>
+    <li>Resolva no caderno antes de conferir o gabarito.</li>
+    <li>Use <strong>·</strong> para AND, <strong>+</strong> para OR, <strong>⊕</strong> para XOR e <strong>¯</strong> (barra) para NOT.</li>
+    {% if mostrar_respostas %}<li>As respostas ficam ocultas — clique em "Ver resposta" para conferir.</li>{% endif %}
+    <li>Para a última seção, desenhe o circuito no papel; o gabarito mostra o esquema esperado.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Exercício 1: Calcular a Saída</h2>
+  <p>Determine o valor lógico da saída para as entradas fornecidas.</p>
+
+  <div class="exercise-question">
+    <h3>Questão 1</h3>
+    <p><strong>Dado:</strong> A = 1, B = 0, C = 1. Calcule o valor da saída F.</p>
+    <figure>
+      <div class="wavedrom">
+      <script type="WaveDrom">
+      { assign: [
+        ["F", ["|", ["&", "A", "B"], "C"]]
+      ]}
+      </script>
+      </div>
+    </figure>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <p>F = (A · B) + C = (1 · 0) + 1 = 0 + 1 = <strong>1</strong>.</p>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+
+  <div class="exercise-question">
+    <h3>Questão 2</h3>
+    <p><strong>Dado:</strong> A = 1, B = 1, C = 0. Calcule o valor da saída F.</p>
+    <figure>
+      <div class="wavedrom">
+      <script type="WaveDrom">
+      { assign: [
+        ["F", ["|", ["~", "A"], ["&", "B", "C"]]]
+      ]}
+      </script>
+      </div>
+    </figure>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <p>F = $\bar{A}$ + (B · C) = 0 + (1 · 0) = 0 + 0 = <strong>0</strong>.</p>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+
+  <div class="exercise-question">
+    <h3>Questão 3</h3>
+    <p><strong>Dado:</strong> A = 1, B = 0, C = 1. Calcule o valor da saída F.</p>
+    <figure>
+      <div class="wavedrom">
+      <script type="WaveDrom">
+      { assign: [
+        ["F", ["&", ["^", "A", "B"], "C"]]
+      ]}
+      </script>
+      </div>
+    </figure>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <p>F = (A ⊕ B) · C = (1 ⊕ 0) · 1 = 1 · 1 = <strong>1</strong>.</p>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+
+  <div class="exercise-question">
+    <h3>Questão 4</h3>
+    <p><strong>Dado:</strong> A = 0, B = 1, C = 0. Calcule o valor da saída F.</p>
+    <figure>
+      <div class="wavedrom">
+      <script type="WaveDrom">
+      { assign: [
+        ["F", ["|", ["&", ["~", "A"], ["~", "B"]], "C"]]
+      ]}
+      </script>
+      </div>
+    </figure>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <p>F = ($\bar{A}$ · $\bar{B}$) + C = (1 · 0) + 0 = 0 + 0 = <strong>0</strong>.</p>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>Exercício 2: Circuito → Expressão</h2>
+  <p>Escreva a expressão booleana que descreve cada circuito.</p>
+
+  <div class="exercise-question">
+    <h3>Questão 1</h3>
+    <figure>
+      <div class="wavedrom">
+      <script type="WaveDrom">
+      { assign: [
+        ["F", ["|", ["&", "A", "B"], ["~", "C"]]]
+      ]}
+      </script>
+      </div>
+    </figure>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <p>F = (A · B) + $\bar{C}$.</p>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+
+  <div class="exercise-question">
+    <h3>Questão 2</h3>
+    <figure>
+      <div class="wavedrom">
+      <script type="WaveDrom">
+      { assign: [
+        ["F", ["&", ["^", "A", "B"], "C"]]
+      ]}
+      </script>
+      </div>
+    </figure>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <p>F = (A ⊕ B) · C.</p>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+
+  <div class="exercise-question">
+    <h3>Questão 3</h3>
+    <figure>
+      <div class="wavedrom">
+      <script type="WaveDrom">
+      { assign: [
+        ["F", ["|", ["&", ["~", "A"], "B"], ["&", "A", ["~", "B"]]]]
+      ]}
+      </script>
+      </div>
+    </figure>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <p>F = ($\bar{A}$ · B) + (A · $\bar{B}$), que é equivalente a <strong>A ⊕ B</strong>.</p>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+
+  <div class="exercise-question">
+    <h3>Questão 4</h3>
+    <figure>
+      <div class="wavedrom">
+      <script type="WaveDrom">
+      { assign: [
+        ["F", ["~&", "A", ["~", "B"]]]
+      ]}
+      </script>
+      </div>
+    </figure>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <p>F = $\overline{A \cdot \bar{B}}$. Aplicando DeMorgan: F = $\bar{A}$ + B.</p>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>Exercício 3: Expressão → Circuito</h2>
+  <p>Desenhe o circuito que implementa cada expressão. O gabarito mostra o esquema esperado.</p>
+
+  <div class="exercise-question">
+    <h3>Questão 1</h3>
+    <p><strong>Expressão:</strong> F = (A · B) + C</p>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <div class="wavedrom">
+        <script type="WaveDrom">
+        { assign: [
+          ["F", ["|", ["&", "A", "B"], "C"]]
+        ]}
+        </script>
+        </div>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+
+  <div class="exercise-question">
+    <h3>Questão 2</h3>
+    <p><strong>Expressão:</strong> F = (A + B) · C</p>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <div class="wavedrom">
+        <script type="WaveDrom">
+        { assign: [
+          ["F", ["&", ["|", "A", "B"], "C"]]
+        ]}
+        </script>
+        </div>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+
+  <div class="exercise-question">
+    <h3>Questão 3</h3>
+    <p><strong>Expressão:</strong> F = $\bar{A}$ + (B · $\bar{C}$)</p>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <div class="wavedrom">
+        <script type="WaveDrom">
+        { assign: [
+          ["F", ["|", ["~", "A"], ["&", "B", ["~", "C"]]]]
+        ]}
+        </script>
+        </div>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+
+  <div class="exercise-question">
+    <h3>Questão 4</h3>
+    <p><strong>Expressão:</strong> F = ($\bar{A}$ · B) + (A · $\bar{B}$)</p>
+    {% if mostrar_respostas %}
+    <details class="answer-box">
+      <summary>Ver resposta</summary>
+      <div class="answer-content">
+        <div class="wavedrom">
+        <script type="WaveDrom">
+        { assign: [
+          ["F", ["|", ["&", ["~", "A"], "B"], ["&", "A", ["~", "B"]]]]
+        ]}
+        </script>
+        </div>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+</section>

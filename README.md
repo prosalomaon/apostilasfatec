@@ -10,6 +10,7 @@ Este README é a **fonte única de documentação** do projeto (arquitetura, est
 - **Nunjucks**: Motor de templates para reaproveitamento de código (layouts).
 - **CSS Vanilla**: Estilização seguindo o design system "Brutalist Academic".
 - **Mermaid.js**: Renderização de diagramas diretamente no navegador.
+- **WaveDrom.js**: Renderização de circuitos lógicos e diagramas de temporização no navegador.
 - **Highlight.js**: Realce de sintaxe para exemplos de código (SQL, MySQL, PostgreSQL, Java, PHP, etc.).
 - **GitHub Actions**: Deploy automático do site no GitHub Pages.
 
@@ -247,6 +248,32 @@ A aula deve seguir esta sequência de seções para garantir a consistência ped
   </div>
 </section>
 ```
+
+1. **Circuitos Lógicos (WaveDrom)** — circuitos de portas lógicas e timing diagrams renderizados no navegador. Cada diagrama é um bloco `<script type="WaveDrom">` com o objeto `assign` (lista de saídas com suas árvores de operadores), envolto em um `<div class="wavedrom">`:
+
+```html
+<div class="wavedrom">
+  <script type="WaveDrom">
+  { assign: [
+    ["F", ["|", ["&", "A", "B"], ["~", "C"]]]
+  ]}
+  </script>
+</div>
+```
+
+| Operador | Descrição |
+| :--- | :--- |
+| `["&", ...]` | AND |
+| `["\|", ...]` | OR |
+| `["^", ...]` | XOR |
+| `["~", x]` | NOT (inversor) |
+| `["~&", ...]`, `["~\|", ...]`, `["~^", ...]` | NAND, NOR, XNOR |
+| `["=", x]` | Buffer |
+| Nomes (`AND`, `OR`, `XOR`, `NAND`, `NOR`, `XNOR`, `INV`, `BUF`) | Símbolos IEC 60617 |
+
+Exemplo: a expressão $F = \bar{A}B\bar{C} + A\bar{B}C$ vira `["F", ["|", ["&", ["~", "A"], "B", ["~", "C"]], ["&", "A", ["~", "B"], "C"]]]`.
+
+Para gabaritos de exercícios, use `<details class="answer-box"><summary>Ver resposta</summary><div class="answer-content">...</div></details>`. Use cadeias de strings entre aspas duplas no JSON; a renderização é disparada por `WaveDrom.ProcessAll()` no `main.js`.
 
 1. **Dicas & Lembretes** — destaques e "pulos do gato":
 

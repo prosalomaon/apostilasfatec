@@ -21,7 +21,7 @@ tags:
       end
   </div>
 
-  <p>Com a evolução para a topologia em estrela, surgiram os <strong>hubs</strong>. O hub conecta todas as linhas de par trançado eletricamente, funcionando logicamente como o antigo cabo único da Ethernet clássica. Sendo um dispositivo de <strong>Camada 1 (Física)</strong>, ele não examina os endereços da camada de enlace e apenas replica eletricamente os sinais recebidos em uma porta para todas as outras interfaces. Por esse motivo, todas as portas conectadas a um hub compartilham o mesmo <strong>domínio de colisão</strong>. Se houver simultaneidade de transmissão, as colisões ocorrem no hub e ativam a arbitragem via algoritmo <strong>CSMA/CD</strong>. Além disso, o hub não aumenta a capacidade de rede e obriga que os dispositivos operem em modo <strong>half-duplex</strong>.</p>
+  <p>Com a evolução para a topologia em estrela, surgiram os <strong>hubs</strong>. O hub conecta todas as linhas de par trançado eletricamente, funcionando logicamente como o antigo cabo único da Ethernet clássica. Sendo um dispositivo de <strong>Camada 1 (Física)</strong>, ele não examina os endereços da camada de enlace e apenas replica eletricamente os sinais recebidos em uma porta para todas as outras interfaces. Por esse motivo, todas as portas conectadas a um hub compartilham o mesmo <strong>domínio de colisão</strong>. Se houver simultaneidade de transmissão, as colisões ocorrem no hub e ativam a arbitragem via algoritmo <strong>CSMA/CD</strong>. Além disso, o <a href="anexo-01/">hub não aumenta a capacidade de rede e obriga que os dispositivos operem em modo <strong>half-duplex</strong></a>.</p>
 
   <h3>2. O Switch e a Microsegmentação da Rede</h3>
   <p>O desenvolvimento da <strong>Ethernet comutada</strong> substituiu os hubs por switches (ou <em>bridges</em> modernas). Os switches operam na <strong>Camada 2 (Enlace de Dados)</strong> e modificam estruturalmente o comportamento da rede local através de três mecanismos principais:</p>
@@ -58,7 +58,18 @@ tags:
     <li><strong>Tempestades de Broadcast (Broadcast Storms):</strong> Se uma interface de rede ou dispositivo falha logicamente e passa a emitir quadros de broadcast de forma contínua, a rede inteira é inundada. O tráfego redundante gerado satura as portas e consome toda a capacidade dos enlaces e switches, paralisando completamente o funcionamento da LAN.</li>
   </ul>
 
-  <h3>6. Divisão de Domínios de Broadcast: VLANs (IEEE 802.1Q)</h3>
+  <h3>6. Domínio de Colisão e Broadcast em Redes Sem Fio (Wi-Fi)</h3>
+  <p>As redes sem fio (<strong>IEEE 802.11</strong>) compartilham o meio de transmissão (o ar), mas apresentam particularidades importantes em relação aos domínios de colisão e broadcast descritos para as redes cabeadas.</p>
+  <ul>
+    <li><strong>Meio compartilhado e half-duplex:</strong> O ar é um único meio compartilhado entre todas as estações dentro do alcance do access point. Por isso, as redes sem fio operam obrigatoriamente em <strong>half-duplex</strong>: a estação transmite ou recebe, mas nunca os dois ao mesmo tempo. Como não há um caminho físico dedicado, não existe a possibilidade de full-duplex como ocorre nos enlaces ponto a ponto de um switch.</li>
+    <li><strong>Domínio de colisão como "domínio de interferência":</strong> Em vez de um domínio de colisão bem definido por cabos, o Wi-Fi possui um <strong>domínio de interferência</strong> determinado pelo alcance do sinal de rádio. Duas estações colidem se transmitirem ao mesmo tempo e seus sinais se sobrepuserem no ar. No entanto, como a estação não consegue <strong>detectar</strong> a colisão enquanto transmite (o sinal próprio sobressai-se à recepção no rádio), o CSMA/CD não é utilizado — emprega-se o <strong>CSMA/CA</strong> (com <em>Avoidance</em>), que tenta <em>prevenir</em> colisões em vez de detectá-las.</li>
+    <li><strong>Problema do terminal oculto (<em>hidden node</em>):</strong> Duas estações fora do alcance uma da outra podem transmitir simultaneamente para o mesmo access point, pois nenhuma "ouve" a outra antes de falar. Isso gera colisões no AP que ambas não podem detectar. Para mitigar o problema, o padrão define a reserva do canal com os quadros de controle <strong>RTS/CTS</strong> (<em>Request to Send</em> / <em>Clear to Send</em>), que notificam todos os dispositivos na área para silenciarem suas transmissões temporariamente.</li>
+    <li><strong>O access point como centro lógico:</strong> No modo infraestrutura, todas as comunicações passam pelo <strong>access point (AP)</strong>, que atua como o ponto central da célula (BSS). Um quadro de broadcast enviado por uma estação é repassado pelo AP a todas as demais associadas à mesma célula, definindo o <strong>domínio de broadcast da rede sem fio</strong>.</li>
+    <li><strong>Domínio de broadcast limitado pelo alcance e pelo SSID:</strong> O domínio de broadcast sem fio é delimitado pela área coberta pelo AP e pelos dispositivos associados à mesma rede (<strong>SSID/BSS</strong>). Estações fora da cobertura não recebem os quadros. Diferentemente da rede cabeada, a divisão do domínio de broadcast também pode ser feita por <strong>SSIDs/VLANs</strong> distintas no mesmo AP físico.</li>
+    <li><strong>Independência dos domínios cabeado e sem fio:</strong> Quando um access point conecta a rede sem fio a um switch cabeado, a parte sem fio forma seu próprio domínio de colisão/interferência, enquanto a parte cabeadada opera com seus próprios domínios. O AP faz a ponte entre os dois mundos, mas o domínio de broadcast pode ser único (mesma LAN) ou separado, conforme a configuração de VLANs.</li>
+  </ul>
+
+  <h3>7. Divisão de Domínios de Broadcast: VLANs (IEEE 802.1Q)</h3>
   <p>Para isolar tempestades de broadcast, organizar o tráfego departamental e aprimorar a segurança de forma independente da localização geográfica dos cabos físicos, os switches modernos suportam a criação de <strong>VLANs (Virtual LANs)</strong>.</p>
   <ul>
     <li><strong>Isolamento Lógico:</strong> Uma VLAN permite segmentar uma LAN física grande em múltiplos domínios lógicos isolados. Portas de um switch são marcadas logicamente pelo administrador (comumente representadas por "cores" virtuais, como verde para engenharia e vermelha para finanças).</li>
@@ -155,6 +166,29 @@ tags:
         style V3 fill:#fff,stroke:#000,color:#000
         style V4 fill:#fff,stroke:#000,color:#000
   </div>
+
+  <p><strong>Rede sem fio: um único domínio de interferência, com o problema do terminal oculto (hidden node)</strong></p>
+  <div class="mermaid">
+    graph LR
+        subgraph IRD[Domínio de Interferência / Broadcast]
+            AP((Access Point))
+            subgraph ALCANCE[Alcance do AP]
+                W1[Estação A]
+                W2[Estação B --- em silêncio via RTS/CTS]
+                W3[Estação C --- terminal oculto, fora do alcance de A]
+            end
+            AP --- W1
+            AP --- W2
+        end
+        W1 -. colisão no AP .- W3
+
+        style AP fill:#000,stroke:#000,color:#fff
+        style ALCANCE fill:#fff,stroke:#000,stroke-width:3px,stroke-dasharray:6 4
+        style IRD fill:#000,color:#fff,stroke:#000,stroke-width:2px
+        style W1 fill:#fff,stroke:#000,color:#000
+        style W2 fill:#fff,stroke:#000,color:#000
+        style W3 fill:#fff,stroke:#000,color:#000
+  </div>
 </section>
 
 <div class="tip-box">
@@ -166,6 +200,9 @@ tags:
     <li>Em full-duplex, o <strong>CSMA/CD é desativado</strong>, pois não há mais como ocorrerem colisões no enlace ponto a ponto.</li>
     <li>A bufferização é o mecanismo que evita descartes quando enlaces de velocidades diferentes se encontram no mesmo switch.</li>
     <li><strong>Broadcast Storm:</strong> um dispositivo com defeito pode paralisar toda a LAN lançando broadcasts em excesso.</li>
+    <li><strong>Redes sem fio:</strong> o ar é um meio compartilhado que opera em <strong>half-duplex</strong> e usa <strong>CSMA/CA</strong> (prevenção de colisões) em vez de CSMA/CD (detecção), pois a estação não consegue detectar colisões enquanto transmite.</li>
+    <li><strong>Terminal oculto:</strong> em Wi-Fi, duas estações fora do alcance mútuo podem colidir no access point; o mecanismo <strong>RTS/CTS</strong> reserva o canal para evitar esse problema.</li>
+    <li><strong>Domínio de broadcast sem fio:</strong> limitado pela cobertura do AP e pelos dispositivos associados ao mesmo <strong>SSID</strong>; pode ser dividido com SSIDs/VLANs distintas no mesmo AP físico.</li>
   </ul>
 </div>
 

@@ -1,0 +1,97 @@
+---
+layout: exercicio
+title: "Anexo 01: Hub, Capacidade de Rede e Half-Duplex"
+exercicio_numero: "01"
+aula_numero: "03"
+description: "Explicação detalhada de por que o hub não aumenta a capacidade de rede e obriga que todos os dispositivos conectados operem em modo half-duplex."
+tags: []
+---
+
+<section class="section-box">
+  <h2>Por Que o Hub Não Aumenta a Capacidade de Rede?</h2>
+
+  <h3>1. Um Dispositivo de Camada 1 (Física)</h3>
+  <p>O hub é um dispositivo de <strong>Camada 1 do modelo OSI</strong>. Ele não lê endereços MAC, não possui tabela de encaminhamento e não toma nenhuma decisão inteligente sobre o tráfego. Sua única função é <strong>replicar eletricamente</strong> o sinal que chega em uma porta para <strong>todas as outras portas</strong>.</p>
+  <p>Na prática, o hub funciona como se fosse um único e longo cabo compartilhado (logicamente igual ao barramento da Ethernet clássica), porém embutido dentro de uma caixa com várias portas.</p>
+
+  <h3>2. Compartilhamento de Banda Fixa</h3>
+  <p>Como todas as portas pertencem a um <strong>único domínio de colisão</strong>, a largura de banda total do hub é <strong>dividida</strong> entre todos os dispositivos conectados. Em um hub de 100 Mbps com quatro computadores, a banda disponível para cada máquina não é de 100 Mbps, mas sim uma fração dessa capacidade, pois apenas <strong>um dispositivo pode transmitir por vez</strong>.</p>
+  <p>Adicionar mais computadores a um hub <strong>não aumenta a capacidade total</strong> — ao contrário, cada novo dispositivo passa a dividir a mesma banda fixa, aumentando a probabilidade de colisões e degradando o desempenho geral da rede.</p>
+
+  <div class="code-container">
+    <pre><code>Hub de 100 Mbps com 4 PCs compartilhando um único domínio de colisão:
+
+  Hub (100 Mbps totais)
+    ├── PC 1  →  banda compartilhada
+    ├── PC 2  →  banda compartilhada
+    ├── PC 3  →  banda compartilhada
+    └── PC 4  →  banda compartilhada
+
+  Apenas 1 dispositivo transmite por vez → banda é dividida, nunca somada.</code></pre>
+  </div>
+
+  <h3>3. A Comparação com o Switch</h3>
+  <p>Diferente do hub, o <strong>switch</strong> opera na Camada 2 e utiliza a <strong>microsegmentação</strong>: cada porta possui seu próprio domínio de colisão independente, ligado por um enlace ponto a ponto dedicado. Isso permite que múltiplas portas transmitam simultaneamente, efetivamente <strong>somando</strong> a capacidade de banda (ex.: Fast Ethernet full-duplex a 200 Mbps ou Gigabit a 2000 Mbps agregados).</p>
+</section>
+
+<section class="section-box">
+  <h2>O que Significa Operar em Modo Half-Duplex?</h2>
+
+  <h3>1. Definição de Half-Duplex</h3>
+  <p>Em um enlace <strong>half-duplex</strong>, a comunicação é <strong>alternada</strong>: em um dado momento, o dispositivo pode transmitir <em>ou</em> receber, mas nunca os dois ao mesmo tempo. É como um rádio de comunicação (walkie-talkie), em que você precisa apertar o botão para falar e soltar para ouvir.</p>
+
+  <h3>2. Por Que o Hub Obriga o Half-Duplex?</h3>
+  <p>Como todas as portas do hub compartilham o <strong>mesmo meio físico (dominio de colisão)</strong>, se dois dispositivos tentassem transmitir e receber simultaneamente, seus sinais entrariam em conflito direto no fio, gerando colisões. Para que o algoritmo de detecção de colisões <strong>CSMA/CD</strong> funcione corretamente, cada estação precisa operar em modo half-duplex — escutando o canal antes de falar e interrompendo a transmissão ao detectar uma colisão.</p>
+  <p>Em outras palavras: o meio único do hub <strong>fisicamente impede</strong> a transmissão e recepção simultânea, tornando o full-duplex impossível. O half-duplex, portanto, <strong>não é uma escolha</strong> do usuário, mas uma <strong>consequência técnica</strong> da arquitetura compartilhada.</p>
+
+  <h3>3. Half-Duplex vs. Full-Duplex</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Característica</th>
+        <th>Half-Duplex</th>
+        <th>Full-Duplex</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Transmissão simultânea</strong></td>
+        <td>Não (transmite OU recebe)</td>
+        <td>Sim (transmite E recebe)</td>
+      </tr>
+      <tr>
+        <td><strong>Equipamento</strong></td>
+        <td>Hub (meio compartilhado)</td>
+        <td>Switch (enlace ponto a ponto)</td>
+      </tr>
+      <tr>
+        <td><strong>Colisões</strong></td>
+        <td>Possíveis (usa CSMA/CD)</td>
+        <td>Impossíveis (CSMA/CD desativado)</td>
+      </tr>
+      <tr>
+        <td><strong>Banda efetiva</strong></td>
+        <td>Metade da nominal (ex.: 100 Mbps)</td>
+        <td>O dobro da nominal (ex.: 200 Mbps)</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="tip-box">
+  <h4>Ponto-Chave para Lembrar</h4>
+  <ul>
+    <li>O hub <strong>compartilha</strong> a banda e não <strong>aumenta</strong> a capacidade da rede — só o switch, com a microsegmentação, soma as capacidades das portas.</li>
+    <li>O modo <strong>half-duplex</strong> é imposto pela natureza física do meio compartilhado do hub, que impede transmissão e recepção simultâneas.</li>
+    <li>Trocar um hub por um switch permite enlaces <strong>full-duplex</strong>, elimina colisões e desativa o CSMA/CD, dobrando a banda efetiva dos enlaces.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>KUROSE, James F.; ROSS, Keith W. <em>Redes de Computadores e a Internet</em>. 6. ed. Pearson, 2013. Cap. 6.</li>
+    <li>TANENBAUM, Andrew S.; WETHERALL, David J. <em>Computer Networks</em>. 5th ed. Pearson, 2011. Cap. 4.</li>
+    <li>STALLINGS, William. <em>Data and Computer Communications</em>. 10th ed. Pearson, 2014. Cap. 13.</li>
+  </ul>
+</section>

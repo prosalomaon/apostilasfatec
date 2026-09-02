@@ -5,8 +5,226 @@ description: "Análise do funcionamento de switches e como esses dispositivos se
 tags:
   - aula
 ---
-<!-- TODO: Adicionar conteudo para este encontro -->
 <section class="section-box">
   <h2>Teoria & Conceitos</h2>
-  <p>Conteudo em construcao.</p>
+
+  <h3>1. O Problema do Compartilhamento de Meio: Ethernet Compartilhada e Hubs</h3>
+  <p>O padrão Ethernet original foi concebido para ser uma rede de barramento <em>multidrop</em>. Na chamada <strong>Ethernet compartilhada</strong>, todos os computadores enviam seus pacotes por um único meio físico. Sob essa arquitetura, apenas uma máquina pode transmitir com sucesso de cada vez. Se dois ou mais dispositivos decidem transmitir de forma simultânea, ocorre uma <strong>colisão de dados</strong>, que corrompe as mensagens, bloqueia a rede e impede o tráfego. Além de compartilhar a largura de banda fixa, quanto mais estações são adicionadas ao segmento físico, maior se torna a probabilidade de colisões e a consequente degradação do desempenho.</p>
+
+  <p><strong>Posição do Hub no Modelo OSI (Camada 1 - Física)</strong></p>
+  <div class="mermaid">
+    block
+      block
+        columns 1
+        a["7. Aplicação"] b["6. Apresentação"] c["5. Sessão"] d["4. Transporte"] e["3. Rede"] f["2. Enlace de Dados"] g["1. Física - Hub"]
+        style g fill:#000,color:#fff
+      end
+  </div>
+
+  <p>Com a evolução para a topologia em estrela, surgiram os <strong>hubs</strong>. O hub conecta todas as linhas de par trançado eletricamente, funcionando logicamente como o antigo cabo único da Ethernet clássica. Sendo um dispositivo de <strong>Camada 1 (Física)</strong>, ele não examina os endereços da camada de enlace e apenas replica eletricamente os sinais recebidos em uma porta para todas as outras interfaces. Por esse motivo, todas as portas conectadas a um hub compartilham o mesmo <strong>domínio de colisão</strong>. Se houver simultaneidade de transmissão, as colisões ocorrem no hub e ativam a arbitragem via algoritmo <strong>CSMA/CD</strong>. Além disso, o hub não aumenta a capacidade de rede e obriga que os dispositivos operem em modo <strong>half-duplex</strong>.</p>
+
+  <h3>2. O Switch e a Microsegmentação da Rede</h3>
+  <p>O desenvolvimento da <strong>Ethernet comutada</strong> substituiu os hubs por switches (ou <em>bridges</em> modernas). Os switches operam na <strong>Camada 2 (Enlace de Dados)</strong> e modificam estruturalmente o comportamento da rede local através de três mecanismos principais:</p>
+  <ul>
+    <li><strong>Tabela de Encaminhamento (Tabela MAC):</strong> Ao receber um quadro Ethernet, o switch não o replica cegamente para todas as portas. Ele extrai o endereço físico de destino do cabeçalho de enlace e pesquisa em uma tabela de <em>hash</em> interna para qual porta o destinatário está associado. O switch constrói e atualiza essa tabela de forma dinâmica através do processo de <strong>aprendizado reverso (learning)</strong>, mapeando os endereços MAC de origem observados em cada porta física.</li>
+    <li><strong>Encaminhamento Seletivo:</strong> Uma vez localizado o destino na tabela, o switch encaminha o quadro exclusivamente para a porta onde o dispositivo final se encontra, utilizando seu circuito integrado interno de alta velocidade (<em>backplane</em>). Dessa maneira, nenhuma das outras portas toma conhecimento do tráfego enviado, proporcionando um isolamento seguro.</li>
+    <li><strong>Microsegmentação:</strong> Ao invés de as estações dividirem um canal físico comum, cada máquina se conecta ao switch por meio de um enlace ponto a ponto individual. Esse processo de dar a cada host um canal dedicado e isolado é chamado de <strong>microsegmentação</strong>. Como resultado direto, cada porta de um switch constitui seu próprio domínio de colisão independente.</li>
+  </ul>
+
+  <h3>3. Enlaces Full-Duplex e a Eliminação de Colisões</h3>
+  <p>A comutação de portas viabiliza o uso de interfaces <strong>full-duplex</strong> nos enlaces ponto a ponto entre o switch e as estações finais. Em uma conexão full-duplex, existem caminhos físicos de transmissão e recepção totalmente bidirecionais e simultâneos no cabo.</p>
+  <ul>
+    <li><strong>Eliminação das Colisões:</strong> Como a comunicação ocorre em enlaces isolados de ponta a ponta e as portas do switch segmentam os domínios de colisão, torna-se fisicamente impossível haver colisões lógicas entre os dados enviados e recebidos.</li>
+    <li><strong>Fim da Arbitragem de Barramento:</strong> Com a impossibilidade de haver conflitos no fio, o algoritmo CSMA/CD é desativado nos hosts e nas portas do switch. Os dispositivos não precisam mais "escutar" o meio físico para iniciar o envio de dados.</li>
+    <li><strong>Melhoria de Desempenho:</strong> A desativação do CSMA/CD e a ausência de colisões otimizam o uso de banda. Isso permite dobrar a taxa nominal de velocidade física do link (por exemplo, permitindo conexões Fast Ethernet operando a 200 Mbps ou Gigabit Ethernet a 2000 Mbps agregados).</li>
+    <li><strong>Segurança Física:</strong> Em hubs, o modo promíscuo das placas de rede permite que computadores capturem quadros destinados a terceiros. O switch resolve esse problema de segurança ao limitar o encaminhamento do quadro estritamente à interface do destinatário real.</li>
+  </ul>
+
+  <h3>4. O Mecanismo de Bufferização em Switches</h3>
+  <p>Uma vez que múltiplas estações podem tentar enviar quadros ao mesmo tempo pela rede comutada, o switch precisa gerenciar potenciais gargalos através de <strong>buffers</strong> de armazenamento instalados em suas portas.</p>
+  <ul>
+    <li><strong>Filas de Entrada e Saída:</strong> Quando dois quadros vindos de portas distintas precisam ser direcionados simultaneamente para a mesma porta de saída, o switch armazena temporariamente os quadros excedentes em filas de memória até que o canal de saída fique livre.</li>
+    <li><strong>Equiparação de Velocidades:</strong> A bufferização é indispensável quando há enlaces operando em velocidades diferentes em uma mesma <em>bridge</em> (por exemplo, um servidor injetando dados em uma porta Gigabit Ethernet de 1000 Mbps com destino a um host conectado a uma interface Fast Ethernet de 100 Mbps ou 10 Mbps clássica). O switch enfileira os bytes para evitar a perda instantânea do pacote.</li>
+    <li><strong>Descarte de Quadros:</strong> Caso os buffers fiquem saturados por conta de um tráfego constante de alta intensidade que excede a capacidade de drenagem da porta de saída, o switch é obrigado a descartar novos quadros de entrada (<em>dropped frames</em> ou <em>tail drop</em>).</li>
+  </ul>
+
+  <h3>5. O Domínio de Broadcast e Suas Implicações</h3>
+  <p>O <strong>domínio de broadcast</strong> consiste na área de rede física em que qualquer host receberá quadros de difusão geral enviados por outro dispositivo do mesmo grupo.</p>
+  <ul>
+    <li><strong>Identificação do Broadcast:</strong> Tecnicamente, quadros de broadcast são definidos na subcamada MAC quando o cabeçalho Ethernet contém o endereço de destino preenchido inteiramente com bits 1 (representado em formato hexadecimal como <strong>FF:FF:FF:FF:FF:FF</strong>).</li>
+    <li><strong>Comportamento dos Switches perante o Broadcast:</strong> Para manter a transparência da infraestrutura e garantir que requisições cheguem aos destinos desconhecidos, os switches são configurados para receber e retransmitir compulsoriamente os quadros de broadcast por todas as suas portas ativas, com exceção apenas daquela de onde o quadro original surgiu. Deste modo, os switches, embora isolem colisões, não dividem o domínio de broadcast.</li>
+    <li><strong>Protocolos Dependentes de Broadcast:</strong> O broadcast é amplamente utilizado por protocolos de camadas superiores. O exemplo mais comum é o protocolo <strong>ARP (Address Resolution Protocol)</strong>, usado para mapear um endereço IP em um endereço MAC enviando a pergunta por difusão: <em>"A quem pertence o endereço IP X?"</em>.</li>
+    <li><strong>Degradação por Excesso de Broadcast:</strong> Como o quadro de broadcast chega a todas as placas de rede do domínio, cada CPU da LAN é forçada a processar o quadro para ler o cabeçalho, mesmo que decida descartá-lo em seguida, o que consome banda útil e recursos de processamento.</li>
+    <li><strong>Tempestades de Broadcast (Broadcast Storms):</strong> Se uma interface de rede ou dispositivo falha logicamente e passa a emitir quadros de broadcast de forma contínua, a rede inteira é inundada. O tráfego redundante gerado satura as portas e consome toda a capacidade dos enlaces e switches, paralisando completamente o funcionamento da LAN.</li>
+  </ul>
+
+  <h3>6. Divisão de Domínios de Broadcast: VLANs (IEEE 802.1Q)</h3>
+  <p>Para isolar tempestades de broadcast, organizar o tráfego departamental e aprimorar a segurança de forma independente da localização geográfica dos cabos físicos, os switches modernos suportam a criação de <strong>VLANs (Virtual LANs)</strong>.</p>
+  <ul>
+    <li><strong>Isolamento Lógico:</strong> Uma VLAN permite segmentar uma LAN física grande em múltiplos domínios lógicos isolados. Portas de um switch são marcadas logicamente pelo administrador (comumente representadas por "cores" virtuais, como verde para engenharia e vermelha para finanças).</li>
+    <li><strong>Contenção do Tráfego:</strong> O switch barra o fluxo de quadros entre VLANs diferentes. Um quadro de broadcast enviado em uma porta marcada na VLAN vermelha é encaminhado exclusivamente para as portas da mesma cor (vermelha), simulando de forma estrita o comportamento de redes físicas totalmente separadas.</li>
+    <li><strong>O Padrão IEEE 802.1Q:</strong> Para trafegar a informação de qual VLAN um quadro pertence ao atravessar enlaces interconectados entre múltiplos switches, as pontes utilizam a marcação de cabeçalho definida no padrão <strong>IEEE 802.1Q</strong>. Este padrão insere uma etiqueta (<em>tag</em>) especial de VLAN de <strong>4 bytes</strong> dentro do cabeçalho do quadro Ethernet convencional.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Representação Gráfica</h2>
+
+  <p><strong>Hub: um único domínio de colisão dentro de um único domínio de broadcast</strong></p>
+  <div class="mermaid">
+    graph LR
+        subgraph BRD[Domínio de Broadcast]
+            subgraph COL[Domínio de Colisão]
+                H1[PC 1]
+                H2[PC 2]
+                H3[PC 3]
+                H4[PC 4]
+            end
+            HUB((Hub)) --- H1
+            HUB --- H2
+            HUB --- H3
+            HUB --- H4
+        end
+
+        style HUB fill:#000,stroke:#000,color:#fff
+        style COL fill:#fff,stroke:#000,stroke-width:3px,stroke-dasharray:6 4
+        style BRD fill:#000,color:#fff,stroke:#000,stroke-width:2px
+        style H1 fill:#fff,stroke:#000,color:#000
+        style H2 fill:#fff,stroke:#000,color:#000
+        style H3 fill:#fff,stroke:#000,color:#000
+        style H4 fill:#fff,stroke:#000,color:#000
+  </div>
+
+  <p><strong>Switch com Microsegmentação: um domínio de colisão por porta, dentro de um único domínio de broadcast</strong></p>
+  <div class="mermaid">
+    graph LR
+        subgraph BRD2[Domínio de Broadcast]
+            SWH((Switch))
+            subgraph CD1[Colisão 1]
+                E1[PC 1]
+            end
+            subgraph CD2[Colisão 2]
+                E2[PC 2]
+            end
+            subgraph CD3[Colisão 3]
+                E3[PC 3]
+            end
+            subgraph CD4[Colisão 4]
+                E4[PC 4]
+            end
+            SWH --- E1
+            SWH --- E2
+            SWH --- E3
+            SWH --- E4
+        end
+
+        style SWH fill:#000,stroke:#000,color:#fff
+        style CD1 fill:#fff,stroke:#000,stroke-width:3px,stroke-dasharray:6 4
+        style CD2 fill:#fff,stroke:#000,stroke-width:3px,stroke-dasharray:6 4
+        style CD3 fill:#fff,stroke:#000,stroke-width:3px,stroke-dasharray:6 4
+        style CD4 fill:#fff,stroke:#000,stroke-width:3px,stroke-dasharray:6 4
+        style BRD2 fill:#000,color:#fff,stroke:#000,stroke-width:2px
+        style E1 fill:#fff,stroke:#000,color:#000
+        style E2 fill:#fff,stroke:#000,color:#000
+        style E3 fill:#fff,stroke:#000,color:#000
+        style E4 fill:#fff,stroke:#000,color:#000
+  </div>
+
+  <p><strong>VLANs: divisor de domínios de broadcast em grupos lógicos isolados</strong></p>
+  <div class="mermaid">
+    graph LR
+        SWV((Switch))
+        subgraph BRD_ENG[Domínio de Broadcast - VLAN Engenharia]
+            V1[PC 1]
+            V2[PC 2]
+        end
+        subgraph BRD_FIN[Domínio de Broadcast - VLAN Finanças]
+            V3[PC 3]
+            V4[PC 4]
+        end
+        SWV --- V1
+        SWV --- V2
+        SWV --- V3
+        SWV --- V4
+
+        style SWV fill:#000,stroke:#000,color:#fff
+        style BRD_ENG fill:#fff,stroke:#000,stroke-width:3px,stroke-dasharray:6 4
+        style BRD_FIN fill:#000,color:#fff,stroke:#000,stroke-width:2px
+        style V1 fill:#fff,stroke:#000,color:#000
+        style V2 fill:#fff,stroke:#000,color:#000
+        style V3 fill:#fff,stroke:#000,color:#000
+        style V4 fill:#fff,stroke:#000,color:#000
+  </div>
+</section>
+
+<div class="tip-box">
+  <h4>Dicas & Lembretes</h4>
+  <ul>
+    <li><strong>Domínio de colisão:</strong> conjunto de dispositivos que disputam o mesmo meio físico; limitado pela <strong>porta do switch</strong>. O hub possui apenas 1; o switch possui vários (um por porta).</li>
+    <li><strong>Domínio de broadcast:</strong> conjunto de dispositivos que recebem quadros de difusão (FF:FF:FF:FF:FF:FF); limitado pelo <strong>roteador (Camada 3)</strong> ou pelas <strong>VLANs</strong>.</li>
+    <li>O switch <strong>isola colisões</strong> (microsegmentação) mas <strong>não divide o broadcast</strong> por padrão — só as VLANs o fazem.</li>
+    <li>Em full-duplex, o <strong>CSMA/CD é desativado</strong>, pois não há mais como ocorrerem colisões no enlace ponto a ponto.</li>
+    <li>A bufferização é o mecanismo que evita descartes quando enlaces de velocidades diferentes se encontram no mesmo switch.</li>
+    <li><strong>Broadcast Storm:</strong> um dispositivo com defeito pode paralisar toda a LAN lançando broadcasts em excesso.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Como aplicar na Prática</h2>
+  <ul>
+    <li><strong>Projeto de redes:</strong> Identificar se a rede projetada possui hubs ou switches muda completamente o comportamento: hubs exigem half-duplex e CSMA/CD, enquanto switches permitem full-duplex e eliminação de colisões.</li>
+    <li><strong>Segmentação de broadcast:</strong> Para reduzir o excesso de tráfego de difusão em redes grandes, divida a LAN física em VLANs, delimitando domínios de broadcast menores e mais previsíveis.</li>
+    <li><strong>Segurança:</strong> Prefira switches a hubs para impedir que placas de rede em modo promíscuo capturem quadros destinados a outros hosts.</li>
+    <li><strong>Gerenciamento de gargalos:</strong> Observe os contadores de <em>dropped frames</em> em portas de saída saturadas para dimensionar corretamente a capacidade dos enlaces.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Resumo das Diferenças Lógicas</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Característica</th>
+        <th>Domínio de Colisão</th>
+        <th>Domínio de Broadcast</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Definição</strong></td>
+        <td>Segmento lógico onde pacotes podem colidir eletricamente se enviados de forma simultânea.</td>
+        <td>Segmento lógico de rede em que quadros de difusão geral (FF:FF:FF:FF:FF:FF) são recebidos por todos os hosts.</td>
+      </tr>
+      <tr>
+        <td><strong>Equipamento Limitador</strong></td>
+        <td>Porta do Switch (microsegmentação isola cada porta em seu domínio).</td>
+        <td>Roteador (Camada 3) ou portas separadas por VLANs no Switch.</td>
+      </tr>
+      <tr>
+        <td><strong>Comportamento do Hub</strong></td>
+        <td>Possui apenas 1 domínio de colisão para todo o equipamento físico.</td>
+        <td>Possui apenas 1 domínio de broadcast para todo o dispositivo.</td>
+      </tr>
+      <tr>
+        <td><strong>Comportamento do Switch</strong></td>
+        <td>Possui múltiplos domínios de colisão (um por porta de conexão dedicada).</td>
+        <td>Possui apenas 1 domínio de broadcast compartilhado por padrão (dividido apenas via VLANs).</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>IEEE. <em>IEEE Standard for Local and Metropolitan Area Networks — Bridges and Bridged Networks / Virtual LANs</em>. IEEE Std 802.1Q-2022.</li>
+    <li>TANENBAUM, Andrew S.; WETHERALL, David J. <em>Computer Networks</em>. 5th ed. Pearson, 2011. Cap. 4.</li>
+    <li>STALLINGS, William. <em>Data and Computer Communications</em>. 10th ed. Pearson, 2014. Cap. 13.</li>
+    <li>KUROSE, James F.; ROSS, Keith W. <em>Redes de Computadores e a Internet</em>. 6. ed. Pearson, 2013. Cap. 6.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Para Praticar</h2>
+  <a href="questionario">Questionário</a>
 </section>

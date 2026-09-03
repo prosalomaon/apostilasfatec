@@ -19,6 +19,53 @@ tags:
 </section>
 
 <section class="section-box">
+  <h2>O que é uma Tabela Verdade?</h2>
+  <p>A <strong>tabela verdade</strong> é uma tabela que descreve o comportamento de uma função lógica ao listar <strong>todas as combinações possíveis</strong> das variáveis de entrada e o valor de saída correspondente para cada uma delas.</p>
+  <p>Se uma função possui $n$ variáveis de entrada, ela terá $2^n$ combinações possíveis. Assim, uma função com 2 variáveis tem $2^2 = 4$ linhas, com 3 variáveis tem $2^3 = 8$ linhas e assim por diante. Cada linha da tabela associa uma combinação específica de entradas ao resultado da função.</p>
+
+  <h3>Para que serve?</h3>
+  <ul>
+    <li><strong>Definir o comportamento do circuito:</strong> É a especificação mais direta e inequívoca de o que um circuito deve fazer.</li>
+    <li><strong>Análise:</strong> Permite descobrir qual função lógica um circuito existente realiza, observando como a saída responde a cada combinação de entrada.</li>
+    <li><strong>Projeto e simplificação:</strong> A partir da tabela verdade é possível escrever as equações booleanas (SOP e POS) e simplificá-las com mapas de Karnaugh.</li>
+    <li><strong>Documentação e verificação:</strong> Serve como referência para testar e validar se um circuito opera corretamente.</li>
+  </ul>
+
+  <h3>Exemplo: Tabela Verdade da porta OR</h3>
+  <p>Considere a função $F = A + B$ (OR). Como existem 2 variáveis, a tabela tem $2^2 = 4$ linhas:</p>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$F = A + B$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Exemplo: Função com 3 variáveis</h3>
+  <p>Considere a função $F = A \cdot B + C$. Aqui $n = 3$, então a tabela tem $2^3 = 8$ linhas:</p>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$C$</th><th>$F = A \cdot B + C$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+  <p>Ao observar as linhas em que $F = 1$, podemos escrever uma equação para a função — esse processo é o tema das seções sobre <strong>mintermos, maxtermos</strong> e as formas canônicas <strong>SOP</strong> e <strong>POS</strong>.</p>
+</section>
+
+<section class="section-box">
   <h2>Variáveis e Operações Fundamentais</h2>
   <p>Ao contrário da álgebra tradicional, as variáveis booleanas assumem apenas <strong>dois estados lógicos</strong>: <strong>1</strong> (verdadeiro) ou <strong>0</strong> (falso). As três operações lógicas básicas são:</p>
 
@@ -35,6 +82,106 @@ tags:
       <tr><td>1</td><td>1</td><td><strong>1</strong></td></tr>
     </tbody>
   </table>
+
+  <p style="margin-top:1.2rem"><strong>Simulação interativa — clique nas entradas A e B para alternar os valores e observe a saída S:</strong></p>
+  <div id="sketch-and" style="display:flex; justify-content:center; width:100%; margin:1rem auto;"></div>
+  <script>
+    window.addEventListener('load', () => {
+      new p5((p) => {
+        let a = 0;
+        let b = 0;
+
+        const gw = 200;
+        const gh = 90;
+        const radius = 18;
+
+        const gateX = () => p.width / 2 - gw / 2;
+        const gateY = () => p.height / 2 - gh / 2;
+
+        const inY1 = () => gateY() + gh / 4;
+        const inY2 = () => gateY() + (3 * gh) / 4;
+        const outY = () => gateY() + gh / 2;
+        const outContactX = () => gateX() + (gw - gh) + gh / 2;
+
+        const pinX = () => gateX() - 50;
+        const outPinX = () => gateX() + gw + 20;
+
+        p.setup = () => {
+          const canvas = p.createCanvas(p.windowWidth > 540 ? 520 : 320, 260);
+          canvas.parent('sketch-and');
+          p.textAlign(p.CENTER, p.CENTER);
+        };
+
+        const blob = (x, y, val) => {
+          p.stroke(0);
+          p.strokeWeight(2);
+          p.fill(255);
+          p.circle(x, y, radius * 2);
+          p.fill(20);
+          p.noStroke();
+          p.textSize(18);
+          p.textStyle(p.BOLD);
+          p.text(String(val), x, y);
+        };
+
+        const label = (x, y, txt) => {
+          p.fill(60);
+          p.noStroke();
+          p.textSize(16);
+          p.textStyle(p.NORMAL);
+          p.text(txt, x, y);
+        };
+
+        const drawGate = () => {
+          Portas.desenharAnd(p, {
+            x: gateX(),
+            y: gateY(),
+            gw: gw,
+            gh: gh,
+            pinX: pinX(),
+            inY1: inY1(),
+            inY2: inY2(),
+            outContactX: outContactX(),
+            outPinX: outPinX(),
+            outY: outY()
+          });
+        };
+
+        p.draw = () => {
+          p.background(250);
+          const out = a & b;
+
+          drawGate();
+
+          blob(pinX(), inY1(), a);
+          blob(pinX(), inY2(), b);
+          blob(outPinX(), outY(), out);
+
+          label(pinX() - 34, inY1(), 'A');
+          label(pinX() - 34, inY2(), 'B');
+          label(outPinX() + 34, outY(), 'S');
+
+          p.fill(80);
+          p.noStroke();
+          p.textSize(14);
+          p.textStyle(p.NORMAL);
+          p.text('Clique nas bolinhas A e B', p.width / 2, p.height - 18);
+        };
+
+        p.mousePressed = () => {
+          if (p.dist(p.mouseX, p.mouseY, pinX(), inY1()) < radius + 8) {
+            a = a === 1 ? 0 : 1;
+          } else if (p.dist(p.mouseX, p.mouseY, pinX(), inY2()) < radius + 8) {
+            b = b === 1 ? 0 : 1;
+          }
+        };
+
+        p.windowResized = () => {
+          p.resizeCanvas(p.windowWidth > 540 ? 520 : 320, 260);
+        };
+      });
+    });
+  </script>
 
   <h3>OR (OU)</h3>
   <p>Representada pelo sinal de adição ($A + B$). A saída é 1 se <strong>pelo menos um</strong> dos operandos de entrada for 1.</p>
@@ -85,6 +232,78 @@ tags:
 
   <h3>NOR</h3>
   <p>É o complemento direto da operação OR: $\overline{A + B}$. Também é uma porta <strong>universal</strong>.</p>
+</section>
+
+<section class="section-box">
+  <h2>Mintermos e Maxtermos</h2>
+  <p>Uma tabela verdade pode ser convertida em uma <strong>equação booleana</strong> de duas formas canônicas (padrão) distintas. O conceito chave para entender essas formas são os <strong>mintermos</strong> e os <strong>maxtermos</strong>.</p>
+
+  <h3>Mintermos (termos de produto)</h3>
+  <p>Um <strong>mintermo</strong> é um termo de <strong>produto</strong> (AND) que inclui <strong>todas</strong> as variáveis da função, cada uma aparecendo exatamente uma vez, na forma normal ou complementada. Ele é construído a partir de uma linha da tabela verdade da seguinte maneira:</p>
+  <ul>
+    <li>Se a variável é <strong>1</strong> na linha, ela aparece <strong>sem barra</strong> ($A$).</li>
+    <li>Se a variável é <strong>0</strong> na linha, ela aparece <strong>com barra</strong> ($\bar{A}$).</li>
+  </ul>
+  <p>Cada mintermo é verdadeiro (igual a 1) em <strong>exatamente uma</strong> combinação de entradas. A <strong>soma (OR) de todos os mintermos</strong> das linhas em que a saída é 1 produz a expressão canônica <strong>SOP (Soma de Produtos)</strong>. Mintermos são usualmente representados pela letra $m$. Com 2 variáveis existem $2^2 = 4$ mintermos possíveis ($m_0$ a $m_3$).</p>
+
+  <h4>Construção dos mintermos ($A$ e $B$)</h4>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>Mintermo</th><th>Símbolo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>$\bar{A} \cdot \bar{B}$</td><td>$m_0$</td></tr>
+      <tr><td>0</td><td>1</td><td>$\bar{A} \cdot B$</td><td>$m_1$</td></tr>
+      <tr><td>1</td><td>0</td><td>$A \cdot \bar{B}$</td><td>$m_2$</td></tr>
+      <tr><td>1</td><td>1</td><td>$A \cdot B$</td><td>$m_3$</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Exemplo: expressão SOP a partir da tabela verdade</h4>
+  <p>Considere a seguinte tabela verdade:</p>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>Saída $F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+  <p>As linhas com $F = 1$ correspondem aos mintermos $m_1 = \bar{A}B$ e $m_3 = AB$. Somando esses mintermos, obtemos a forma canônica <strong>SOP</strong>:</p>
+  <p>$$F = \bar{A}B + AB$$</p>
+
+  <h3>Maxtermos (termos de soma)</h3>
+  <p>Um <strong>maxtermo</strong> é um termo de <strong>soma</strong> (OR) que também inclui <strong>todas</strong> as variáveis, cada uma na forma normal ou complementada. Ele é construído de forma <strong>inversa</strong> ao mintermo:</p>
+  <ul>
+    <li>Se a variável é <strong>0</strong> na linha, ela aparece <strong>sem barra</strong> ($A$).</li>
+    <li>Se a variável é <strong>1</strong> na linha, ela aparece <strong>com barra</strong> ($\bar{A}$).</li>
+  </ul>
+  <p>Cada maxtermo é falso (igual a 0) em <strong>exatamente uma</strong> combinação de entradas. O <strong>produto (AND) de todos os maxtermos</strong> das linhas em que a saída é 0 produz a expressão canônica <strong>POS (Produto de Somas)</strong>. Maxtermos são usualmente representados pela letra $M$.</p>
+
+  <h4>Construção dos maxtermos ($A$ e $B$)</h4>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>Maxtermo</th><th>Símbolo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>$A + B$</td><td>$M_0$</td></tr>
+      <tr><td>0</td><td>1</td><td>$A + \bar{B}$</td><td>$M_1$</td></tr>
+      <tr><td>1</td><td>0</td><td>$\bar{A} + B$</td><td>$M_2$</td></tr>
+      <tr><td>1</td><td>1</td><td>$\bar{A} + \bar{B}$</td><td>$M_3$</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Exemplo: expressão POS a partir da tabela verdade</h4>
+  <p>Usando a mesma tabela verdade do exemplo anterior, as linhas com $F = 0$ correspondem aos maxtermos $M_0 = A + B$ e $M_2 = \bar{A} + B$. Multiplicando esses maxtermos, obtemos a forma canônica <strong>POS</strong>:</p>
+  <p>$$F = (A + B)(\bar{A} + B)$$</p>
+
+  <div class="tip-box">
+    <h4>Relação entre mintermo e maxtermo</h4>
+    <p>Um mintermo e um maxtermo da mesma linha são <strong>complementos</strong> um do outro, e o índice de um maxtermo corresponde ao índice do mintermo <strong>complementado</strong>: $M_i = \overline{m_i}$. Portanto, a forma SOP (mintermos de $F$) é complementar à forma POS (maxtermos de $F$).</p>
+  </div>
 </section>
 
 <section class="section-box">
@@ -267,6 +486,22 @@ tags:
     <li>TANENBAUM, Andrew S. <em>Structured Computer Organization</em>. 6th ed. Pearson, 2012. Cap. 2.</li>
     <li>FLEISCHER, Peter E.; MEAD, Carver; CONWAY, Lynn. <em>Introduction to VLSI Systems</em>. Addison-Wesley, 1980.</li>
   </ul>
+</section>
+
+<section class="section-box">
+  <h2>Gerador de Tabela Verdade Interativo</h2>
+  <p>Comece com 2 entradas, adicione até 6 e clique nas células da coluna de saída para alternar entre 0 e 1.</p>
+  <div id="tabela-verdade-gerador"></div>
+  <script>
+    window.addEventListener('load', () => {
+      TabelaVerdade.init('tabela-verdade-gerador');
+    });
+  </script>
+</section>
+
+  <section class="section-box">
+  <h2>Anexos</h2>
+  <a href="anexo-01">Mapas de Karnaugh</a>
 </section>
 
 <section class="section-box">

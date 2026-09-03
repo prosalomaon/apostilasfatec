@@ -1,0 +1,171 @@
+---
+layout: exercicio
+title: "Anexo 01: Mapas de Karnaugh"
+exercicio_numero: "01"
+aula_numero: "04"
+description: "Referência completa sobre mapas de Karnaugh: a matriz por código Gray, agrupamento de potências de 2, regras de ouro, exemplos de 2, 3 e 4 variáveis e a simplificação passo a passo de expressões booleanas."
+---
+
+<section class="section-box">
+  <h2>O que é um Mapa de Karnaugh?</h2>
+  <p>O <strong>Mapa de Karnaugh</strong> (ou K-map) é uma ferramenta <strong>visual</strong> criada por <strong>Maurice Karnaugh em 1953</strong> para simplificar funções booleanas sem depender de manipulação algébrica. Ele reorganiza a tabela verdade em uma matriz bidimensional onde células <strong>adjacentes</strong> (inclusive nas bordas) diferem em <strong>apenas uma variável</strong>.</p>
+  <p>A simplificação funciona porque, ao agrupar células vizinhas contendo "1", a variável que muda entre elas pode ser eliminada da expressão final, gerando um circuito com menos portas lógicas, mais barato e mais rápido.</p>
+</section>
+
+<section class="section-box">
+  <h2>Estrutura e Ordem do Código Gray</h2>
+  <p>A principal diferença entre o Mapa de Karnaugh e uma tabela verdade comum é a <strong>ordem das colunas e linhas</strong>, que segue o <strong>Código Gray</strong>: 00, 01, 11, 10. Nessa ordem, de uma combinação para a vizinha, apenas <strong>um único bit</strong> muda.</p>
+
+  <h3>Mapa para 2 variáveis</h3>
+  <table>
+    <thead>
+      <tr><th></th><th>$B = 0$</th><th>$B = 1$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>$A = 0$</strong></td><td>$m_0$</td><td>$m_1$</td></tr>
+      <tr><td><strong>$A = 1$</strong></td><td>$m_2$</td><td>$m_3$</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Mapa para 3 variáveis ($A$, $B$ vs $C$)</h3>
+  <table>
+    <thead>
+      <tr><th></th><th>$BC = 00$</th><th>$BC = 01$</th><th>$BC = 11$</th><th>$BC = 10$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>$A = 0$</strong></td><td>$m_0$</td><td>$m_1$</td><td>$m_3$</td><td>$m_2$</td></tr>
+      <tr><td><strong>$A = 1$</strong></td><td>$m_4$</td><td>$m_5$</td><td>$m_7$</td><td>$m_6$</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Mapa para 4 variáveis ($AB$ vs $CD$)</h3>
+  <table>
+    <thead>
+      <tr><th></th><th>$CD = 00$</th><th>$CD = 01$</th><th>$CD = 11$</th><th>$CD = 10$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>$AB = 00$</strong></td><td>$m_0$</td><td>$m_1$</td><td>$m_3$</td><td>$m_2$</td></tr>
+      <tr><td><strong>$AB = 01$</strong></td><td>$m_4$</td><td>$m_5$</td><td>$m_7$</td><td>$m_6$</td></tr>
+      <tr><td><strong>$AB = 11$</strong></td><td>$m_{12}$</td><td>$m_{13}$</td><td>$m_{15}$</td><td>$m_{14}$</td></tr>
+      <tr><td><strong>$AB = 10$</strong></td><td>$m_8$</td><td>$m_9$</td><td>$m_{11}$</td><td>$m_{10}$</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Observação:</strong> a ordem das células dentro de uma linha segue Gray (00, 01, 11, 10) e <em>não</em> a ordem numérica. Isso é essencial para que a adjacência represente uma mudança de um único bit.</p>
+</section>
+
+<section class="section-box">
+  <h2>Como Preencher o Mapa</h2>
+  <ol>
+    <li>Escreva a <strong>tabela verdade</strong> da função.</li>
+    <li>Para cada linha com saída <strong>1</strong>, coloque um <strong>1</strong> na célula correspondente ao mintermo; para saída <strong>0</strong>, deixe a célula em branco (ou com 0).</li>
+    <li>Células com valor <strong>"d"</strong> (don't care) podem ser tratadas como 1 ou 0 conforme conveniente.</li>
+  </ol>
+
+  <h3>Exemplo: preenchimento a partir da tabela verdade</h3>
+  <p>Considere a função com 2 variáveis definida pela tabela:</p>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>1</td></tr>
+      <tr><td>0</td><td>1</td><td>1</td></tr>
+      <tr><td>1</td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>1</td><td>1</td></tr>
+    </tbody>
+  </table>
+  <p>As saídas iguais a 1 estão em $m_0$, $m_1$ e $m_3$. O mapa fica:</p>
+  <table>
+    <thead>
+      <tr><th></th><th>$B = 0$</th><th>$B = 1$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>$A = 0$</strong></td><td><strong>1</strong></td><td><strong>1</strong></td></tr>
+      <tr><td><strong>$A = 1$</strong></td><td></td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section-box">
+  <h2>Regras de Ouro do Agrupamento</h2>
+  <ul>
+    <li><strong>Tamanho dos blocos:</strong> agrupe apenas <strong>potências de 2</strong> células: 1, 2, 4, 8 ou 16.</li>
+    <li><strong>Maximização:</strong> quanto maior o grupo, melhor. Um grupo de 2 elimina 1 variável; um de 4 elimina 2; um de 8 elimina 3.</li>
+    <li><strong>Adjacência circular:</strong> as bordas opostas do mapa se "encostam" (como um toro). Uma célula do canto pode ser agrupada com células do canto oposto.</li>
+    <li><strong>Mínimo de laços:</strong> use o menor número de grupos possível para cobrir todos os "1"s.</li>
+    <li><strong>Reutilização:</strong> um "1" pode ser usado em mais de um grupo. Isso é permitido e frequentemente necessário.</li>
+    <li><strong>Sem redundância:</strong> descarte qualquer grupo cujos "1"s já estejam totalmente cobertos por grupos maiores.</li>
+    <li><strong>Don't care:</strong> células "d" só entram em um grupo se ajudarem a aumentá-lo; caso contrário, são ignoradas como 0.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Exemplo Completo: 2 Variáveis</h2>
+  <p>Com o mapa preenchido no exemplo anterior, identificamos dois agrupamentos:</p>
+  <ul>
+    <li><strong>Grupo das células $m_0$ e $m_1$</strong> (linha $A = 0$) → expressa $\bar{A}$.</li>
+    <li><strong>Grupo das células $m_1$ e $m_3$</strong> (coluna $B = 1$) → expressa $B$.</li>
+  </ul>
+  <p>Somando os termos resultantes (SOP):</p>
+  <p>$$F = \bar{A} + B$$</p>
+  <p>Compare com a expressão a partir dos mintermos diretos: $F = \bar{A}\bar{B} + \bar{A}B + AB$. A simplificação pelo mapa eliminou as variáveis redundantes e reduziu o custo do circuito.</p>
+</section>
+
+<section class="section-box">
+  <h2>Exemplo Completo: 3 Variáveis</h2>
+  <p>Considere a função com saída 1 nos mintermos $m_2$, $m_3$, $m_6$ e $m_7$. O mapa preenchido é:</p>
+  <table>
+    <thead>
+      <tr><th></th><th>$BC = 00$</th><th>$BC = 01$</th><th>$BC = 11$</th><th>$BC = 10$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>$A = 0$</strong></td><td></td><td></td><td><strong>1</strong> $(m_3)$</td><td><strong>1</strong> $(m_2)$</td></tr>
+      <tr><td><strong>$A = 1$</strong></td><td></td><td></td><td><strong>1</strong> $(m_7)$</td><td><strong>1</strong> $(m_6)$</td></tr>
+    </tbody>
+  </table>
+  <p>As quatro células de 1 formam um <strong>bloco de 4</strong> (duas linhas × duas colunas), que elimina <strong>duas variáveis</strong>: a variável que muda entre as linhas ($A$) e a que muda entre as colunas ($B$). A variável constante é $C = 1$. Portanto:</p>
+  <p>$$F = C$$</p>
+  <p>A expressão original $F = A\bar{B}C + \bar{A}BC + AB C + \bar{A}B\bar{C}$ foi reduzida para simplesmente $C$.</p>
+</section>
+
+<section class="section-box">
+  <h2>Exemplo Completo: 4 Variáveis e Adjacência Circular</h2>
+  <p>Considere a função com saída 1 nos mintermos $m_0$, $m_1$, $m_2$, $m_4$, $m_8$ — ou seja, todos os "1"s da primeira linha ($AB = 00$) e todos os "1"s da primeira coluna ($CD = 00$). O mapa preenchido é:</p>
+  <table>
+    <thead>
+      <tr><th></th><th>$CD = 00$</th><th>$CD = 01$</th><th>$CD = 11$</th><th>$CD = 10$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>$AB = 00$</strong></td><td><strong>1</strong></td><td><strong>1</strong></td><td></td><td><strong>1</strong></td></tr>
+      <tr><td><strong>$AB = 01$</strong></td><td><strong>1</strong></td><td></td><td></td><td></td></tr>
+      <tr><td><strong>$AB = 11$</strong></td><td><strong>1</strong></td><td></td><td></td><td></td></tr>
+      <tr><td><strong>$AB = 10$</strong></td><td><strong>1</strong></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <p>Aqui exploramos duas propriedades importantes:</p>
+  <ul>
+    <li><strong>Linha completa ($AB = 00$):</strong> $m_0$, $m_1$, $m_2$ e $m_3$ formam os quatro extremos da primeira linha. Pela <strong>adjacência circular</strong>, $m_3$ (extrema direita, $CD = 10$) é vizinha de $m_0$ (extrema esquerda, $CD = 00$). Assim, os quatro "1"s da linha ($m_0$, $m_1$, $m_2$, $m_3$) formam um <strong>laço de 4</strong> que elimina $C$ e $D$, restando $\bar{A}$.</li>
+    <li><strong>Coluna de 4 ($CD = 00$):</strong> $m_0$, $m_4$, $m_8$ e $m_{12}$ formam a coluna completa. Por adjacência circular, $m_4$ (topo, $AB = 01$) é vizinha de $m_{12}$ (base, $AB = 10$). Esse <strong>bloco de 4</strong> elimina $A$ e $B$, restando $\bar{C}\bar{D}$.</li>
+  </ul>
+  <p>Somando os dois grupos (SOP):</p>
+  <p>$$F = \bar{A} + \bar{C}\bar{D}$$</p>
+  <p>Note que $m_0$ pertence a ambos os grupos — a <strong>reutilização</strong> de células é permitida e, neste caso, necessária para cobrir todos os "1"s com o menor número de laços possíveis.</p>
+</section>
+
+<section class="section-box">
+  <h2>Quando o Mapa Não é Suficiente</h2>
+  <p>Os mapas de Karnaugh são práticos para <strong>até 4 variáveis</strong> (até 5 ou 6 com técnicas avançadas de mapas sobrepostos, bastante difíceis de visualizar). Para funções com muitas variáveis, os engenheiros usam o <strong>Método de Quine-McCluskey</strong>, uma técnica tabular que segue os mesmos princípios de agrupamento e eliminação, porém facilmente traduzível para algoritmos de computador e automação de projeto.</p>
+</section>
+
+<div class="tip-box">
+  <h4>Resumo Rápido</h4>
+  <ul>
+    <li><strong>Ordem Gray:</strong> 00, 01, 11, 10 — vizinhos mudam apenas 1 bit.</li>
+    <li><strong>Agrupe potências de 2:</strong> 1, 2, 4, 8, 16 células.</li>
+    <li><strong>Maior grupo possível:</strong> grupo maior = menos variáveis = circuito mais simples.</li>
+    <li><strong>Bordas se tocam:</strong> a adjacência é circular (como um toro).</li>
+    <li><strong>Cada grupo de 1:</strong> um termo AND no SOP; a variável constante permanece, a que muda é eliminada.</li>
+    <li><strong>Don't care:</strong> use como 1 só se ajudar a aumentar o grupo.</li>
+  </ul>
+</div>

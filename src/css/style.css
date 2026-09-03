@@ -709,3 +709,88 @@ footer {
   font-style: italic;
   font-size: 0.9rem;
 }
+
+/* Tabela Verdade Generator */
+.tt-wrapper {
+  margin-top: 1rem;
+}
+
+.tt-btn-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tt-btn {
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tt-btn:hover:not(:disabled) {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.tt-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tt-btn-remove {
+  border-color: #c00;
+  color: #c00;
+}
+
+.tt-btn-remove:hover:not(:disabled) {
+  background: #c00;
+  color: #fff;
+}
+
+.tt-btn-reset {
+  margin-left: auto;
+}
+
+.tt-table {
+  width: auto;
+  min-width: 60%;
+  margin: 0 auto;
+}
+
+.tt-table th {
+  position: sticky;
+  top: 0;
+}
+
+.tt-clickable {
+  cursor: pointer;
+  transition: background 0.1s ease;
+  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+  text-align: center;
+  width: 3rem;
+  min-width: 3rem;
+}
+
+.tt-clickable:hover {
+  background: var(--accent);
+}
+
+.tt-one {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.tt-info {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+}

@@ -37,6 +37,9 @@ layout: base
     {% set perguntaNum = loop.index %}
     <div class="section-box">
       <h2>{{ perguntaNum }}. {{ pergunta.texto }}</h2>
+      {% if pergunta.figura %}
+      <div class="quiz-figura">{{ pergunta.figura | safe }}</div>
+      {% endif %}
       {% for alternativa in pergunta.alternativas %}
       <label><input type="radio" name="q{{ perguntaNum }}" value="{{ alternativa.letra }}"> {{ alternativa.letra }}) {{ alternativa.texto }}</label><br>
       {% endfor %}

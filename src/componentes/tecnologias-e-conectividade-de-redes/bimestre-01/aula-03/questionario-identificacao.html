@@ -1,0 +1,362 @@
+---
+layout: questionario
+title: "Identificação de Domínios de Colisão e Broadcast em Topologias"
+exercicio_numero: "02"
+aula_numero: "03"
+description: "Atividade prática de múltipla escolha em que o aluno analisa topologias desenhadas e identifica o total de domínios de colisão e de broadcast. Regra de contagem: um hub (com todos os seus enlaces) forma um único domínio de colisão; cada link de um host conectado ao switch forma um domínio de colisão próprio; o enlace entre dois switches (ou entre switch e roteador) forma um único domínio de colisão; roteadores e VLANs separam domínios de broadcast."
+tags:
+  - aula
+perguntas:
+  - texto: "Analise a topologia abaixo e indique o número total de domínios de colisão e de domínios de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          HUB((Hub))
+          H1[PC-1] --- HUB
+          H2[PC-2] --- HUB
+          H3[PC-3] --- HUB
+          H4[PC-4] --- HUB
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 1 | Broadcast: 1"
+      - letra: "b"
+        texto: "Colisão: 4 | Broadcast: 1"
+      - letra: "c"
+        texto: "Colisão: 1 | Broadcast: 4"
+      - letra: "d"
+        texto: "Colisão: 4 | Broadcast: 4"
+    resposta_correta: "a"
+
+  - texto: "Analise a topologia abaixo e indique o número total de domínios de colisão e de domínios de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          SW[Switch-1]
+          A1[PC-1] --- SW
+          A2[PC-2] --- SW
+          A3[PC-3] --- SW
+          A4[PC-4] --- SW
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 1 | Broadcast: 1"
+      - letra: "b"
+        texto: "Colisão: 4 | Broadcast: 1"
+      - letra: "c"
+        texto: "Colisão: 4 | Broadcast: 4"
+      - letra: "d"
+        texto: "Colisão: 1 | Broadcast: 4"
+    resposta_correta: "b"
+
+  - texto: "Dois switches estão interligados por um enlace e cada um conecta três máquinas. Indique o número total de domínios de colisão e de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          SW1[Switch-1] --- SW2[Switch-2]
+          A1[PC-1] --- SW1
+          A2[PC-2] --- SW1
+          A3[PC-3] --- SW1
+          B1[PC-4] --- SW2
+          B2[PC-5] --- SW2
+          B3[PC-6] --- SW2
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 8 | Broadcast: 1"
+      - letra: "b"
+        texto: "Colisão: 6 | Broadcast: 2"
+      - letra: "c"
+        texto: "Colisão: 7 | Broadcast: 1"
+      - letra: "d"
+        texto: "Colisão: 8 | Broadcast: 2"
+    resposta_correta: "c"
+
+  - texto: "Um roteador conecta dois switches, cada um com três máquinas. Indique o número total de domínios de colisão e de domínios de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          R((Router))
+          R --- SW1[Switch-1]
+          R --- SW2[Switch-2]
+          A1[PC-1] --- SW1
+          A2[PC-2] --- SW1
+          A3[PC-3] --- SW1
+          B1[PC-4] --- SW2
+          B2[PC-5] --- SW2
+          B3[PC-6] --- SW2
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 8 | Broadcast: 1"
+      - letra: "b"
+        texto: "Colisão: 6 | Broadcast: 2"
+      - letra: "c"
+        texto: "Colisão: 7 | Broadcast: 2"
+      - letra: "d"
+        texto: "Colisão: 8 | Broadcast: 2"
+    resposta_correta: "d"
+
+  - texto: "Dois hubs, cada um com quatro máquinas, estão conectados a um switch. Indique o número total de domínios de colisão e de domínios de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          H1((Hub-1))
+          A1[PC-1] --- H1
+          A2[PC-2] --- H1
+          A3[PC-3] --- H1
+          A4[PC-4] --- H1
+          H2((Hub-2))
+          B1[PC-5] --- H2
+          B2[PC-6] --- H2
+          B3[PC-7] --- H2
+          B4[PC-8] --- H2
+          SW[Switch-1]
+          H1 --- SW
+          H2 --- SW
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 2 | Broadcast: 1"
+      - letra: "b"
+        texto: "Colisão: 6 | Broadcast: 1"
+      - letra: "c"
+        texto: "Colisão: 8 | Broadcast: 2"
+      - letra: "d"
+        texto: "Colisão: 2 | Broadcast: 2"
+    resposta_correta: "a"
+
+  - texto: "Um switch possui quatro hosts divididos em duas VLANs (VLAN 10 e VLAN 20). Indique o número total de domínios de colisão e de domínios de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph TD
+          SW[Switch-1]
+          A1[PC-1 - VLAN 10] --- SW
+          A2[PC-2 - VLAN 10] --- SW
+          B1[PC-3 - VLAN 20] --- SW
+          B2[PC-4 - VLAN 20] --- SW
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 4 | Broadcast: 1"
+      - letra: "b"
+        texto: "Colisão: 2 | Broadcast: 2"
+      - letra: "c"
+        texto: "Colisão: 4 | Broadcast: 2"
+      - letra: "d"
+        texto: "Colisão: 8 | Broadcast: 2"
+    resposta_correta: "c"
+
+  - texto: "Dois switches estão interligados por um enlace e cada um conecta duas máquinas. Indique o número total de domínios de colisão e de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          SW1[Switch-1] --- SW2[Switch-2]
+          A1[PC-1] --- SW1
+          A2[PC-2] --- SW1
+          B1[PC-3] --- SW2
+          B2[PC-4] --- SW2
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 5 | Broadcast: 1"
+      - letra: "b"
+        texto: "Colisão: 4 | Broadcast: 1"
+      - letra: "c"
+        texto: "Colisão: 5 | Broadcast: 2"
+      - letra: "d"
+        texto: "Colisão: 6 | Broadcast: 1"
+    resposta_correta: "a"
+
+  - texto: "Um roteador está conectado a um único switch com três máquinas. Indique o número total de domínios de colisão e de domínios de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          R((Router))
+          R --- SW[Switch-1]
+          A1[PC-1] --- SW
+          A2[PC-2] --- SW
+          A3[PC-3] --- SW
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 4 | Broadcast: 2"
+      - letra: "b"
+        texto: "Colisão: 3 | Broadcast: 1"
+      - letra: "c"
+        texto: "Colisão: 4 | Broadcast: 1"
+      - letra: "d"
+        texto: "Colisão: 7 | Broadcast: 1"
+    resposta_correta: "c"
+
+  - texto: "Três switches estão interligados em cadeia e cada um conecta uma única máquina. Indique o número total de domínios de colisão e de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          SW1[Switch-1] --- SW2[Switch-2] --- SW3[Switch-3]
+          A1[PC-1] --- SW1
+          A2[PC-2] --- SW2
+          A3[PC-3] --- SW3
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 4 | Broadcast: 1"
+      - letra: "b"
+        texto: "Colisão: 5 | Broadcast: 1"
+      - letra: "c"
+        texto: "Colisão: 5 | Broadcast: 2"
+      - letra: "d"
+        texto: "Colisão: 3 | Broadcast: 1"
+    resposta_correta: "b"
+
+  - texto: "Um hub com três máquinas está conectado a um switch que possui mais uma máquina; esse switch se interliga a um segundo switch com duas máquinas. Indique o número total de domínios de colisão e de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          H1((Hub-1))
+          A1[PC-1] --- H1
+          A2[PC-2] --- H1
+          A3[PC-3] --- H1
+          H1 --- SW1[Switch-1]
+          A4[PC-4] --- SW1
+          SW1 --- SW2[Switch-2]
+          B1[PC-5] --- SW2
+          B2[PC-6] --- SW2
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 6 | Broadcast: 1"
+      - letra: "b"
+        texto: "Colisão: 5 | Broadcast: 1"
+      - letra: "c"
+        texto: "Colisão: 5 | Broadcast: 2"
+      - letra: "d"
+        texto: "Colisão: 8 | Broadcast: 1"
+    resposta_correta: "b"
+
+  - texto: "Um roteador conecta três switches, cada um com duas máquinas. Indique o número total de domínios de colisão e de domínios de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          R((Router))
+          R --- SW1[Switch-1]
+          R --- SW2[Switch-2]
+          R --- SW3[Switch-3]
+          A1[PC-1] --- SW1
+          A2[PC-2] --- SW1
+          B1[PC-3] --- SW2
+          B2[PC-4] --- SW2
+          C1[PC-5] --- SW3
+          C2[PC-6] --- SW3
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 9 | Broadcast: 3"
+      - letra: "b"
+        texto: "Colisão: 9 | Broadcast: 1"
+      - letra: "c"
+        texto: "Colisão: 6 | Broadcast: 3"
+      - letra: "d"
+        texto: "Colisão: 12 | Broadcast: 3"
+    resposta_correta: "a"
+
+  - texto: "Dois switches interligados por um enlace trunk mantêm duas VLANs: os dois hosts do Switch-1 na VLAN 10 e os dois hosts do Switch-2 na VLAN 20. Indique o número total de domínios de colisão e de domínios de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          SW1[Switch-1] === SW2[Switch-2]
+          A1[PC-1 - VLAN 10] --- SW1
+          A2[PC-2 - VLAN 10] --- SW1
+          B1[PC-3 - VLAN 20] --- SW2
+          B2[PC-4 - VLAN 20] --- SW2
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 5 | Broadcast: 1"
+      - letra: "b"
+        texto: "Colisão: 4 | Broadcast: 2"
+      - letra: "c"
+        texto: "Colisão: 6 | Broadcast: 2"
+      - letra: "d"
+        texto: "Colisão: 5 | Broadcast: 2"
+    resposta_correta: "d"
+
+  - texto: "Um switch possui três máquinas conectadas diretamente e um hub com duas máquinas. Indique o número total de domínios de colisão e de domínios de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          SW[Switch-1]
+          A1[PC-1] --- SW
+          A2[PC-2] --- SW
+          A3[PC-3] --- SW
+          H1((Hub-1))
+          B1[PC-4] --- H1
+          B2[PC-5] --- H1
+          H1 --- SW
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 5 | Broadcast: 1"
+      - letra: "b"
+        texto: "Colisão: 4 | Broadcast: 1"
+      - letra: "c"
+        texto: "Colisão: 4 | Broadcast: 2"
+      - letra: "d"
+        texto: "Colisão: 7 | Broadcast: 1"
+    resposta_correta: "b"
+
+  - texto: "Um roteador está conectado a um switch com duas máquinas, e esse switch se interliga a um segundo switch com duas máquinas. Indique o número total de domínios de colisão e de domínios de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          R((Router))
+          R --- SW1[Switch-1]
+          SW1 --- SW2[Switch-2]
+          A1[PC-1] --- SW1
+          A2[PC-2] --- SW1
+          B1[PC-3] --- SW2
+          B2[PC-4] --- SW2
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 6 | Broadcast: 2"
+      - letra: "b"
+        texto: "Colisão: 6 | Broadcast: 1"
+      - letra: "c"
+        texto: "Colisão: 5 | Broadcast: 1"
+      - letra: "d"
+        texto: "Colisão: 8 | Broadcast: 2"
+    resposta_correta: "b"
+
+  - texto: "Analise a topologia combinada a seguir: um hub com três máquinas ligado ao Switch-1, que tem duas máquinas diretas e se conecta ao Switch-2; o Switch-2 tem duas máquinas e também se conecta ao roteador, que por sua vez alimenta um Switch-3 com três máquinas. Indique o número total de domínios de colisão e de domínios de broadcast."
+    figura: |
+      <div class="mermaid">
+        graph LR
+          H1((Hub-1))
+          A1[PC-1] --- H1
+          A2[PC-2] --- H1
+          A3[PC-3] --- H1
+          H1 --- SW1[Switch-1]
+          A4[PC-4] --- SW1
+          A5[PC-5] --- SW1
+          SW1 --- SW2[Switch-2]
+          B1[PC-6] --- SW2
+          B2[PC-7] --- SW2
+          R((Router))
+          SW2 --- R
+          R --- SW3[Switch-3]
+          C1[PC-8] --- SW3
+          C2[PC-9] --- SW3
+          C3[PC-10] --- SW3
+      </div>
+    alternativas:
+      - letra: "a"
+        texto: "Colisão: 10 | Broadcast: 2"
+      - letra: "b"
+        texto: "Colisão: 11 | Broadcast: 2"
+      - letra: "c"
+        texto: "Colisão: 11 | Broadcast: 1"
+      - letra: "d"
+        texto: "Colisão: 13 | Broadcast: 3"
+    resposta_correta: "b"
+---

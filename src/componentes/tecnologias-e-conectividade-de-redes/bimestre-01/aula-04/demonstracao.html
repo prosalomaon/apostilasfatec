@@ -1,0 +1,675 @@
+---
+layout: exercicio
+title: "Demonstração Prática: VLANs no Cisco Packet Tracer"
+exercicio_numero: "01"
+aula_numero: "04"
+description: "Guias passo a passo para configuração de VLANs no Cisco Packet Tracer — do básico ao avançado."
+tags: []
+---
+
+<section class="section-box">
+  <h2>Visão Geral da Demonstração</h2>
+  <p>Esta página reúne exercícios práticos para serem realizados no <strong>Cisco Packet Tracer</strong>, organizados do nível fácil ao difícil. Cada demonstração é autocontida e pode ser usada individualmente em sala de aula.</p>
+  <p><strong>Requisito:</strong> Cisco Packet Tracer instalado (versão 8.0 ou superior).</p>
+  <ul>
+    <li><strong>Demonstração 1:</strong> VLANs em um único switch — isolamento de broadcast (fácil)</li>
+    <li><strong>Demonstração 2:</strong> Switches independentes — a VLAN é local a cada switch (intermediário)</li>
+    <li><strong>Demonstração 3:</strong> Cenário corporativo — três VLANs e contenção de broadcast (intermediário/avançado)</li>
+  </ul>
+  <p><strong>Nota:</strong> Esta aula aborda somente a VLAN em si. Temas como Trunk 802.1Q, VLAN nativa e roteamento entre VLANs serão cobertos nas próximas aulas.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- DEMONSTRAÇÃO 1 -->
+<!-- ============================================================ -->
+<section class="section-box" id="demo1">
+  <h2>Demonstração 1 — VLANs em um Único Switch: Isolamento de Broadcast (Fácil)</h2>
+
+  <h3>Objetivo</h3>
+  <p>Criar duas VLANs em um único switch, atribuir portas a cada VLAN e demonstrar o isolamento de trafego e de broadcast entre elas. Nesta demonstração as máquinas de VLANs diferentes <strong>não conseguem se comunicar</strong> — e é exatamente esse o ponto a ser mostrado.</p>
+
+  <h3>Topologia</h3>
+  <div class="mermaid">
+    graph TD
+        subgraph Switch0[Switch 0 - 2960]
+            subgraph VLAN10[VLAN 10 - Financeiro]
+                PC0[PC0 - 192.168.10.10]
+                PC1[PC1 - 192.168.10.11]
+            end
+            subgraph VLAN20[VLAN 20 - RH]
+                PC2[PC2 - 192.168.20.10]
+                PC3[PC3 - 192.168.20.11]
+            end
+        end
+
+        style Switch0 fill:#fff,stroke:#000,stroke-width:2px
+        style VLAN10 fill:#d4edda,stroke:#28a745
+        style VLAN20 fill:#cce5ff,stroke:#007bff
+        style PC0 fill:#fff,stroke:#28a745
+        style PC1 fill:#fff,stroke:#28a745
+        style PC2 fill:#fff,stroke:#007bff
+        style PC3 fill:#fff,stroke:#007bff
+  </div>
+
+  <h3>Materiais Necessários</h3>
+  <ul>
+    <li>1× Switch 2960</li>
+    <li>4× PCs (PC0, PC1, PC2, PC3)</li>
+    <li>4× Cabos Copper Straight-Through</li>
+  </ul>
+
+  <h3>Passo 1 — Montar a Topologia</h3>
+  <ol>
+    <li>Abra o Cisco Packet Tracer.</li>
+    <li>No painel inferior, clique em <strong>Network Devices</strong> → <strong>Switches</strong>.</li>
+    <li>Arraste um <strong>2960</strong> para a área de trabalho.</li>
+    <li>Clique em <strong>End Devices</strong> → <strong>PC</strong>. Arraste 4 PCs para a área de trabalho.</li>
+    <li>Conecte cada PC a uma porta do switch usando <strong>Copper Straight-Through</strong>:
+      <ul>
+        <li>PC0 → FastEthernet0/1</li>
+        <li>PC1 → FastEthernet0/2</li>
+        <li>PC2 → FastEthernet0/3</li>
+        <li>PC3 → FastEthernet0/4</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3>Passo 2 — Configurar os Endereços IP dos PCs</h3>
+  <p>Para cada PC, clique nele, vá na aba <strong>Desktop</strong> → <strong>IP Configuration</strong> e configure:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>PC</th>
+        <th>IP Address</th>
+        <th>Subnet Mask</th>
+        <th>VLAN</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PC0</td><td>192.168.10.10</td><td>255.255.255.0</td><td>VLAN 10</td></tr>
+      <tr><td>PC1</td><td>192.168.10.11</td><td>255.255.255.0</td><td>VLAN 10</td></tr>
+      <tr><td>PC2</td><td>192.168.20.10</td><td>255.255.255.0</td><td>VLAN 20</td></tr>
+      <tr><td>PC3</td><td>192.168.20.11</td><td>255.255.255.0</td><td>VLAN 20</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Passo 3 — Criar as VLANs no Switch</h3>
+  <p>Clique no switch, vá na aba <strong>CLI</strong> e pressione <strong>Enter</strong> para acessar o prompt. Digite os seguintes comandos:</p>
+  <p>Não conhece os comandos <code>enable</code>, <code>configure terminal</code> ou os blocos de configuração da CLI? Consulte o <a href="anexo-01/">Anexo 01: Dominando a CLI do Cisco IOS</a> antes de prosseguir.</p>
+
+  <pre><code>enable
+configure terminal
+
+! Criando as VLANs
+vlan 10
+ name Financeiro
+exit
+
+vlan 20
+ name RH
+exit
+
+! Verificando as VLANs criadas
+show vlan brief</code></pre>
+
+  <p><strong>Resultado esperado do <code>show vlan brief</code>:</strong></p>
+  <pre><code>VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+10   Financeiro                      active
+20   RH                               active</code></pre>
+
+  <h3>Passo 4 — Atribuir Portas às VLANs</h3>
+  <p>Ainda no CLI do switch:</p>
+
+  <pre><code>configure terminal
+
+! Portas do Financeiro (VLAN 10)
+interface FastEthernet0/1
+ switchport mode access
+ switchport access vlan 10
+exit
+
+interface FastEthernet0/2
+ switchport mode access
+ switchport access vlan 10
+exit
+
+! Portas do RH (VLAN 20)
+interface FastEthernet0/3
+ switchport mode access
+ switchport access vlan 20
+exit
+
+interface FastEthernet0/4
+ switchport mode access
+ switchport access vlan 20
+exit
+
+! Verificando a atribuição
+show vlan brief</code></pre>
+
+  <p><strong>Resultado esperado:</strong></p>
+  <pre><code>VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/5, Fa0/6, Fa0/7, Fa0/8 ...
+10   Financeiro                      active    Fa0/1, Fa0/2
+20   RH                               active    Fa0/3, Fa0/4</code></pre>
+
+  <h3>Passo 5 — Testar a Conectividade</h3>
+  <p>No PC0, vá em <strong>Desktop</strong> → <strong>Command Prompt</strong> e execute:</p>
+  <pre><code>ping 192.168.10.11</code></pre>
+  <p><strong>Resultado:</strong> Sucesso — PC0 e PC1 estão na mesma VLAN (10), portanto se comunicam.</p>
+
+  <pre><code>ping 192.168.20.10</code></pre>
+  <p><strong>Resultado:</strong> Falha — PC0 (VLAN 10) não consegue pingar PC2 (VLAN 20). O isolamento funciona!</p>
+
+  <p>Repita o teste em PC2 (VLAN 20): o <code>ping 192.168.20.11</code> deve ter sucesso e o <code>ping 192.168.10.10</code> deve falhar, confirmando o mesmo comportamento no outro sentido.</p>
+
+  <h3>Passo 6 — Visualizar a Contenção de Broadcast (Simulation Mode)</h3>
+  <ol>
+    <li>Clique no ícone <strong>Simulation Mode</strong> no canto inferior direito.</li>
+    <li>Clique no ícone <strong>Add Simple PDU</strong> (envelope) e selecione <strong>PC0</strong> como origem e <strong>PC1</strong> como destino.</li>
+    <li>No painel <strong>Simulation Panel</strong>, clique em <strong>Play</strong> para avançar o quadro.</li>
+    <li>Observe o envelope <strong>ARP</strong> partir do PC0 em direção ao switch.</li>
+    <li>Ao chegar ao switch, observe que ele replica o quadro <strong>apenas para as portas Fa0/2 e Fa0/24</strong> (e demais portas da VLAN 10) — literalmente <strong>nenhum envelope</strong> vai em direção ao PC2 (Fa0/3) ou PC3 (Fa0/4), que estão na VLAN 20.</li>
+    <li>Repita o procedimento enviando um PDU de <strong>PC2 para PC3</strong> (VLAN 20) e confirme que o broadcast também fica restrito à VLAN 20.</li>
+  </ol>
+
+  <div class="tip-box">
+    <h4>Ponto de Demonstração</h4>
+    <p>Mostre aos alunos que o switch replica o broadcast <strong>somente para as portas da mesma VLAN</strong>. Isso prova que cada VLAN é um <strong>domínio de broadcast separado</strong> — exatamente como se fossem dois switches físicos diferentes dentro do mesmo equipamento.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- DEMONSTRAÇÃO 2 -->
+<!-- ============================================================ -->
+<section class="section-box" id="demo2">
+  <h2>Demonstração 2 — Switches Independentes: a VLAN é Local (Intermediário)</h2>
+
+  <h3>Objetivo</h3>
+  <p>Demonstrar que a configuração de VLAN é <strong>local a cada switch</strong>: dois switches podem ter a mesma VLAN 10 configurada, porém elas são domínios lógicos independentes. Mesmo que as máquinas estejam na "mesma VLAN", elas <strong>não se comunicam</strong> através do enlace entre os switches sem um link de tronco (Trunk), que será assunto da próxima aula.</p>
+
+  <h3>Topologia</h3>
+  <div class="mermaid">
+    graph LR
+        subgraph SW1[Switch 1 - 2960]
+            subgraph V10A[VLAN 10 - Financeiro]
+                PC0[PC0 - 192.168.10.1]
+            end
+            subgraph V20A[VLAN 20 - RH]
+                PC1[PC1 - 192.168.20.1]
+            end
+            L1[Fa0/24 - enlace normal]
+        end
+        subgraph SW2[Switch 2 - 2960]
+            L2[Fa0/24 - enlace normal]
+            subgraph V10B[VLAN 10 - Financeiro]
+                PC2[PC2 - 192.168.10.2]
+            end
+            subgraph V20B[VLAN 20 - RH]
+                PC3[PC3 - 192.168.20.2]
+            end
+        end
+        L1 -- "somente a VLAN de acesso" --- L2
+
+        style SW1 fill:#fff,stroke:#000,stroke-width:2px
+        style SW2 fill:#fff,stroke:#000,stroke-width:2px
+        style V10A fill:#d4edda,stroke:#28a745
+        style V10B fill:#d4edda,stroke:#28a745
+        style V20A fill:#cce5ff,stroke:#007bff
+        style V20B fill:#cce5ff,stroke:#007bff
+        style L1 fill:#ffc107,stroke:#000
+        style L2 fill:#ffc107,stroke:#000
+  </div>
+
+  <h3>Materiais Necessários</h3>
+  <ul>
+    <li>2× Switch 2960</li>
+    <li>4× PCs</li>
+    <li>5× Cabos Copper Straight-Through (4 para PCs + 1 entre switches)</li>
+  </ul>
+
+  <h3>Passo 1 — Montar a Topologia</h3>
+  <ol>
+    <li>Arraste 2 switches 2960 e 4 PCs para a área de trabalho.</li>
+    <li>Conecte:
+      <ul>
+        <li>PC0 → Switch1 Fa0/1</li>
+        <li>PC1 → Switch1 Fa0/2</li>
+        <li>PC2 → Switch2 Fa0/1</li>
+        <li>PC3 → Switch2 Fa0/2</li>
+        <li>Switch1 Fa0/24 → Switch2 Fa0/24 (enlace entre switches)</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3>Passo 2 — Configurar os Endereços IP dos PCs</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>PC</th>
+        <th>IP Address</th>
+        <th>Subnet Mask</th>
+        <th>VLAN</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PC0</td><td>192.168.10.1</td><td>255.255.255.0</td><td>VLAN 10</td></tr>
+      <tr><td>PC1</td><td>192.168.20.1</td><td>255.255.255.0</td><td>VLAN 20</td></tr>
+      <tr><td>PC2</td><td>192.168.10.2</td><td>255.255.255.0</td><td>VLAN 10</td></tr>
+      <tr><td>PC3</td><td>192.168.20.2</td><td>255.255.255.0</td><td>VLAN 20</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Passo 3 — Configurar o Switch 1</h3>
+  <pre><code>enable
+configure terminal
+
+! Criar VLANs
+vlan 10
+ name Financeiro
+exit
+vlan 20
+ name RH
+exit
+
+! Atribuir portas dos hosts
+interface FastEthernet0/1
+ switchport mode access
+ switchport access vlan 10
+exit
+
+interface FastEthernet0/2
+ switchport mode access
+ switchport access vlan 20
+exit
+
+! Porta 24: enlace simples entre switches (apenas VLAN 1)
+interface FastEthernet0/24
+ switchport mode access
+exit
+
+show vlan brief</code></pre>
+
+  <h3>Passo 4 — Configurar o Switch 2</h3>
+  <pre><code>enable
+configure terminal
+
+! Criar as MESMAS VLANs do Switch 1
+vlan 10
+ name Financeiro
+exit
+vlan 20
+ name RH
+exit
+
+! Atribuir portas dos hosts
+interface FastEthernet0/1
+ switchport mode access
+ switchport access vlan 10
+exit
+
+interface FastEthernet0/2
+ switchport mode access
+ switchport access vlan 20
+exit
+
+! Porta 24: enlace simples entre switches (apenas VLAN 1)
+interface FastEthernet0/24
+ switchport mode access
+exit
+
+show vlan brief</code></pre>
+
+  <h3>Passo 5 — Verificar a Configuração</h3>
+  <p>Em cada switch, confirme que ambos possuem as VLANs 10 e 20 com as mesmas portas atribuídas:</p>
+  <pre><code>show vlan brief</code></pre>
+  <p>Nos dois switches a saída deve ser idêntica:</p>
+  <pre><code>VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/3, Fa0/4, Fa0/5, Fa0/6 ...
+                                                Fa0/24
+10   Financeiro                      active    Fa0/1
+20   RH                               active    Fa0/2</code></pre>
+
+  <h3>Passo 6 — Testar a Conectividade</h3>
+  <p>Nos Command Prompts dos PCs, execute os testes abaixo e compare os resultados:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Origem</th>
+        <th>Destino</th>
+        <th>Comando</th>
+        <th>Resultado</th>
+        <th>Explicação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PC0 (VLAN 10, SW1)</td>
+        <td>PC1 (VLAN 20, SW1)</td>
+        <td><code>ping 192.168.20.1</code></td>
+        <td>Falha</td>
+        <td>VLANs diferentes no mesmo switch não se comunicam.</td>
+      </tr>
+      <tr>
+        <td>PC0 (VLAN 10, SW1)</td>
+        <td>PC2 (VLAN 10, SW2)</td>
+        <td><code>ping 192.168.10.2</code></td>
+        <td>Falha</td>
+        <td>A VLAN 10 do SW1 e a VLAN 10 do SW2 são domínios independentes.</td>
+      </tr>
+      <tr>
+        <td>PC2 (VLAN 10, SW2)</td>
+        <td>PC0 (VLAN 10, SW1)</td>
+        <td><code>ping 192.168.10.1</code></td>
+        <td>Falha</td>
+        <td>Mesma observação, no sentido inverso.</td>
+      </tr>
+      <tr>
+        <td>PC0 (VLAN 10, SW1)</td>
+        <td>PC3 (VLAN 20, SW2)</td>
+        <td><code>ping 192.168.20.2</code></td>
+        <td>Falha</td>
+        <td>VLANs diferentes em switches diferentes.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p><strong>Atenção:</strong> nenhum host de um switch consegue alcançar um host do outro switch, mesmo nas mesmas sub-redes e "mesmas VLANs". Esse é o resultado esperado desta demonstração.</p>
+
+  <h3>Passo 7 — Explicar a Causa</h3>
+  <p>O comando <code>show vlan brief</code> mostra que o enlace entre os switches (Fa0/24) pertence somente à <strong>VLAN 1</strong>. Quando um quadro da VLAN 10 chega a essa porta vindo de um host, o switch simplesmente não o encaminha, porque a porta Fa0/24 não faz parte da VLAN 10.</p>
+  <p>A VLAN é um conceito <strong>local</strong>: defini-la no Switch 1 não a cria no Switch 2, e vice-versa. Para que uma VLAN seja <strong>estendida entre switches</strong>, é necessário um enlace capaz de transportar várias VLANs com marcação (Trunk IEEE 802.1Q) — esse será o tema da próxima aula.</p>
+
+  <div class="tip-box">
+    <h4>Ponto de Demonstração</h4>
+    <p>Essa é a demonstração que deixa clara a diferença entre <strong>topologia física</strong> e <strong>lógica</strong> tratada na aula. Mostre que cada switch "conhece" apenas as regras que foram configuradas nele, e que os hosts dos switches diferentes seguem isolados. Conclua com a provocação: "e se quisermos unir essas duas redes físicas em uma única VLAN? É disso que vamos tratar na próxima aula".</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- DEMONSTRAÇÃO 3 -->
+<!-- ============================================================ -->
+<section class="section-box" id="demo3">
+  <h2>Demonstração 3 — Cenário Corporativo: Três VLANs e Contenção de Broadcast (Intermediário/Avançado)</h2>
+
+  <h3>Objetivo</h3>
+  <p>Criar um cenário corporativo com 3 VLANs em um único switch (Financeiro, RH e TI), demonstrar a contenção de broadcast com o Simulation Mode e evidenciar a limitação da atribuição de VLAN por porta.</p>
+
+  <h3>Topologia</h3>
+  <div class="mermaid">
+    graph TD
+        subgraph Switch0[Switch 0 - 2960]
+            subgraph VLAN10[VLAN 10 - Financeiro]
+                PC0[PC0 - 10.10.10.1]
+                PC1[PC1 - 10.10.10.2]
+            end
+            subgraph VLAN20[VLAN 20 - RH]
+                PC2[PC2 - 10.10.20.1]
+                PC3[PC3 - 10.10.20.2]
+            end
+            subgraph VLAN30[VLAN 30 - TI]
+                PC4[PC4 - 10.10.30.1]
+                PC5[PC5 - 10.10.30.2]
+            end
+        end
+
+        style Switch0 fill:#fff,stroke:#000,stroke-width:2px
+        style VLAN10 fill:#d4edda,stroke:#28a745
+        style VLAN20 fill:#cce5ff,stroke:#007bff
+        style VLAN30 fill:#f8d7da,stroke:#dc3545
+        style PC0 fill:#fff,stroke:#28a745
+        style PC1 fill:#fff,stroke:#28a745
+        style PC2 fill:#fff,stroke:#007bff
+        style PC3 fill:#fff,stroke:#007bff
+        style PC4 fill:#fff,stroke:#dc3545
+        style PC5 fill:#fff,stroke:#dc3545
+  </div>
+
+  <h3>Materiais Necessários</h3>
+  <ul>
+    <li>1× Switch 2960</li>
+    <li>6× PCs (PC0 a PC5)</li>
+    <li>6× Cabos Copper Straight-Through</li>
+  </ul>
+
+  <h3>Passo 1 — Montar a Topologia</h3>
+  <ol>
+    <li>Arraste 1 switch 2960 e 6 PCs para a área de trabalho.</li>
+    <li>Conecte:
+      <ul>
+        <li>PC0 → FastEthernet0/1, PC1 → FastEthernet0/2</li>
+        <li>PC2 → FastEthernet0/3, PC3 → FastEthernet0/4</li>
+        <li>PC4 → FastEthernet0/5, PC5 → FastEthernet0/6</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3>Passo 2 — Configurar os Endereços IP dos PCs</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>PC</th>
+        <th>IP Address</th>
+        <th>Subnet Mask</th>
+        <th>VLAN</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PC0</td><td>10.10.10.1</td><td>255.255.255.0</td><td>VLAN 10</td></tr>
+      <tr><td>PC1</td><td>10.10.10.2</td><td>255.255.255.0</td><td>VLAN 10</td></tr>
+      <tr><td>PC2</td><td>10.10.20.1</td><td>255.255.255.0</td><td>VLAN 20</td></tr>
+      <tr><td>PC3</td><td>10.10.20.2</td><td>255.255.255.0</td><td>VLAN 20</td></tr>
+      <tr><td>PC4</td><td>10.10.30.1</td><td>255.255.255.0</td><td>VLAN 30</td></tr>
+      <tr><td>PC5</td><td>10.10.30.2</td><td>255.255.255.0</td><td>VLAN 30</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Passo 3 — Criar as Três VLANs no Switch</h3>
+  <p>No CLI do switch:</p>
+  <pre><code>enable
+configure terminal
+
+! Criar as 3 VLANs
+vlan 10
+ name Financeiro
+exit
+vlan 20
+ name RH
+exit
+vlan 30
+ name TI
+exit
+
+show vlan brief</code></pre>
+
+  <h3>Passo 4 — Atribuir as Portas às VLANs</h3>
+  <p>Desta vez utilize <code>interface range</code> para configurar várias portas de uma só vez:</p>
+  <pre><code>configure terminal
+
+! Financeiro (VLAN 10)
+interface range FastEthernet0/1 - 2
+ switchport mode access
+ switchport access vlan 10
+exit
+
+! RH (VLAN 20)
+interface range FastEthernet0/3 - 4
+ switchport mode access
+ switchport access vlan 20
+exit
+
+! TI (VLAN 30)
+interface range FastEthernet0/5 - 6
+ switchport mode access
+ switchport access vlan 30
+exit
+
+show vlan brief</code></pre>
+
+  <p><strong>Resultado esperado:</strong></p>
+  <pre><code>VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/7, Fa0/8, Fa0/9, Fa0/10 ...
+10   Financeiro                      active    Fa0/1, Fa0/2
+20   RH                               active    Fa0/3, Fa0/4
+30   TI                               active    Fa0/5, Fa0/6</code></pre>
+
+  <h3>Passo 5 — Testar a Conectividade entre VLANs</h3>
+  <p>Nos Command Prompts dos PCs, execute:</p>
+  <pre><code>ping 10.10.10.2</code></pre>
+  <p><strong>Resultado (em PC0):</strong> Sucesso — PC0 e PC1 estão na mesma VLAN 10.</p>
+
+  <pre><code>ping 10.10.20.1</code></pre>
+  <p><strong>Resultado (em PC0):</strong> Falha — PC0 (VLAN 10) não alcança PC2 (VLAN 20).</p>
+
+  <pre><code>ping 10.10.30.1</code></pre>
+  <p><strong>Resultado (em PC0):</strong> Falha — PC0 (VLAN 10) não alcança PC4 (VLAN 30).</p>
+
+  <h3>Passo 6 — Contenção de Broadcast no Simulation Mode</h3>
+  <ol>
+    <li>Ative o <strong>Simulation Mode</strong> e adicione um <strong>Simple PDU</strong> de <strong>PC0</strong> para <strong>PC1</strong> (ambos na VLAN 10).</li>
+    <li>Avance o quadro com <strong>Play</strong>/<strong>Forward</strong>.</li>
+    <li>Quando o envelope ARP chegar ao switch, o switch o <strong>inunda somente pelas portas da VLAN 10</strong> (Fa0/1 e Fa0/2, além das portas de trunk/nativas). Nenhum envelope sai pelas portas Fa0/3, Fa0/4, Fa0/5 ou Fa0/6.</li>
+    <li>Repita o teste com um PDU de <strong>PC2 → PC3</strong> (VLAN 20) e depois <strong>PC4 → PC5</strong> (VLAN 30). Em cada caso, o flood atinge apenas as duas portas da própria VLAN.</li>
+    <li>Anote o que observou no quadro vindo do <strong>PC4 → PC5</strong>: mesmo havendo 6 computadores ligados, o broadcast originado na VLAN 30 nunca "molha" os setores de Financeiro e RH.</li>
+  </ol>
+
+  <div class="tip-box">
+    <h4>Explicação para a turma</h4>
+    <p>Em uma rede plana (sem VLANs), esse mesmo broadcast seria copiado para <strong>todas</strong> as portas ativas do switch, obrigando cada máquina a processar e descartar tráfego alheio. Com a segmentação por VLAN, o flood é <strong>contido</strong> no setor de origem — exatamente a contenção de broadcast estudada na aula, protegendo os demais setores de tempestades de tráfego.</p>
+  </div>
+
+  <h3>Passo 7 — A Limitação da Atribuição de VLAN por Porta</h3>
+  <p>A atribuição por porta (Camada 1) é simples, porém rígida: ao <strong>mover o cabo</strong> de um host para outra porta, o host muda de VLAN.</p>
+  <ol>
+    <li>Desconecte o cabo do <strong>PC2</strong> da porta Fa0/3 e troque-o para a porta <strong>Fa0/8</strong> (que pertence à VLAN 1 padrão).</li>
+    <li>No CLI do switch, execute <code>show vlan brief</code>. O PC2 agora aparece na coluna Ports da <strong>VLAN 1</strong>, e não mais na VLAN 20.</li>
+    <li>No PC2, execute <code>ping 10.10.20.2</code>. O resultado agora é <strong>falha</strong> — ele perdeu o acesso ao setor de RH.</li>
+    <li>Restaure o cabo do PC2 na porta <strong>Fa0/3</strong> e verifique com <code>ping 10.10.20.2</code> que a comunicação volta a funcionar (ou execute <code>show vlan brief</code> para confirmar o retorno à VLAN 20).</li>
+  </ol>
+
+  <div class="tip-box">
+    <h4>Ponto de Demonstração</h4>
+    <p>Conecte essa atividade à teoria dos <strong>métodos de atribuição de VLAN</strong> da aula: a VLAN por porta (Camada 1) é a mais usada, mas se um usuário trocar de mesa e ligar o cabo em outra porta, ele cairá na VLAN errada. Métodos alternativos (por MAC, Camada 2, e por protocolo) serão discutidos nas próximas aulas.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- RESUMO -->
+<!-- ============================================================ -->
+<section class="section-box">
+  <h2>Resumo dos Comandos</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Comando</th>
+        <th>Opções / Variações</th>
+        <th>Função</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>vlan &lt;id&gt;</code></td>
+        <td>
+          <code>vlan 10</code>, <code>vlan 20</code>, etc.<br>
+          <code>no vlan 10</code> — remove a VLAN
+        </td>
+        <td>Cria (ou remove) a VLAN no banco de dados local do switch e entra no modo de configuração dela. Valores possíveis: 1–4094 (as VLANs 1 e 1002–1005 são reservadas).</td>
+      </tr>
+      <tr>
+        <td><code>name &lt;texto&gt;</code></td>
+        <td>
+          <code>name Financeiro</code><br>
+          <code>no name</code> — remove o nome
+        </td>
+        <td>Atribui um nome descritivo à VLAN atual. Comando opcional, executado dentro do modo de configuração da VLAN.</td>
+      </tr>
+      <tr>
+        <td><code>switchport mode &lt;modo&gt;</code></td>
+        <td>
+          <code>access</code> — porta de acesso (uma única VLAN)<br>
+          <code>dynamic auto</code> — aguarda o vizinho (negociação DTP)<br>
+          <code>dynamic desirable</code> — oferece trunk ao vizinho (negociação DTP)<br>
+          <code>trunk</code> — porta de tronco (múltiplas VLANs, próxima aula)
+        </td>
+        <td>Define o modo de operação da porta. Para conectar um host (PC), use sempre <code>access</code>.</td>
+      </tr>
+      <tr>
+        <td><code>switchport access vlan &lt;id&gt;</code></td>
+        <td>
+          <code>switchport access vlan 10</code><br>
+          <code>switchport access vlan 1</code> — volta ao padrão
+        </td>
+        <td>Vincula a porta (em modo <code>access</code>) à VLAN indicada. A VLAN precisa já ter sido criada com o comando <code>vlan</code>.</td>
+      </tr>
+      <tr>
+        <td><code>interface range &lt;portas&gt;</code></td>
+        <td>
+          <code>interface range Fa0/1 - 4</code><br>
+          <code>interface range Fa0/1-2, Fa0/5</code>
+        </td>
+        <td>Permite aplicar os mesmos comandos a várias portas de uma vez, evitando configurar cada interface individualmente.</td>
+      </tr>
+      <tr>
+        <td><code>show vlan brief</code></td>
+        <td>
+          <code>show vlan</code> — mais detalhes (inclui nomes e portas)<br>
+          <code>show vlan id 10</code> — filtra por ID<br>
+          <code>show vlan name RH</code> — filtra por nome
+        </td>
+        <td>Exibe as VLANs configuradas e, na coluna Ports, quais portas pertencem a cada VLAN.</td>
+      </tr>
+      <tr>
+        <td><code>show interfaces &lt;porta&gt; switchport</code></td>
+        <td>
+          <code>show interfaces switchport</code> — todas as portas<br>
+          <code>show interfaces Fa0/1 switchport</code> — porta específica
+        </td>
+        <td>Mostra detalhes completos da porta: modo, VLAN de acesso, VLAN de trunk (nativa), etc. Útil para diagnosticar a configuração.</td>
+      </tr>
+      <tr>
+        <td><code>show interfaces status</code></td>
+        <td>
+          <code>show interfaces status</code> — todas as portas<br>
+          <code>show interfaces Fa0/1 status</code> — porta específica
+        </td>
+        <td>Exibe um resumo de cada porta: estado (up/down), velocidade, duplex e a VLAN associada.</td>
+      </tr>
+      <tr>
+        <td><code>default interface &lt;porta&gt;</code></td>
+        <td>
+          <code>default interface Fa0/1</code>
+        </td>
+        <td>Restaura a porta às configurações de fábrica (voltando à VLAN 1 em modo dinâmico padrão), desfazendo rapidamente os comandos aplicados.</td>
+      </tr>
+      <tr>
+        <td><code>show running-config</code></td>
+        <td>
+          <code>show running-config | include vlan</code> — filtra as linhas com "vlan"<br>
+          <code>show running-config interface Fa0/1</code> — configuração da porta
+        </td>
+        <td>Exibe a configuração atual completa do switch, incluindo as VLANs e portas configuradas nas demonstrações.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section-box">
+  <h2>Dicas para a Demonstração em Sala</h2>
+  <ul>
+    <li><strong>Comece pela Demonstração 1</strong> — ela é rápida e já estabelece o conceito de isolamento entre VLANs.</li>
+    <li><strong>Não pule o Simulation Mode</strong> — a visualização gráfica dos envelopes mostrando que o broadcast fica contido na própria VLAN é extremamente didática.</li>
+    <li><strong>Salve os arquivos .pkt</strong> de cada demonstração para reutilizar em aulas futuras.</li>
+    <li><strong>Use a Demonstração 2 como gancho:</strong> ao notar que os switches "na mesma VLAN" não se comunicam, instigue a pergunta que será respondida na próxima aula (o que é necessário para estender uma VLAN entre switches?).</li>
+    <li><strong>Na Demonstração 3, varie o número de PCs por VLAN</strong> (por exemplo, 3 em uma VLAN e 1 em outra) para mostrar como o flood atinge todas as portas da VLAN.</li>
+    <li><strong>Erro comum:</strong> mover o host de porta e esquecer de verificar o <code>show vlan brief</code> — o PC "some" da VLAN original sem nenhum aviso no hardware. Reforce esse comportamento com o Passo 7 da Demonstração 3.</li>
+  </ul>
+</section>

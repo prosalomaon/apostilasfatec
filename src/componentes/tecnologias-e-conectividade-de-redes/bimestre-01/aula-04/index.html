@@ -1,12 +1,231 @@
 ---
 title: "Segmentação Lógica: Fundamentos de VLANs (IEEE 802.1Q)"
 aula_numero: "04"
-description: "Introdução ao conceito de Redes Locais Virtuais (VLANs) para organização lógica de departamentos e segurança."
+description: "Redes Locais Virtuais (VLANs): acoplamento entre topologia física e lógica, o padrão de marcação IEEE 802.1Q, métodos de atribuição e contenção de broadcast."
 tags:
   - aula
 ---
-<!-- TODO: Adicionar conteudo para este encontro -->
 <section class="section-box">
-  <h2>Teoria & Conceitos</h2>
-  <p>Conteudo em construcao.</p>
+  <h2>1. Introdução: O Desacoplamento entre Topologia Física e Lógica</h2>
+  <p>Nas redes locais tradicionais, a divisão dos dispositivos em grupos de trabalho dependia inteiramente da geografia física. Todos os computadores em escritórios adjacentes eram conectados aos mesmos switches e, consequentemente, pertenciam à mesma LAN física, independentemente de os usuários trabalharem juntos ou em departamentos totalmente distintos (como recursos humanos e desenvolvimento).</p>
+  <p>Esse modelo geográfico impõe sérias limitações:</p>
+  <ul>
+    <li><strong>Rigidez de Configuração:</strong> Se um funcionário muda de mesa ou de departamento dentro do prédio, o administrador de rede precisa mudar fisicamente os cabos e conectores de switch para colocá-lo na rede correta.</li>
+    <li><strong>Desperdício de Portas:</strong> Em departamentos muito pequenos, portas de switches caros acabam ficando ociosas por falta de hosts próximos, já que as portas de um switch tradicional pertencem ao mesmo domínio de broadcast.</li>
+  </ul>
+  <p>A <strong>VLAN (Virtual LAN)</strong> surgiu como uma solução para esses problemas, permitindo recompor a fiação dos prédios inteiramente via software. Ela possibilita dividir uma LAN física grande em múltiplas LANs lógicas menores, fazendo com que a topologia lógica da rede reflita a <strong>estrutura organizacional</strong> (o organograma da empresa) e não a disposição física das salas.</p>
+</section>
+
+<section class="section-box">
+  <h2>2. Os Três Pilares para Implementação de VLANs</h2>
+  <p>Os administradores de redes utilizam as VLANs para atender a três objetivos críticos em ambientes corporativos:</p>
+
+  <h3>A. Segurança da Informação</h3>
+  <p>Em uma rede plana comum, computadores que contêm dados altamente sigilosos (como os registros de pagamento de Recursos Humanos ou servidores de uso restrito) compartilham o mesmo espaço físico e lógico de computadores de uso público ou de estagiários. O switch comum, por si só, não impede que o tráfego sensível seja acessado caso um invasor abuse de vulnerabilidades de camada 2. Ao criar VLANs, o switch cria <strong>barreiras lógicas intransponíveis</strong>: computadores em VLANs diferentes não conseguem se comunicar diretamente, agindo como se estivessem em redes físicas isoladas, a menos que passem explicitamente por um roteador de camada superior com políticas de segurança ativas.</p>
+
+  <h3>B. Controle de Carga e Recursos</h3>
+  <p>Diferentes departamentos possuem demandas de rede distintas. Se um laboratório de pesquisa ou de testes de TI começar a realizar experimentos que saturem a capacidade da rede local, o pessoal da administração ou de gerência de vendas não deve ser prejudicado em suas atividades críticas (como uma videoconferência). A segmentação por VLANs <strong>impede que a sobrecarga de um segmento se espalhe</strong> e degrade os recursos de banda garantidos para outros setores.</p>
+
+  <h3>C. Contenção do Tráfego de Broadcast</h3>
+  <p>Como os switches são transparentes e precisam inundar a rede quando o MAC de destino de um quadro é desconhecido, os quadros de broadcast (como as requisições ARP: <em>"A quem pertence o endereço IP x?"</em>) são distribuídos compulsoriamente para todas as portas ativas.</p>
+  <ul>
+    <li><strong>O problema do crescimento:</strong> À medida que mais hosts são adicionados ao domínio, a quantidade de broadcasts gerados cresce de forma exponencial, consumindo capacidade útil de tráfego e forçando cada CPU de cada máquina a processar e descartar dados indesejados.</li>
+    <li><strong>A tempestade de broadcast (Broadcast Storm):</strong> Se uma placa de rede (NIC) de um host falha e começa a disparar broadcasts contínuos, a LAN inteira pode sofrer um colapso completo.</li>
+    <li><strong>A solução lógica:</strong> A VLAN restringe o escopo de inundação. Um broadcast enviado por um computador em uma determinada VLAN só alcançará as portas pertencentes a essa mesma VLAN, protegendo os demais setores da rede contra a degradação de performance e tempestades de tráfego.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>3. Funcionamento Lógico e Inundação</h2>
+  <p>Para estruturar as VLANs, o administrador de rede define tabelas de configuração nos switches. Essas tabelas associam as portas físicas a identificadores de VLAN específicos (frequentemente representados por cores em diagramas técnicos, como <strong>cinza/VLAN G</strong> e <strong>branca/VLAN W</strong>).</p>
+  <p>O switch gerencia o encaminhamento com base nas seguintes regras lógicas:</p>
+  <ul>
+    <li><strong>Inundação Restrita:</strong> Quando um quadro de broadcast ou um quadro com destino desconhecido (unicast/multicast) chega em uma porta da VLAN Cinza, o switch inunda o quadro apenas nas portas físicas marcadas com a cor cinza.</li>
+    <li><strong>Isolamento Absoluto:</strong> O quadro cinza nunca será enviado a uma porta marcada com a cor branca, garantindo isolamento total de tráfego na camada 2, como se houvesse dois switches físicos fisicamente separados no rack.</li>
+    <li><strong>Tráfego Multisswitch (Trunking):</strong> Se a rede possui múltiplos switches interconectados e existem dispositivos da VLAN Cinza distribuídos por ambos, o enlace que une esses switches precisa transportar tráfego de múltiplas VLANs. Esse enlace compartilhado é conhecido como <strong>link de tronco (trunk)</strong>, e requer um protocolo de marcação especial para identificar a qual VLAN cada quadro pertence antes de enviá-lo pelo cabo.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Representação Gráfica</h2>
+  <p><strong>Trunk 802.1Q: um único enlace físico entre switches transportando múltiplas VLANs</strong></p>
+  <div class="mermaid">
+    graph LR
+        subgraph SWA[Switch A]
+            subgraph GA[VLAN Cinza - RH]
+                A1[RH 1]
+                A2[RH 2]
+            end
+            subgraph WA[VLAN Branca - Finanças]
+                A3[FIN 1]
+            end
+            TA([Trunk 802.1Q])
+        end
+        subgraph SWB[Switch B]
+            subgraph GB[VLAN Cinza - RH]
+                B1[RH 3]
+                B2[RH 4]
+            end
+            subgraph WB[VLAN Branca - Finanças]
+                B3[FIN 2]
+            end
+            TB([Trunk 802.1Q])
+        end
+        TA -- "Quadros marcados com tag (tagged)" --- TB
+
+        style SWA fill:#fff,stroke:#000,stroke-width:3px,stroke-dasharray:6 4
+        style SWB fill:#fff,stroke:#000,stroke-width:3px,stroke-dasharray:6 4
+        style GA fill:#e0e0e0,stroke:#000
+        style GB fill:#e0e0e0,stroke:#000
+        style WA fill:#fff,stroke:#000
+        style WB fill:#fff,stroke:#000
+        style TA fill:#000,stroke:#000,color:#fff
+        style TB fill:#000,stroke:#000,color:#fff
+        style A1 fill:#fff,stroke:#000
+        style A2 fill:#fff,stroke:#000
+        style A3 fill:#fff,stroke:#000
+        style B1 fill:#fff,stroke:#000
+        style B2 fill:#fff,stroke:#000
+        style B3 fill:#fff,stroke:#000
+  </div>
+  <p><em>Quadros que atravessam o trunk precisam carregar a tag de VLAN (4 bytes) para que cada switch saiba a qual domínio lógico o quadro pertence.</em></p>
+</section>
+
+<section class="section-box">
+  <h2>4. O Padrão IEEE 802.1Q e a Estrutura do Tagging</h2>
+  <p>Para viabilizar a transmissão de quadros de múltiplas VLANs por um único link físico entre switches, o comitê IEEE 802 lançou o padrão <strong>IEEE 802.1Q em 1998</strong>. Esse padrão resolve o problema de identificação ao inserir uma <strong>etiqueta (tag) de VLAN</strong> diretamente no cabeçalho do quadro Ethernet original.</p>
+
+  <h3>A. Inserção e Remoção de Tags de Forma Transparente</h3>
+  <p>Para garantir que as centenas de milhões de placas de rede antigas (NICs) nos computadores dos usuários não precisassem ser descartadas por incompatibilidade, o padrão foi projetado para ser <strong>transparente para as estações finais</strong>:</p>
+  <ol>
+    <li>O switch que recebe o quadro comum (<em>untagged</em>) de um host insere a tag de VLAN de <strong>4 bytes</strong> assim que o quadro entra na porta física.</li>
+    <li>O quadro trafega com a tag através de switches e links <em>trunk</em> que reconhecem a VLAN.</li>
+    <li>O switch final, antes de entregar o quadro ao host de destino em uma porta de acesso, <strong>remove a tag</strong> de VLAN, entregando um quadro Ethernet padrão para o dispositivo receptor.</li>
+  </ol>
+
+  <h3>B. Estrutura do Quadro IEEE 802.1Q</h3>
+  <p>A inserção da tag adiciona exatamente <strong>4 bytes</strong> ao quadro Ethernet convencional, alterando o tamanho máximo do quadro de <strong>1.518 bytes</strong> para <strong>1.522 bytes</strong>. O switch utiliza essa tag de <strong>32 bits</strong>, dividida nos seguintes campos:</p>
+  <table>
+    <thead>
+      <tr>
+        <th colspan="16" scope="col">TPID (16 bits) — 0x8100</th>
+        <th colspan="3" scope="col">Prioridade (3 bits)</th>
+        <th scope="col">CFI/DEI (1 bit)</th>
+        <th colspan="12" scope="col">VLAN ID (12 bits)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="16">Identifica a marcação IEEE 802.1Q no quadro.</td>
+        <td colspan="3">Níveis 0–7 de prioridade (QoS / CoS).</td>
+        <td>Formato canônico do endereço MAC.</td>
+        <td colspan="12">Identificador da VLAN (0–4095).</td>
+      </tr>
+    </tbody>
+  </table>
+  <ul>
+    <li><strong>TPID (Tag Protocol Identifier — 16 bits):</strong> Sempre possui o valor hexadecimal <strong>0x8100</strong>. Como esse valor é maior que 1.500, as placas de rede legadas que eventualmente lerem esse quadro o interpretarão como um campo <strong>Tipo</strong> (e não Tamanho), evitando erros lógicos.</li>
+    <li><strong>TCI (Tag Control Information — 16 bits):</strong> Bloco que engloba as informações de controle da VLAN:
+      <ul>
+        <li><strong>Prioridade do Usuário (3 bits):</strong> Provê 8 níveis de prioridade (<em>Quality of Service — QoS</em>). Permite diferenciar e dar tratamento preferencial ao tráfego de tempo real (como voz e vídeo) em relação ao tráfego regular (como e-mails e navegação web).</li>
+        <li><strong>CFI (Canonical Format Indicator — 1 bit):</strong> Utilizado historicamente para indicar compatibilidade de formatos de endereço MAC (como Token Ring/802.5 e Ethernet).</li>
+        <li><strong>VLAN ID (VID — 12 bits):</strong> O identificador real da VLAN. Com 12 bits dedicados, o padrão suporta a criação de até <strong>4.096 VLANs</strong> distintas em um único domínio de comutação.</li>
+      </ul>
+    </li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>5. Métodos de Atribuição de VLAN</h2>
+  <p>Existem diferentes estratégias para associar um computador a uma VLAN específica dentro de um switch:</p>
+  <ul>
+    <li><strong>VLAN baseada em Porta (Camada 1):</strong> É o método mais comum e simples. O administrador de rede configura as portas físicas do switch estaticamente (por exemplo, porta 1 pertence à VLAN 10, porta 2 pertence à VLAN 20). A limitação desse método é que, se o usuário mover seu computador para outra mesa e conectar o cabo em outra porta, ele poderá cair na VLAN errada.</li>
+    <li><strong>VLAN baseada em Endereço MAC (Camada 2):</strong> Associa o endereço físico único da placa de rede (MAC) a uma VLAN específica, independentemente da porta física onde o cabo for conectado. É extremamente flexível para dispositivos móveis, mas exige um esforço maior de configuração inicial e gerenciamento da tabela de mapeamento MAC-VLAN.</li>
+    <li><strong>VLAN baseada em Protocolo (Camadas superiores):</strong> Permite atribuir a VLAN com base no protocolo contido na carga útil do quadro (por exemplo, pacotes IPv4 vão para uma VLAN, enquanto outros protocolos ou quadros PPP vão para outra), maximizando a flexibilidade lógica dentro da mesma porta.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>6. Quadro Comparativo: Segmentação Física vs. Segmentação Lógica (VLAN)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Critério</th>
+        <th>Redes Físicas Separadas</th>
+        <th>Redes Lógicas com VLANs (802.1Q)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Isolamento de Tráfego</strong></td>
+        <td>Físico (switches, cabos e racks totalmente isolados).</td>
+        <td>Lógico (isolar tráfego dentro do backplane do mesmo switch).</td>
+      </tr>
+      <tr>
+        <td><strong>Custo de Infraestrutura</strong></td>
+        <td>Elevado (requer compra de múltiplos switches físicos para cada grupo).</td>
+        <td>Reduzido (aproveita as portas ociosas do mesmo hardware físico para múltiplos grupos).</td>
+      </tr>
+      <tr>
+        <td><strong>Flexibilidade de Mudanças</strong></td>
+        <td>Baixa (requer readequação física de cabos e movimentação de hardware nos racks).</td>
+        <td>Alta (mudança rápida de portas e reconfiguração feita diretamente no software de gerência).</td>
+      </tr>
+      <tr>
+        <td><strong>Escalabilidade</strong></td>
+        <td>Limitada pela quantidade de equipamentos e espaço físico disponível.</td>
+        <td>Elevada (suporta até 4.096 grupos lógicos utilizando a tag de 12 bits).</td>
+      </tr>
+      <tr>
+        <td><strong>Qualidade de Serviço (QoS)</strong></td>
+        <td>Depende de filas físicas e banda de enlace dedicada.</td>
+        <td>Nativa e integrada (utiliza os 3 bits de prioridade inseridos na tag 802.1Q).</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="tip-box">
+  <h4>Dicas & Lembretes</h4>
+  <ul>
+    <li><strong>VLAN:</strong> divide uma LAN física em múltiplos domínios de broadcast lógicos, refletindo o <strong>organograma</strong> da empresa em vez da posição das salas.</li>
+    <li><strong>Segurança:</strong> hosts de VLANs distintas não conversam diretamente na camada 2 — apenas via roteador com políticas de segurança.</li>
+    <li><strong>Broadcast contido:</strong> a inundação de um broadcast fica restrita às portas da mesma VLAN, protegendo os demais setores de tempestades de broadcast.</li>
+    <li><strong>Trunk 802.1Q:</strong> enlace entre switches que transporta várias VLANs; cada quadro cruza o trunk com sua tag de 4 bytes.</li>
+    <li><strong>Tag:</strong> o quadro passa de 1.518 para 1.522 bytes; o campo TPID é sempre <strong>0x8100</strong>.</li>
+    <li><strong>VLAN ID:</strong> 12 bits suportam até 4.096 VLANs; os 3 bits de prioridade oferecem 8 níveis de QoS.</li>
+    <li><strong>Atribuição:</strong> por <strong>porta</strong> (Camada 1), por <strong>MAC</strong> (Camada 2) ou por <strong>protocolo</strong> (camadas superiores).</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Como Aplicar na Prática</h2>
+  <ul>
+    <li><strong>Projeto de redes:</strong> Desenhe a topologia lógica seguindo o organograma e não a planta física — a VLAN elimina a necessidade de mover cabos ao reorganizar pessoas e departamentos.</li>
+    <li><strong>Segurança:</strong> Separe setores sigilosos (RH, financeiro) em VLANs próprias para criar barreiras na camada 2 diante de acessos indevidos.</li>
+    <li><strong>QoS:</strong> Utilize os 3 bits de prioridade da tag para dar tratamento preferencial a voz e vídeo sobre o tráfego comum.</li>
+    <li><strong>Trunking:</strong> Ao interligar switches, configure enlaces de tronco 802.1Q para transportar múltiplas VLANs por um único cabo.</li>
+    <li><strong>Contenção de falhas:</strong> Limite o escopo de broadcast por VLAN para impedir que a falha de uma única NIC derrube toda a rede.</li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>IEEE. <em>IEEE Standard for Local and Metropolitan Area Networks — Bridges and Bridged Networks / Virtual LANs</em>. IEEE Std 802.1Q-2022.</li>
+    <li>TANENBAUM, Andrew S.; WETHERALL, David J. <em>Computer Networks</em>. 5th ed. Pearson, 2011. Cap. 4.</li>
+    <li>STALLINGS, William. <em>Data and Computer Communications</em>. 10th ed. Pearson, 2014. Cap. 13.</li>
+    <li>KUROSE, James F.; ROSS, Keith W. <em>Redes de Computadores e a Internet</em>. 6. ed. Pearson, 2013. Cap. 6.</li>
+    <li>FOROUZAN, Behrouz A. <em>Data Communications and Networking</em>. 5th ed. McGraw-Hill, 2012. Cap. 13.</li>
+  </ul>
+</section>
+
+<a href="demonstracao" class="btn" style="display:block; width:100%; text-align:center; box-sizing:border-box; margin-bottom:1.5rem;">PARA DEMONSTRAÇÃO</a>
+
+<section class="section-box">
+  <h2>Para Praticar</h2>
+  <ul>
+    <li><a href="anexo-01/">Anexo 01: Dominando a CLI do Cisco IOS</a> — tutorial de navegação, blocos de configuração e atalhos.</li>
+    <li><a href="#atividade">Atividade Teórica de Fixação</a></li>
+  </ul>
 </section>

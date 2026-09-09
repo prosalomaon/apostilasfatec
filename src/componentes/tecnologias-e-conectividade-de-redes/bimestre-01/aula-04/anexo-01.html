@@ -1,0 +1,303 @@
+---
+layout: exercicio
+title: "Anexo 01: Dominando a CLI do Cisco IOS"
+exercicio_numero: "01"
+aula_numero: "04"
+description: "Guia completo da Interface de Linha de Comando (CLI) do Cisco IOS: modos de operação, enable, configure terminal, blocos de configuração, atalhos e boas práticas."
+tags: []
+---
+
+<section class="section-box">
+  <h2>1. O que é a CLI do Cisco IOS?</h2>
+  <p>A <strong>CLI (Command-Line Interface)</strong> é a forma de interagir com o sistema operacional dos equipamentos Cisco (o <strong>IOS — Internetwork Operating System</strong>) digitando comandos em texto. Toda a configuração de switches e roteadores — VLANs, portas, trunking, endereçamento IP — é feita por meio dela.</p>
+  <p>No Cisco Packet Tracer, a CLI é acessada da seguinte forma:</p>
+  <ol>
+    <li>Clique sobre o equipamento (switch ou roteador).</li>
+    <li>Na janela que abre, clique na aba <strong>CLI</strong>.</li>
+    <li>Ao ligar o equipamento (simulado pelo botão de energia), o prompt <code>Would you like to enter the initial configuration dialog? [yes/no]:</code> aparece. Digite <code>no</code> e pressione <strong>Enter</strong>.</li>
+    <li>Será apresentado o prompt de linha de comando, pronto para receber os comandos.</li>
+  </ol>
+
+  <div class="code-container">
+    <pre><code>Would you like to enter the initial configuration dialog? [yes/no]: no
+
+Press RETURN to get started!
+
+Switch&gt;</code></pre>
+  </div>
+
+  <div class="tip-box">
+    <h4>Leitura do prompt</h4>
+    <p>O prompt indica <strong>em qual posição da hierarquia você está</strong>. Toda vez que ele muda, significa que você entrou (ou saiu) de um modo de configuração. Aprender a ler o prompt é o primeiro passo para não se perder na CLI.</p>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>2. A Hierarquia de Modos de Operação</h2>
+  <p>A CLI funciona em <strong>camadas</strong>. Cada camada é chamada de <strong>modo de operação</strong> e dá acesso a um conjunto específico de comandos. O equipamento só executa o comando se ele existir no modo em que você está.</p>
+
+  <h3>A. Modo Usuário (<code>&gt;</code>)</h3>
+  <p>É o modo inicial, de acesso restrito e apenas para <strong>visualização básica</strong>.</p>
+
+  <h3>B. Modo Privilegiado (<code>#</code>)</h3>
+  <p>Dá acesso a todos os comandos de <strong>visualização (show), diagnóstico e gerenciamento</strong>. Para entrar, use o comando <code>enable</code>:</p>
+
+  <div class="code-container">
+    <pre><code>Switch&gt; enable
+Switch#</code></pre>
+  </div>
+
+  <h3>C. Modo de Configuração Global (<code>(config)#</code>)</h3>
+  <p>Dá acesso aos comandos que alteram a configuração do equipamento como um todo. Para entrar, no modo privilegiado, digite:</p>
+
+  <div class="code-container">
+    <pre><code>Switch# configure terminal
+Switch(config)#</code></pre>
+  </div>
+
+  <h3>D. Modos de Configuração Específicos — os "Blocos" (<code>(config-vlan)#</code>, <code>(config-if)#</code>, ...)</h3>
+  <p>A partir da configuração global, alguns comandos <strong>abrem um novo modo específico</strong>. Esses são os famosos <strong>blocos de comando</strong>:</p>
+  <ul>
+    <li><code>vlan 10</code> → entra no bloco da VLAN 10: prompt <code>(config-vlan)#</code>. Todos os comandos digitados a seguir se aplicam <strong>àquela VLAN</strong>.</li>
+    <li><code>interface FastEthernet 0/1</code> → entra no bloco da porta Fa0/1: prompt <code>(config-if)#</code>. Todos os comandos digitados a seguir se aplicam <strong>àquela porta</strong>.</li>
+    <li><code>line console 0</code> → entra no bloco da porta de console: prompt <code>(config-line)#</code>.</li>
+  </ul>
+  <p>Enquanto você estiver dentro de um bloco, os comandos são <strong>interpretados dentro daquele contexto</strong> — e não no contexto global. Por isso, depois de configurar uma VLAN ou uma porta, é preciso usar <code>exit</code> para voltar e poder digitar outros comandos.</p>
+
+  <h3>E. Visão Geral da Navegação</h3>
+  <div class="mermaid">
+    graph TD
+        U[Modo Usuário<br/>Switch>] -->|enable| P[Modo Privilegiado<br/>Switch#]
+        P -->|configure terminal| G[Config. Global<br/>Switch#config#]
+        G -->|vlan 10| VL[Bloco da VLAN<br/>Switch#config-vlan#]
+        G -->|interface Fa0/1| IF[Bloco da Interface<br/>Switch#config-if#]
+        G -->|line console 0| LN[Bloco da Console<br/>Switch#config-line#]
+        VL -->|exit| G
+        IF -->|exit| G
+        LN -->|exit| G
+        G -->|end ou Ctrl+Z| P
+        P -->|exit| U
+
+        style U fill:#fff,stroke:#000,stroke-width:2px
+        style P fill:#fff,stroke:#000,stroke-width:2px
+        style G fill:#fff,stroke:#000,stroke-width:2px
+        style VL fill:#e2d5f3,stroke:#6f42c1
+        style IF fill:#e2d5f3,stroke:#6f42c1
+        style LN fill:#e2d5f3,stroke:#6f42c1
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Modo</th>
+        <th>Prompt</th>
+        <th>Como entrar</th>
+        <th>O que permite</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Usuário</strong></td>
+        <td><code>Switch&gt;</code></td>
+        <td>Início da sessão</td>
+        <td>Comandos básicos de visualização.</td>
+      </tr>
+      <tr>
+        <td><strong>Privilegiado</strong></td>
+        <td><code>Switch#</code></td>
+        <td><code>enable</code></td>
+        <td>Todos os comandos <code>show</code>, testes e gerenciamento.</td>
+      </tr>
+      <tr>
+        <td><strong>Configuração Global</strong></td>
+        <td><code>Switch(config)#</code></td>
+        <td><code>configure terminal</code></td>
+        <td>Comandos que alteram a configuração inteira do equipamento.</td>
+      </tr>
+      <tr>
+        <td><strong>Bloco da VLAN</strong></td>
+        <td><code>Switch(config-vlan)#</code></td>
+        <td><code>vlan &lt;numero&gt;</code></td>
+        <td>Comandos daquela VLAN específica (ex.: <code>name</code>).</td>
+      </tr>
+      <tr>
+        <td><strong>Bloco da Interface</strong></td>
+        <td><code>Switch(config-if)#</code></td>
+        <td><code>interface &lt;tipo/porta&gt;</code></td>
+        <td>Comandos daquela porta específica (ex.: <code>switchport ...</code>).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip-box">
+    <h4>A regra de ouro dos blocos</h4>
+    <p><strong>Dentro de um bloco, os comandos valem apenas para aquele contexto.</strong> Ao criar a VLAN 10 (<code>vlan 10</code>), o comando <code>name Vendas</code> seguinte será aplicado à VLAN 10. Para criar outra VLAN (ou configurar portas), você precisa digitar <code>exit</code> para voltar ao modo global e então iniciar o novo bloco.</p>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>3. Navegando com exit, end e Ctrl+Z</h2>
+  <p>Existem três formas de <strong>sair</strong> de um modo:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Comando / Tecla</th>
+        <th>Efeito</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>exit</code></td>
+        <td>Sobe <strong>um nível</strong> na hierarquia (volta ao modo anterior). É o mais usado no dia a dia.</td>
+      </tr>
+      <tr>
+        <td><code>end</code></td>
+        <td>Volta <strong>direto</strong> ao modo privilegiado (<code>#</code>), de qualquer profundidade.</td>
+      </tr>
+      <tr>
+        <td><code>Ctrl+Z</code></td>
+        <td>Atalho que equivale ao <code>end</code>: salta direto ao modo privilegiado.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Exemplo prático</strong> — o fluxo das demonstrações do Encontro 04, observando o prompt mudar a cada bloco:</p>
+
+  <div class="code-container">
+    <pre><code>Switch&gt; enable                          ! entra no modo privilegiado
+Switch# configure terminal              ! entra no modo global
+Switch(config)# vlan 10                 ! abre o BLOCO da VLAN 10
+Switch(config-vlan)# name Vendas        ! este comando vale para a VLAN 10
+Switch(config-vlan)# exit               ! volta para o modo global
+Switch(config)# vlan 20                 ! abre o BLOCO da VLAN 20
+Switch(config-vlan)# name Engenharia
+Switch(config-vlan)# exit               ! volta para o modo global
+Switch(config)# interface FastEthernet 0/1   ! abre o BLOCO da porta Fa0/1
+Switch(config-if)# switchport mode access    ! vale para Fa0/1
+Switch(config-if)# switchport access vlan 10 ! vale para Fa0/1
+Switch(config-if)# exit                 ! volta para o modo global
+Switch(config)# end                     ! pula direto para o modo privilegiado
+Switch# show vlan brief                 ! verifica o resultado</code></pre>
+  </div>
+
+  <p>Se você esquecesse do <code>exit</code> depois do bloco da VLAN 10 e digitasse <code>vlan 20</code>, o prompt <code>(config-vlan)#</code> não permitiria esse comando — porque <code>vlan</code> é um comando do modo global, não do bloco da VLAN.</p>
+</section>
+
+<section class="section-box">
+  <h2>4. Atalhos e Truques de Produtividade</h2>
+
+  <h3>A. Os atalhos essenciais do IOS</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Atalho</th>
+        <th>Função</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Tab</strong></td><td>Completa automaticamente um comando parcialmente digitado.</td></tr>
+      <tr><td><strong>?</strong></td><td>Mostra a ajuda contextual: todos os comandos (ou opções) disponíveis naquele ponto da linha.</td></tr>
+      <tr><td><strong>Seta ↑ / ↓</strong></td><td>Navega pelo histórico dos comandos já digitados.</td></tr>
+      <tr><td><strong>Ctrl+A</strong></td><td>Move o cursor para o início da linha.</td></tr>
+      <tr><td><strong>Ctrl+E</strong></td><td>Move o cursor para o final da linha.</td></tr>
+      <tr><td><strong>Ctrl+C</strong></td><td>Cancela/descarta a linha atual e retorna ao prompt (ou aborta o comando em execução).</td></tr>
+      <tr><td><strong>Ctrl+Z</strong></td><td>Equivale ao <code>end</code>: volta direto ao modo privilegiado.</td></tr>
+      <tr><td><strong>Ctrl+W</strong></td><td>Apaga a palavra anterior ao cursor.</td></tr>
+      <tr><td><strong>Ctrl+U</strong></td><td>Apaga toda a linha atual.</td></tr>
+      <tr><td><strong>Ctrl+H / Backspace</strong></td><td>Apaga o caractere anterior ao cursor.</td></tr>
+      <tr><td><strong>Ctrl+Shift+6</strong></td><td>Interrompe processos longos (ex.: perquisas de DNS, pings infinitos).</td></tr>
+    </tbody>
+  </table>
+
+  <h3>B. Abreviações de comandos (abbreviation)</h3>
+  <p>O IOS aceita <strong>abreviações únicas</strong> — você só precisa digitar caracteres suficientes para identificar o comando sem ambiguidade:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Comando completo</th>
+        <th>Abreviação comum</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><code>enable</code></td><td><code>en</code></td></tr>
+      <tr><td><code>configure terminal</code></td><td><code>conf t</code></td></tr>
+      <tr><td><code>interface FastEthernet 0/1</code></td><td><code>int fa0/1</code></td></tr>
+      <tr><td><code>show vlan brief</code></td><td><code>sh vlan br</code></td></tr>
+      <tr><td><code>show interfaces trunk</code></td><td><code>sh int tr</code></td></tr>
+      <tr><td><code>show running-config</code></td><td><code>sh run</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>C. O prefixo <code>no</code></h3>
+  <p>Usar <code>no</code> antes de um comando <strong>remove/desfaz</strong> a configuração:</p>
+  <ul>
+    <li><code>no vlan 10</code> → remove a VLAN 10.</li>
+    <li><code>no switchport access vlan 10</code> → remove o vínculo da porta com a VLAN 10.</li>
+    <li><code>no shutdown</code> → liga a interface (na Cisco, <code>shutdown</code> desliga; <code>no shutdown</code> ativa).</li>
+  </ul>
+
+  <h3>D. Executando comandos show dentro do modo de configuração</h3>
+  <p>Se quiser <strong>visualizar</strong> a configuração sem sair do bloco em que está, use o prefixo <code>do</code>:</p>
+  <div class="code-container">
+    <pre><code>Switch(config-vlan)# do show vlan brief
+Switch(config-if)# do show interfaces status</code></pre>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>5. Erros Comuns na CLI e Como Identificá-los</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Sintoma</th>
+        <th>Mensagem</th>
+        <th>Provável causa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Comando recusado</td>
+        <td><code>% Invalid input detected</code></td>
+        <td>O comando não existe <strong>naquele modo</strong> (ex.: digitou comando de bloco fora do bloco) ou tem erro de digitação.</td>
+      </tr>
+      <tr>
+        <td>Autocompletar falhou</td>
+        <td><code>% Ambiguous command</code></td>
+        <td>A abreviação usada é ambígua — digite mais caracteres.</td>
+      </tr>
+      <tr>
+        <td>Empacou num bloco</td>
+        <td>O prompt continua <code>(config-if)#</code></td>
+        <td>Esqueceu do <code>exit</code> (ou <code>end</code>/<code>Ctrl+Z</code>).</td>
+      </tr>
+      <tr>
+        <td>Configuração não aplicada</td>
+        <td><code>show running-config</code> sem a mudança</td>
+        <td>Foi configurada a porta errada, ou a VLAN ainda não existia.</td>
+      </tr>
+      <tr>
+        <td>Símbolos <code>%</code> antes do prompt</td>
+        <td><code>% Unknown command</code> etc.</td>
+        <td>Comando mal digitado naquele modo — verifique o prompt atual.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip-box">
+    <h4>Três boas práticas para não se perder</h4>
+    <ul>
+      <li><strong>Sempre olhe o prompt:</strong> ele diz em qual bloco você está.</li>
+      <li><strong>Use Tab e ? o tempo todo:</strong> evita erros de digitação e ensina os comandos disponíveis.</li>
+      <li><strong>Confirme com <code>show</code>:</strong> depois de cada bloco, use <code>show vlan brief</code>, <code>show running-config</code> ou <code>show interfaces status</code> para validar o que foi aplicado.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>CISCO. <em>Catalyst 2960 Switch Command Reference</em>. Cisco Systems, 2015.</li>
+    <li>CISCO. <em>CLI Quick Reference Guide for Switches</em>. Cisco Systems.</li>
+    <li>ODOM, Wendell. <em>CCNA 200-301 Official Cert Guide</em>. Cisco Press, 2019. Cap. 4–5.</li>
+  </ul>
+</section>

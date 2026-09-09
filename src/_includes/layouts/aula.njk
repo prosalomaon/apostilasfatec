@@ -5,10 +5,13 @@ layout: base
 
 <article class="lesson-content">
   <header class="lesson-header">
-    <a
-      href="{{ ['/componentes/', subject, '/'] | join | url }}"
-      class="back-link-class"
-    >← Voltar</a>
+    <div class="lesson-toolbar">
+      <a
+        href="{{ ['/componentes/', subject, '/'] | join | url }}"
+        class="back-link-class"
+      >← Voltar</a>
+      <button type="button" class="print-btn" onclick="window.print()">Gerar PDF</button>
+    </div>
     <h1>{{ unit_label | default("Aula") }} {{ aula_numero }} - {{ title }}</h1>
     {% if description %}
       <p class="lesson-intro">{{ description }}</p>

@@ -5,8 +5,337 @@ description: "Laboratório para configuração de portas de acesso e links de tr
 tags:
   - aula
 ---
-<!-- TODO: Adicionar conteudo para este encontro -->
 <section class="section-box">
-  <h2>Teoria & Conceitos</h2>
-  <p>Conteudo em construcao.</p>
+  <h2>1. Introdução: Do Conceito à Configuração</h2>
+  <p>No encontro anterior estudamos os fundamentos das VLANs e o padrão de marcação IEEE 802.1Q. Agora vamos colocar esses conceitos em prática no simulador <strong>Cisco Packet Tracer</strong>, configurando <strong>Portas de Acesso (Access Ports)</strong> e <strong>Links de Tronco (Trunk Ports)</strong> em dois switches comutados.</p>
+  <p>Serão analisados os comandos de interface de linha de comando (CLI), o comportamento dos quadros Ethernet com a marcação IEEE 802.1Q e as técnicas de solução de problemas (troubleshooting), conforme previsto na ementa da disciplina.</p>
+  <p><strong>Requisito:</strong> Cisco Packet Tracer instalado (versão 8.0 ou superior).</p>
+</section>
+
+<section class="section-box">
+  <h2>2. Fundamentos Teóricos da Operação das Portas</h2>
+  <p>Antes da execução dos comandos, é essencial compreender a distinção funcional entre os dois tipos de portas em um ambiente de comutação:</p>
+
+  <h3>A. Portas de Acesso (Access Ports)</h3>
+  <p>São interfaces conectadas a <strong>dispositivos finais</strong> (computadores, impressoras, servidores). Cada porta de acesso é associada a uma <strong>única VLAN</strong>. Os quadros que entram e saem dessas portas são do tipo convencional (<em>untagged</em> — sem etiqueta 802.1Q). O switch atribui internamente a tag da VLAN correspondente assim que o quadro entra na interface e remove a tag antes de entregar o quadro ao host final, garantindo <strong>transparência</strong> para as placas de rede dos computadores.</p>
+
+  <h3>B. Portas de Tronco (Trunk Ports)</h3>
+  <p>São interfaces de <strong>interconexão entre switches</strong> ou entre switch e roteador. Têm a função de transportar o tráfego de <strong>múltiplas VLANs simultaneamente</strong> através de um único enlace físico. Para diferenciar a qual VLAN cada quadro pertence ao atravessar o cabo, o switch insere o cabeçalho <strong>IEEE 802.1Q de 4 bytes</strong> (contendo o identificador de VLAN de 12 bits, TPID <code>0x8100</code> e os bits de prioridade de QoS).</p>
+
+  <h3>C. VLAN Nativa (Native VLAN)</h3>
+  <p>Por padrão no padrão IEEE 802.1Q, quadros pertencentes à <strong>VLAN Nativa</strong> (geralmente a VLAN 1) trafegam pelo link de tronco <strong>sem</strong> a adição da etiqueta de 4 bytes (<em>untagged</em>). Se um switch recebe um quadro sem tag em uma porta tronco, ele assume que esse quadro pertence à sua VLAN Nativa configurada.</p>
+</section>
+
+<section class="section-box">
+  <h2>3. Cenário e Topologia do Laboratório</h2>
+  <p>Para a atividade prática de simulação, será montada a seguinte topologia com <strong>dois switches</strong> e <strong>quatro computadores</strong>:</p>
+
+  <div class="mermaid">
+    graph TB
+        subgraph SW1[SW-1 - Switch 2960]
+            subgraph V10A[VLAN 10 - Vendas]
+                PC1[PC-1 - 192.168.10.10]
+            end
+            subgraph V20A[VLAN 20 - Engenharia]
+                PC2[PC-2 - 192.168.20.10]
+            end
+            T1([Fa0/24 - Trunk 802.1Q])
+        end
+        subgraph SW2[SW-2 - Switch 2960]
+            T2([Fa0/24 - Trunk 802.1Q])
+            subgraph V10B[VLAN 10 - Vendas]
+                PC3[PC-3 - 192.168.10.20]
+            end
+            subgraph V20B[VLAN 20 - Engenharia]
+                PC4[PC-4 - 192.168.20.20]
+            end
+        end
+        T1 === T2
+
+        style SW1 fill:#fff,stroke:#000,stroke-width:2px
+        style SW2 fill:#fff,stroke:#000,stroke-width:2px
+        style V10A fill:#d4edda,stroke:#28a745
+        style V10B fill:#d4edda,stroke:#28a745
+        style V20A fill:#cce5ff,stroke:#007bff
+        style V20B fill:#cce5ff,stroke:#007bff
+        style T1 fill:#ffc107,stroke:#000
+        style T2 fill:#ffc107,stroke:#000
+  </div>
+
+  <h3>Tabela de Mapeamento da Rede</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Dispositivo</th>
+        <th>Interface Física</th>
+        <th>VLAN</th>
+        <th>Nome da VLAN</th>
+        <th>Endereço IP</th>
+        <th>Sub-rede</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PC-1</td>
+        <td>SW-1 (Fa0/1)</td>
+        <td>VLAN 10</td>
+        <td>Vendas</td>
+        <td>192.168.10.10/24</td>
+        <td>192.168.10.0/24</td>
+      </tr>
+      <tr>
+        <td>PC-2</td>
+        <td>SW-1 (Fa0/2)</td>
+        <td>VLAN 20</td>
+        <td>Engenharia</td>
+        <td>192.168.20.10/24</td>
+        <td>192.168.20.0/24</td>
+      </tr>
+      <tr>
+        <td>PC-3</td>
+        <td>SW-2 (Fa0/1)</td>
+        <td>VLAN 10</td>
+        <td>Vendas</td>
+        <td>192.168.10.20/24</td>
+        <td>192.168.10.0/24</td>
+      </tr>
+      <tr>
+        <td>PC-4</td>
+        <td>SW-2 (Fa0/2)</td>
+        <td>VLAN 20</td>
+        <td>Engenharia</td>
+        <td>192.168.20.20/24</td>
+        <td>192.168.20.0/24</td>
+      </tr>
+      <tr>
+        <td>Link Trunk</td>
+        <td>SW-1 (Fa0/24) ↔ SW-2 (Fa0/24)</td>
+        <td>Múltiplas</td>
+        <td>Trunk 802.1Q</td>
+        <td>N/A</td>
+        <td>Enlace Switch-to-Switch</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section-box">
+  <h2>4. Roteiro de Configuração CLI (Passo a Passo)</h2>
+
+  <h3>Passo 1 — Criação e Nomeação das VLANs nos Switches (SW-1 e SW-2)</h3>
+  <p>A criação do banco de dados de VLANs deve ser realizada em <strong>ambos os switches</strong> para que reconheçam os identificadores numéricos.</p>
+
+  <pre><code>SW-1# configure terminal
+SW-1(config)# vlan 10
+SW-1(config-vlan)# name Vendas
+SW-1(config-vlan)# exit
+SW-1(config)# vlan 20
+SW-1(config-vlan)# name Engenharia
+SW-1(config-vlan)# exit</code></pre>
+
+  <p>Repetir exatamente os mesmos comandos no switch <strong>SW-2</strong>.</p>
+
+  <h3>Passo 2 — Configuração das Portas de Acesso</h3>
+  <p>Definição do modo de operação estático da porta como <strong>acesso</strong> e associação à respectiva VLAN.</p>
+
+  <p><strong>Configuração no Switch SW-1:</strong></p>
+  <pre><code>SW-1(config)# interface FastEthernet 0/1
+SW-1(config-if)# switchport mode access
+SW-1(config-if)# switchport access vlan 10
+SW-1(config-if)# exit
+
+SW-1(config)# interface FastEthernet 0/2
+SW-1(config-if)# switchport mode access
+SW-1(config-if)# switchport access vlan 20
+SW-1(config-if)# exit</code></pre>
+
+  <p><strong>Configuração no Switch SW-2:</strong></p>
+  <pre><code>SW-2(config)# interface FastEthernet 0/1
+SW-2(config-if)# switchport mode access
+SW-2(config-if)# switchport access vlan 10
+SW-2(config-if)# exit
+
+SW-2(config)# interface FastEthernet 0/2
+SW-2(config-if)# switchport mode access
+SW-2(config-if)# switchport access vlan 20
+SW-2(config-if)# exit</code></pre>
+
+  <h3>Passo 3 — Configuração do Link de Tronco (Trunking IEEE 802.1Q)</h3>
+  <p>Configuração da interface de interconexão <strong>Fa0/24 em ambos os switches</strong> para multiplexar e transportar quadros com a etiqueta de 4 bytes do padrão 802.1Q.</p>
+
+  <p><strong>Configuração no Switch SW-1 e SW-2 (Porta Fa0/24):</strong></p>
+  <pre><code>SW-1(config)# interface FastEthernet 0/24
+SW-1(config-if)# switchport mode trunk
+SW-1(config-if)# switchport trunk allowed vlan 10,20
+SW-1(config-if)# exit</code></pre>
+
+  <div class="tip-box">
+    <h4>Nota de Segurança</h4>
+    <p>O comando <code>switchport trunk allowed vlan 10,20</code> <strong>limita o tráfego do link aos grupos autorizados</strong>, restringindo tempestades de broadcast desnecessárias enviadas pela rede. Sem essa restrição, o trunk transportaria todas as VLANs existentes (1–4094), incluindo VLANs não previstas no projeto.</p>
+  </div>
+
+  <h3>Passo 4 — Alteração Opcional da VLAN Nativa</h3>
+  <p>Para prevenir ataques de <strong>VLAN Hopping</strong> ou incompatibilidades de tráfego não etiquetado, é recomendável alterar a VLAN Nativa padrão (VLAN 1) para uma VLAN <strong>sem portas de acesso ativas</strong>.</p>
+
+  <pre><code>SW-1(config)# interface FastEthernet 0/24
+SW-1(config-if)# switchport trunk native vlan 99
+SW-1(config-if)# exit</code></pre>
+
+  <p><strong>Atenção:</strong> Se a VLAN nativa for diferente nas duas pontas do tronco, o switch gerará <strong>alertas de inconsistência</strong> de CDP/802.1Q.</p>
+</section>
+
+<section class="section-box">
+  <h2>5. Diagnóstico, Verificação e Troubleshooting</h2>
+  <p>Para validar se os domínios de broadcast estão isolados corretamente e se o tronco está funcionando, os seguintes comandos devem ser executados via CLI:</p>
+
+  <h3>A. Verificação da Tabela de VLANs</h3>
+  <pre><code>SW-1# show vlan brief</code></pre>
+  <p><strong>O que validar:</strong> confirma se as portas Fa0/1 e Fa0/2 estão atribuídas corretamente às VLANs 10 e 20 e se a porta Fa0/24 <strong>não aparece na lista</strong> (pois virou trunk).</p>
+
+  <p><strong>Resultado esperado:</strong></p>
+  <pre><code>VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/3, Fa0/4, Fa0/5, Fa0/6 ...
+10   Vendas                           active    Fa0/1
+20   Engenharia                       active    Fa0/2</code></pre>
+
+  <h3>B. Verificação do Estado do Tronco</h3>
+  <pre><code>SW-1# show interfaces trunk</code></pre>
+  <p><strong>O que validar:</strong> exibe o modo (<code>trunk</code>), o protocolo de encapsulamento (<code>802.1q</code>), a VLAN Nativa ativa e as VLANs permitidas no enlace.</p>
+
+  <p><strong>Resultado esperado:</strong></p>
+  <pre><code>Port        Mode         Encapsulation  Status        Native vlan
+Fa0/24      on           802.1q         trunking      1
+
+Port        Vlans allowed on trunk
+Fa0/24      10,20
+
+Port        Vlans allowed and active in management domain
+Fa0/24      10,20
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa0/24      10,20</code></pre>
+
+  <h3>C. Teste de Conectividade Lógica (Ping no Packet Tracer)</h3>
+  <p><strong>Teste 1 — Mesma VLAN / Hosts Distintos:</strong> executar <code>ping 192.168.10.20</code> a partir do <strong>PC-1</strong> (VLAN 10) em direção ao <strong>PC-3</strong> (VLAN 10 em outro switch).</p>
+  <p><strong>Resultado esperado:</strong> <em>Sucesso (Reply)</em>. O quadro sai de PC-1, entra sem tag na porta Fa0/1 de SW-1, recebe a tag 10 ao entrar no tronco Fa0/24, atravessa o cabo etiquetado com <strong>VLAN ID 10</strong>, chega ao SW-2, que remove a tag e entrega o quadro limpo ao PC-3.</p>
+
+  <p><strong>Teste 2 — VLANs Distintas / Camada 2 Pura:</strong> executar <code>ping 192.168.20.10</code> a partir do <strong>PC-1</strong> (VLAN 10) em direção ao <strong>PC-2</strong> (VLAN 20 no mesmo switch).</p>
+  <p><strong>Resultado esperado:</strong> <em>Falha (Request Timed Out)</em>. Mesmo estando no mesmo switch físico, a separação lógica de portas bloqueia o encaminhamento de broadcast e unicast entre VLANs diferentes, exigindo um dispositivo de <strong>Camada 3</strong> (roteador) para comunicação.</p>
+
+  <pre><code>C:\&gt; ping 192.168.10.20
+
+Pinging 192.168.10.20 with 32 bytes of data:
+
+Reply from 192.168.10.20: bytes=32 time=2ms TTL=128
+Reply from 192.168.10.20: bytes=32 time=2ms TTL=128
+Reply from 192.168.10.20: bytes=32 time=2ms TTL=128
+Reply from 192.168.10.20: bytes=32 time=2ms TTL=128
+
+Ping statistics for 192.168.10.20:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)</code></pre>
+
+  <div class="tip-box">
+    <h4>Troubleshooting Rápido</h4>
+    <ul>
+      <li><strong>Ping entre switches falha na mesma VLAN:</strong> verifique se a VLAN foi criada nos <em>dois</em> switches e se o comando <code>switchport trunk allowed vlan</code> inclui a VLAN desejada.</li>
+      <li><strong>Trunk não sobe (status down):</strong> confira se as duas extremidades estão com <code>switchport mode trunk</code> consentâneo (mismatch de modo DTP) e se os cabos estão nas portas corretas.</li>
+      <li><strong>Alertas de nativa inconsistente:</strong> as VLANs nativas das duas pontas do tronco precisam ser idênticas.</li>
+      <li><strong>Host sem comunicação mesmo na mesma VLAN:</strong> confira o endereço IP, a máscara e a porta de acesso no <code>show vlan brief</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section-box">
+  <h2>6. Quadro Comparativo: Porta de Acesso vs. Porta de Tronco</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Parâmetro</th>
+        <th>Porta de Acesso (Access Port)</th>
+        <th>Porta de Tronco (Trunk Port)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Conectividade típica</strong></td>
+        <td>Dispositivos Finais (PC, Impressoras, Servidores).</td>
+        <td>Dispositivos de Rede (Switch para Switch, Switch para Roteador).</td>
+      </tr>
+      <tr>
+        <td><strong>Quantidade de VLANs</strong></td>
+        <td>Transporta tráfego de apenas 1 VLAN por vez.</td>
+        <td>Transporta tráfego de múltiplas VLANs simultaneamente.</td>
+      </tr>
+      <tr>
+        <td><strong>Cabeçalho IEEE 802.1Q</strong></td>
+        <td>Não possui tag no cabo (<em>untagged</em>).</td>
+        <td>Insere a tag de 4 bytes contendo o VLAN ID nos quadros (<em>tagged</em>).</td>
+      </tr>
+      <tr>
+        <td><strong>Tratamento da VLAN Nativa</strong></td>
+        <td>Inexistente (porta pertence a uma VLAN estática).</td>
+        <td>Quadros da VLAN Nativa passam sem tag.</td>
+      </tr>
+      <tr>
+        <td><strong>Comandos principais no IOS</strong></td>
+        <td><code>switchport mode access</code><br><code>switchport access vlan &lt;id&gt;</code></td>
+        <td><code>switchport mode trunk</code><br><code>switchport trunk allowed vlan &lt;ids&gt;</code></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="tip-box">
+  <h4>Dicas & Lembretes</h4>
+  <ul>
+    <li><strong>Porta de acesso:</strong> conecta dispositivos finais; quadros sempre <em>untagged</em>; pertence a uma única VLAN.</li>
+    <li><strong>Porta de tronco:</strong> conecta switches/roteadores; transporta várias VLANs; quadros saem <em>tagged</em> com 802.1Q.</li>
+    <li><strong>VLAN Nativa:</strong> por padrão a VLAN 1; seus quadros atravessam o trunk <em>sem tag</em>. Troque-a no laboratório por uma VLAN sem portas de acesso.</li>
+    <li><strong>Restrição de tronco:</strong> sempre use <code>switchport trunk allowed vlan</code> para permitir apenas as VLANs do projeto.</li>
+    <li><strong>Show commands:</strong> <code>show vlan brief</code> confirma portas de acesso; <code>show interfaces trunk</code> confirma o estado do enlace de tronco.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Como Aplicar na Prática</h2>
+  <ul>
+    <li><strong>Projeto de redes:</strong> atribua <em>portas de acesso</em> aos hosts de cada setor e reserve portas de <em>tronco</em> apenas para a interconexão de switches e o uplink para o roteador.</li>
+    <li><strong>Segurança:</strong> restrinja as VLANs permitidas no trunk e troque a VLAN nativa padrão para evitar ataques de VLAN Hopping.</li>
+    <li><strong>Escalabilidade:</strong> ao adicionar um novo switch no rack, replique o banco de VLANs (comandos <code>vlan</code> + <code>name</code>) e configure o novo enlace de tronco antes de ativar as portas dos usuários.</li>
+    <li><strong>Troubleshooting:</strong> use <code>show vlan brief</code> e <code>show interfaces trunk</code> como primeiro passo de diagnóstico em casos de host "desaparecido" ou enlace inoperante.</li>
+  </ul>
+</section>
+
+<section class="section-box" id="atividade">
+  <h2>Atividade Teórica de Fixação: Cenários de Análise</h2>
+  <p>Com base na topologia do laboratório, responda as questões a seguir:</p>
+  <ol>
+    <li>Explique, quadro a quadro, como o PC-1 (VLAN 10) alcança o PC-3 (VLAN 10 no SW-2), indicando em qual ponto a tag 802.1Q é inserida e em qual ela é removida.</li>
+    <li>Por que o ping do PC-1 para o PC-2 falha, mesmo estando conectados ao mesmo switch físico?</li>
+    <li>O que ocorreria se o <code>switchport trunk native vlan</code> fosse configurado com valores diferentes nas duas pontas do tronco?</li>
+    <li>Se uma quarta VLAN (VLAN 40, Marketing) fosse criada apenas no SW-2 e a porta Fa0/5 conectasse um host, o que aconteceria com o tráfego dela no trunk? Justifique com base no comando <code>switchport trunk allowed vlan 10,20</code>.</li>
+  </ol>
+</section>
+
+<a href="demonstracao" class="btn" style="display:block; width:100%; text-align:center; box-sizing:border-box; margin-bottom:1.5rem;">PARA DEMONSTRAÇÃO</a>
+
+<section class="section-box">
+  <h2>Para Praticar</h2>
+  <p>Monte o laboratório passo a passo no Packet Tracer seguindo as seções 3 e 4 desta aula. Valide o resultado com os comandos de verificação da seção 5.</p>
+  <ul>
+    <li><a href="demonstracao/">Demonstração Prática: Portas de Acesso e Trunking IEEE 802.1Q</a></li>
+    <li><a href="#atividade">Atividade Teórica de Fixação</a></li>
+  </ul>
+</section>
+
+<section class="section-box">
+  <h2>Referências</h2>
+  <ul>
+    <li>IEEE. <em>IEEE Standard for Local and Metropolitan Area Networks — Bridges and Bridged Networks / Virtual LANs</em>. IEEE Std 802.1Q-2022.</li>
+    <li>CISCO. <em>Catalyst 2960 Switch Software Configuration Guide</em> — Configuring VLANs e Configuring VLAN Trunks.</li>
+    <li>TANENBAUM, Andrew S.; WETHERALL, David J. <em>Computer Networks</em>. 5th ed. Pearson, 2011. Cap. 4.</li>
+    <li>KUROSE, James F.; ROSS, Keith W. <em>Redes de Computadores e a Internet</em>. 6. ed. Pearson, 2013. Cap. 6.</li>
+    <li>FOROUZAN, Behrouz A. <em>Data Communications and Networking</em>. 5th ed. McGraw-Hill, 2012. Cap. 13.</li>
+  </ul>
 </section>

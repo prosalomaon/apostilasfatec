@@ -1,0 +1,173 @@
+---
+layout: exercicio
+title: "Mintermos e Maxtermos: Tabelas Verdade"
+exercicio_numero: "02"
+aula_numero: "04"
+description: "Lista de 10 tabelas verdade (5 com duas entradas e 5 com três entradas) com saídas distintas para treinar a obtenção das formas canônicas SOP (mintermos) e POS (maxtermos)."
+---
+
+<div class="tip-box tip-box-instruction">
+  <h4>Orientações</h4>
+  <ul>
+    <li>Para cada tabela, escreva a expressão canônica <strong>SOP</strong> somando os <strong>mintermos</strong> das linhas em que $F = 1$.</li>
+    <li>Em seguida, escreva a expressão canônica <strong>POS</strong> multiplicando os <strong>maxtermos</strong> das linhas em que $F = 0$.</li>
+  </ul>
+</div>
+
+<section class="section-box">
+  <h2>Duas Entradas</h2>
+
+  <h3>Tabela 1</h3>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>0</td><td>1</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tabela 2</h3>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td><strong>0</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tabela 3</h3>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tabela 4</h3>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td><strong>0</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tabela 5</h3>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td><strong>0</strong></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section-box">
+  <h2>Três Entradas</h2>
+
+  <h3>Tabela 6</h3>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$C$</th><th>$F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>1</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tabela 7</h3>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$C$</th><th>$F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tabela 8</h3>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$C$</th><th>$F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>0</td><td>1</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tabela 9</h3>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$C$</th><th>$F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>0</td><td>0</td><td>1</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>1</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tabela 10</h3>
+  <table>
+    <thead>
+      <tr><th>$A$</th><th>$B$</th><th>$C$</th><th>$F$</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td><strong>0</strong></td></tr>
+      <tr><td>0</td><td>1</td><td>1</td><td><strong>0</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+      <tr><td>1</td><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+    </tbody>
+  </table>
+</section>

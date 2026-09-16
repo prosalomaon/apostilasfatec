@@ -245,7 +245,240 @@ Switch(config-if)# do show interfaces status</code></pre>
 </section>
 
 <section class="section-box">
-  <h2>5. Erros Comuns na CLI e Como Identificá-los</h2>
+  <h2>5. Lista Completa de Comandos</h2>
+  <p>Este guia reúne, em ordem de uso, todos os comandos de VLANs, portas, trunks e SVIs vistos nas demonstrações — com as abreviações aceitas pelo IOS ao lado de cada comando.</p>
+
+  <h3>1. Administração e Criação de VLANs</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Comando Completo</th>
+        <th>Abreviação</th>
+        <th>Definição / Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>vlan &lt;ID&gt;</code></td>
+        <td><code>vl &lt;ID&gt;</code></td>
+        <td>Entra no modo de configuração da VLAN (cria a VLAN se ela não existir).</td>
+      </tr>
+      <tr>
+        <td><code>name &lt;TEXTO&gt;</code></td>
+        <td><code>name &lt;TEXTO&gt;</code></td>
+        <td>Atribui um nome identificador à VLAN (facilita a gestão).</td>
+      </tr>
+      <tr>
+        <td><code>vlan &lt;ID1,ID2,ID3-ID4&gt;</code></td>
+        <td><code>vl &lt;ID1,ID2,ID3-ID4&gt;</code></td>
+        <td>Cria múltiplas VLANs individuais ou em intervalo de uma só vez.</td>
+      </tr>
+      <tr>
+        <td><code>no vlan &lt;ID&gt;</code></td>
+        <td><code>no vl &lt;ID&gt;</code></td>
+        <td>Exclui uma VLAN do banco de dados do switch.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>2. Atribuição de Portas (Modo Access)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Comando Completo</th>
+        <th>Abreviação</th>
+        <th>Definição / Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>interface &lt;TIPO/PORTA&gt;</code></td>
+        <td><code>int &lt;TIPO/PORTA&gt;</code></td>
+        <td>Entra no modo de configuração de uma interface específica (ex: fa0/1).</td>
+      </tr>
+      <tr>
+        <td><code>interface range &lt;TIPO/INICIO - FIM&gt;</code></td>
+        <td><code>int range &lt;TIPO/INICIO - FIM&gt;</code></td>
+        <td>Seleciona um grupo/intervalo de portas para configurar juntas.</td>
+      </tr>
+      <tr>
+        <td><code>switchport mode access</code></td>
+        <td><code>sw mo acc</code></td>
+        <td>Define a porta explicitamente como porta de acesso (para conectar hosts).</td>
+      </tr>
+      <tr>
+        <td><code>switchport access vlan &lt;ID&gt;</code></td>
+        <td><code>sw acc vl &lt;ID&gt;</code></td>
+        <td>Associa a porta (ou intervalo de portas) a uma VLAN específica.</td>
+      </tr>
+      <tr>
+        <td><code>no switchport access vlan</code></td>
+        <td><code>no sw acc vl</code></td>
+        <td>Remove a porta da VLAN atribuída e a devolve para a VLAN 1 padrão.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3. Configuração de Links Tronco (Trunk)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Comando Completo</th>
+        <th>Abreviação</th>
+        <th>Definição / Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>switchport mode trunk</code></td>
+        <td><code>sw mo tr</code></td>
+        <td>Força a interface a operar como tronco (transporta múltiplas VLANs).</td>
+      </tr>
+      <tr>
+        <td><code>switchport trunk encapsulation dot1q</code></td>
+        <td><code>sw tr enc dot</code></td>
+        <td>Define o padrão de encapsulamento 802.1Q (obrigatório antes do <code>sw mo tr</code> em switches L3).</td>
+      </tr>
+      <tr>
+        <td><code>switchport trunk allowed vlan &lt;LISTA&gt;</code></td>
+        <td><code>sw tr all vl &lt;LISTA&gt;</code></td>
+        <td>Define estritamente quais VLANs têm permissão para atravessar o tronco.</td>
+      </tr>
+      <tr>
+        <td><code>switchport trunk allowed vlan add &lt;ID&gt;</code></td>
+        <td><code>sw tr all vl add &lt;ID&gt;</code></td>
+        <td>Adiciona uma VLAN à lista de permissões sem sobrescrever as existentes.</td>
+      </tr>
+      <tr>
+        <td><code>switchport trunk allowed vlan remove &lt;ID&gt;</code></td>
+        <td><code>sw tr all vl rem &lt;ID&gt;</code></td>
+        <td>Remove uma VLAN específica da lista de permissões do tronco.</td>
+      </tr>
+      <tr>
+        <td><code>switchport trunk allowed vlan all</code></td>
+        <td><code>sw tr all vl all</code></td>
+        <td>Restaura a permissão para que todas as VLANs trafeguem pelo tronco.</td>
+      </tr>
+      <tr>
+        <td><code>switchport trunk native vlan &lt;ID&gt;</code></td>
+        <td><code>sw tr nat vl &lt;ID&gt;</code></td>
+        <td>Altera a VLAN Nativa do tronco (tráfego sem etiqueta 802.1Q).</td>
+      </tr>
+      <tr>
+        <td><code>switchport nonegotiate</code></td>
+        <td><code>sw noneg</code></td>
+        <td>Desativa o protocolo DTP (evita que a porta negocie tronco automaticamente por segurança).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4. Interface Virtual de Gerenciamento (SVI)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Comando Completo</th>
+        <th>Abreviação</th>
+        <th>Definição / Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>interface vlan &lt;ID&gt;</code></td>
+        <td><code>int vl &lt;ID&gt;</code></td>
+        <td>Cria/acessa a SVI (interface lógica L3) associada a uma VLAN.</td>
+      </tr>
+      <tr>
+        <td><code>ip address &lt;IP&gt; &lt;MASCARA&gt;</code></td>
+        <td><code>ip add &lt;IP&gt; &lt;MASCARA&gt;</code></td>
+        <td>Atribui um endereço IP e máscara de rede à SVI do switch.</td>
+      </tr>
+      <tr>
+        <td><code>no shutdown</code></td>
+        <td><code>no shut</code></td>
+        <td>Ativa a interface lógica (liga a SVI).</td>
+      </tr>
+      <tr>
+        <td><code>ip default-gateway &lt;IP&gt;</code></td>
+        <td><code>ip def &lt;IP&gt;</code></td>
+        <td>Configura o IP do roteador padrão no switch (necessário em switches L2).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>5. Diagnóstico e Verificação (Privileged EXEC #)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Comando Completo</th>
+        <th>Abreviação</th>
+        <th>Definição / Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>show vlan brief</code></td>
+        <td><code>sh vl br</code></td>
+        <td>Exibe a tabela resumida com todas as VLANs, status e portas associadas.</td>
+      </tr>
+      <tr>
+        <td><code>show interfaces trunk</code></td>
+        <td><code>sh int tr</code></td>
+        <td>Exibe as portas tronco ativas, modo de encapsulamento e VLANs permitidas.</td>
+      </tr>
+      <tr>
+        <td><code>show interfaces &lt;PORTA&gt; switchport</code></td>
+        <td><code>sh int &lt;PORTA&gt; sw</code></td>
+        <td>Mostra os detalhes de Camada 2 negociados na porta (Modo, VLAN Nativa, DTP).</td>
+      </tr>
+      <tr>
+        <td><code>show running-config interface &lt;PORTA&gt;</code></td>
+        <td><code>sh run int &lt;PORTA&gt;</code></td>
+        <td>Exibe exatamente as linhas de comando configuradas naquela interface.</td>
+      </tr>
+      <tr>
+        <td><code>show ip interface brief</code></td>
+        <td><code>sh ip int br</code></td>
+        <td>Lista o status operacional e os IPs atribuídos às interfaces (incluindo SVIs).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>6. Salvamento e Reset de Memória</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Comando Completo</th>
+        <th>Abreviação</th>
+        <th>Definição / Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>copy running-config startup-config</code></td>
+        <td><code>wr</code></td>
+        <td>Salva as configurações ativas da RAM na NVRAM.</td>
+      </tr>
+      <tr>
+        <td><code>delete flash:vlan.dat</code></td>
+        <td><code>del flash:vlan.dat</code></td>
+        <td>Apaga o arquivo do banco de dados de VLANs da memória flash.</td>
+      </tr>
+      <tr>
+        <td><code>erase startup-config</code></td>
+        <td><code>erase start</code></td>
+        <td>Limpa as configurações salvas no switch (restaura padrão de fábrica após o reload).</td>
+      </tr>
+      <tr>
+        <td><code>reload</code></td>
+        <td><code>reload</code></td>
+        <td>Reinicia o equipamento físico/simulado.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section-box">
+  <h2>6. Erros Comuns na CLI e Como Identificá-los</h2>
   <table>
     <thead>
       <tr>

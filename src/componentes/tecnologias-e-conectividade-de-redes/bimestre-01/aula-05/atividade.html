@@ -1,0 +1,687 @@
+---
+layout: exercicio
+title: "Atividade Prática Integrada: TechSolutions Ltda."
+exercicio_numero: "02"
+aula_numero: "05"
+description: "Atividade em cenário empresarial: da fundação da empresa até a recuperação de desastre, configurando VLANs, portas de acesso, trunks 802.1Q, VLAN nativa e hardening de enlaces no Cisco Packet Tracer."
+tags: []
+mostrar_gabarito: false
+---
+
+<section class="section-box">
+  <h2>Enunciado: O Crescimento da TechSolutions Ltda.</h2>
+  <p>A <strong>TechSolutions Ltda.</strong> é uma empresa de tecnologia em pleno crescimento. Nesta atividade você acompanhará — e configurará — cada etapa da evolução da sua rede, desde a fundação com um único switch até a substituição de equipamento em uma recuperação de desastre.</p>
+  <p>O trabalho é dividido em <strong>5 atividades</strong> que devem ser executadas em sequência no <strong>Cisco Packet Tracer</strong>, sempre reaproveitando a configuração da etapa anterior (exceto onde o cenário pedir o contrário).</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Atividade</th>
+        <th>Tema</th>
+        <th>Objetivo de Aprendizagem</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>A Fundação da Empresa</td><td>Criação de VLANs, modo <code>access</code>, testes de ping e salvamento com <code>wr</code>.</td></tr>
+      <tr><td>2</td><td>Reorganização Física</td><td>Reatribuição de portas, <code>interface range</code> e renomeação de VLANs.</td></tr>
+      <tr><td>3</td><td>A Empresa Cresceu</td><td>Conceito de Trunk (802.1Q), transporte de tags e expansão física mantendo o isolamento lógico.</td></tr>
+      <tr><td>4</td><td>Auditoria de Segurança</td><td>VLAN nativa, <code>trunk allowed vlan</code> e hardening de portas.</td></tr>
+      <tr><td>5</td><td>Migração e Recuperação de Desastre</td><td>Reconstrução de topologia, substituição de hardware e alinhamento Camada 2 / Camada 3.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section-box">
+  <h2>Preparação</h2>
+  <h3>Requisitos</h3>
+  <ul>
+    <li><strong>Cisco Packet Tracer</strong> instalado (versão 8.0 ou superior).</li>
+    <li>Familiaridade com a CLI do Cisco IOS. Não conhece os comandos <code>enable</code>, <code>configure terminal</code> ou o modo de configuração de interface? Revise o <a href="../aula-04/anexo-01/">Anexo 01: Dominando a CLI do Cisco IOS</a>.</li>
+    <li>Paciência para validar cada etapa com os comandos de verificação antes de avançar.</li>
+  </ul>
+
+  <h3>Plano de Endereçamento da Empresa</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>VLAN</th>
+        <th>Nome</th>
+        <th>Sub-rede</th>
+        <th>Setor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>10</td><td><code>ADM</code></td><td>192.168.10.0/24</td><td>Administração</td></tr>
+      <tr><td>20</td><td><code>DESENVOLVIMENTO</code> (inicialmente <code>DEV</code>)</td><td>192.168.20.0/24</td><td>Desenvolvimento</td></tr>
+      <tr><td>30</td><td><code>DIRETORIA</code></td><td>192.168.30.0/24</td><td>Diretoria</td></tr>
+      <tr><td>40</td><td><code>TI</code></td><td>192.168.40.0/24</td><td>Tecnologia da Informação</td></tr>
+      <tr><td>99</td><td><code>NATIVA</code></td><td>sem hosts</td><td>VLAN nativa do trunk (uso exclusivo de infraestrutura)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip-box">
+    <h4>Boas Práticas</h4>
+    <ul>
+      <li>As atividades são <strong>cumulativas</strong>: a Atividade 2 parte do resultado da Atividade 1, e assim por diante. Guarde um arquivo <code>.pkt</code> ao final de cada etapa.</li>
+      <li>Salve sempre a configuração no final de cada atividade com o comando <code>wr</code> (atalho para <code>copy running-config startup-config</code>).</li>
+      <li>Confira a porta de conexão de cada PC antes de começar: ela precisa coincidir com a porta de acesso que você configurar.</li>
+    </ul>
+  </div>
+
+  <nav>
+    <h3>Índice da Atividade</h3>
+    <ul>
+      <li><a href="#atividade-1">Atividade 1 — A Fundação da Empresa (Switch Único e Segmentação Básica)</a></li>
+      <li><a href="#atividade-2">Atividade 2 — Reorganização Física (Mudança de Layout no Escritório)</a></li>
+      <li><a href="#atividade-3">Atividade 3 — A Empresa Cresceu (Adição do Segundo Andar)</a></li>
+      <li><a href="#atividade-4">Atividade 4 — Auditoria de Segurança e Reestruturação de Redes</a></li>
+      <li><a href="#atividade-5">Atividade 5 — Migração de Equipamento e Recuperação de Desastre</a></li>
+      <li><a href="#checklist">Checklist Final de Auditoria</a></li>
+      <li><a href="#orientacoes">Orientações Finais</a></li>
+    </ul>
+  </nav>
+</section>
+
+<!-- ============================================================ -->
+<!-- ATIVIDADE 1 -->
+<!-- ============================================================ -->
+<section class="section-box" id="atividade-1">
+  <h2>Atividade 1 — A Fundação da Empresa (Switch Único e Segmentação Básica)</h2>
+
+  <h3>História</h3>
+  <p>A <strong>TechSolutions</strong> abriu seu primeiro escritório com apenas um switch de 24 portas (<code>SW-Principal</code>). Para organizar a rede, a diretoria pediu para separar a equipe de <strong>Administração</strong> da equipe de <strong>Desenvolvimento</strong>.</p>
+
+  <h3>Cenário Físico</h3>
+  <ul>
+    <li>1 Switch Cisco 2960 (24 portas) — <code>SW-Principal</code>.</li>
+    <li>4 PCs (PC-1, PC-2, PC-3 e PC-4).</li>
+    <li>4 cabos Copper Straight-Through.</li>
+  </ul>
+
+  <h3>Desafio do Aluno</h3>
+  <ol>
+    <li>Criar as duas primeiras VLANs da empresa: <strong>VLAN 10</strong> (<code>ADM</code>) e <strong>VLAN 20</strong> (<code>DEV</code>).</li>
+    <li>Colocar os PCs 1 e 2 (portas <code>Fa0/1</code> a <code>Fa0/2</code>) na <strong>VLAN 10</strong>.</li>
+    <li>Colocar os PCs 3 e 4 (portas <code>Fa0/3</code> a <code>Fa0/4</code>) na <strong>VLAN 20</strong>.</li>
+    <li>Configurar os endereços IP coerentes nas máquinas (<code>192.168.10.X</code> para ADM e <code>192.168.20.X</code> para DEV).</li>
+  </ol>
+
+  <h3>Configuração de IP dos PCs</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>PC</th>
+        <th>Porta no SW-Principal</th>
+        <th>VLAN</th>
+        <th>Endereço IP</th>
+        <th>Máscara</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PC-1</td><td>Fa0/1</td><td>VLAN 10 (ADM)</td><td>192.168.10.10</td><td>255.255.255.0</td></tr>
+      <tr><td>PC-2</td><td>Fa0/2</td><td>VLAN 10 (ADM)</td><td>192.168.10.20</td><td>255.255.255.0</td></tr>
+      <tr><td>PC-3</td><td>Fa0/3</td><td>VLAN 20 (DEV)</td><td>192.168.20.10</td><td>255.255.255.0</td></tr>
+      <tr><td>PC-4</td><td>Fa0/4</td><td>VLAN 20 (DEV)</td><td>192.168.20.20</td><td>255.255.255.0</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Verificação Esperada</h3>
+  <p>Execute <code>show vlan brief</code> no <code>SW-Principal</code>. As portas devem estar distribuídas assim:</p>
+  <pre><code>SW-Principal# show vlan brief
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/5, Fa0/6, Fa0/7 ... Fa0/24
+10   ADM                              active    Fa0/1, Fa0/2
+20   DEV                              active    Fa0/3, Fa0/4</code></pre>
+
+  <h3>Testes de Ping</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Origem</th>
+        <th>Destino</th>
+        <th>Relação</th>
+        <th>Resultado Esperado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PC-1 (192.168.10.10)</td><td>PC-2 (192.168.10.20)</td><td>Mesma VLAN (10)</td><td><strong>Sucesso</strong> — mesmo domínio de broadcast.</td></tr>
+      <tr><td>PC-3 (192.168.20.10)</td><td>PC-4 (192.168.20.20)</td><td>Mesma VLAN (20)</td><td><strong>Sucesso</strong> — mesmo domínio de broadcast.</td></tr>
+      <tr><td>PC-1 (192.168.10.10)</td><td>PC-3 (192.168.20.10)</td><td>VLANs diferentes (10 → 20)</td><td><strong>Falha</strong> — a VLAN isola o tráfego na camada 2.</td></tr>
+    </tbody>
+  </table>
+
+  {% if mostrar_gabarito %}
+  <details class="answer-box">
+    <summary>Ver gabarito da Atividade 1</summary>
+    <div class="answer-content">
+      <pre><code>enable
+configure terminal
+hostname SW-Principal
+
+vlan 10
+ name ADM
+exit
+
+vlan 20
+ name DEV
+exit
+
+interface FastEthernet 0/1
+ switchport mode access
+ switchport access vlan 10
+exit
+
+interface FastEthernet 0/2
+ switchport mode access
+ switchport access vlan 10
+exit
+
+interface FastEthernet 0/3
+ switchport mode access
+ switchport access vlan 20
+exit
+
+interface FastEthernet 0/4
+ switchport mode access
+ switchport access vlan 20
+exit
+
+end
+wr</code></pre>
+    </div>
+  </details>
+  {% endif %}
+</section>
+
+<!-- ============================================================ -->
+<!-- ATIVIDADE 2 -->
+<!-- ============================================================ -->
+<section class="section-box" id="atividade-2">
+  <h2>Atividade 2 — Reorganização Física (Mudança de Layout no Escritório)</h2>
+
+  <h3>História</h3>
+  <p>A empresa contratou mais funcionários e mudou as mesas de lugar. Um desenvolvedor mudou para a mesa onde antes sentava um administrador (porta <code>Fa0/2</code>), e a nova impressora da diretoria foi conectada na porta <code>Fa0/10</code>.</p>
+
+  <h3>Cenário Físico</h3>
+  <ul>
+    <li>O mesmo switch da Atividade 1 (<code>SW-Principal</code>).</li>
+    <li>Nenhum cabo físico é movido: para a equipe de infraestrutura, a reorganização é <strong>puramente lógica</strong>.</li>
+  </ul>
+
+  <h3>Desafio do Aluno</h3>
+  <ol>
+    <li>Alterar a porta <code>Fa0/2</code> da VLAN 10 (<code>ADM</code>) para a VLAN 20 (<code>DEV</code>).</li>
+    <li>Configurar o intervalo de portas <code>Fa0/10</code> a <code>Fa0/12</code> de uma só vez (<code>range</code>) para pertencerem à VLAN 10 (<code>ADM</code>).</li>
+    <li>Mudar o nome da <strong>VLAN 20</strong> de <code>DEV</code> para <code>DESENVOLVIMENTO</code> (padronização pedida pela diretoria).</li>
+    <li><em>Bônus (alinhamento L2/L3):</em> o computador que agora representa o desenvolvedor na porta <code>Fa0/2</code> precisa deixar a rede 192.168.10.0/24. Readequar o IP do PC-2 para <code>192.168.20.30</code>.</li>
+  </ol>
+
+  <div class="tip-box">
+    <h4>Ponto de Atenção</h4>
+    <p>Observe como a VLAN desacopla a <strong>topologia física</strong> (onde o cabos estão conectados) da <strong>topologia lógica</strong> (a que setor cada máquina pertence). Trocar uma porta de VLAN não exige mover um único cabo.</p>
+  </div>
+
+  <h3>Verificação Esperada</h3>
+  <pre><code>SW-Principal# show vlan brief
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/5-Fa0/9, Fa0/13-Fa0/24
+10   ADM                              active    Fa0/1, Fa0/10, Fa0/11, Fa0/12
+20   DESENVOLVIMENTO                  active    Fa0/2, Fa0/3, Fa0/4</code></pre>
+
+  <p><strong>Valide também com um ping:</strong> o PC-2 (agora em 192.168.20.30, VLAN 20) deve responder a um ping do PC-3 (192.168.20.10). E o ping do PC-1 para o PC-2 — antes da readequação de IP e de VLAN — deve falhar.</p>
+
+  {% if mostrar_gabarito %}
+  <details class="answer-box">
+    <summary>Ver gabarito da Atividade 2</summary>
+    <div class="answer-content">
+      <pre><code>configure terminal
+
+! 1. Reatribui a porta Fa0/2 para a VLAN 20
+interface FastEthernet 0/2
+ switchport access vlan 20
+exit
+
+! 2. Configura o intervalo Fa0/10-12 na VLAN 10
+interface range FastEthernet 0/10-12
+ switchport mode access
+ switchport access vlan 10
+exit
+
+! 3. Renomeia a VLAN 20 sem apagar o banco de dados
+vlan 20
+ name DESENVOLVIMENTO
+exit
+
+end
+wr</code></pre>
+      <p>No PC-2, em <strong>Desktop → IP Configuration</strong>, troque o IP para <code>192.168.20.30</code> com máscara <code>255.255.255.0</code>.</p>
+    </div>
+  </details>
+  {% endif %}
+</section>
+
+<!-- ============================================================ -->
+<!-- ATIVIDADE 3 -->
+<!-- ============================================================ -->
+<section class="section-box" id="atividade-3">
+  <h2>Atividade 3 — A Empresa Cresceu (Adição do Segundo Andar)</h2>
+
+  <h3>História</h3>
+  <p>A <strong>TechSolutions</strong> alugou o segundo andar do prédio! Agora existe um novo switch lá em cima (<code>SW-Andar2</code>). A equipe de Desenvolvimento agora ocupa o segundo andar todo, mas precisa continuar na mesma rede lógica do pessoal lá de baixo.</p>
+
+  <h3>Cenário Físico</h3>
+  <ul>
+    <li>2 Switches 2960: <code>SW-Andar1</code> (renomeado a partir do <code>SW-Principal</code>) e <code>SW-Andar2</code> (novo, saindo da caixa).</li>
+    <li>Interconexão pela porta <code>Gi0/1</code> de cada switch.</li>
+    <li>1 novo PC (<code>PC-5</code>) conectado à porta <code>Fa0/1</code> do <code>SW-Andar2</code>.</li>
+  </ul>
+
+  <div class="mermaid">
+    graph TB
+        subgraph AND1["SW-Andar1 — 1º Andar"]
+            subgraph A1V10["VLAN 10 — ADM"]
+                PC1[PC-1 · 192.168.10.10]
+            end
+            subgraph A1V20["VLAN 20 — DESENVOLVIMENTO"]
+                PC2[PC-2 · 192.168.20.30]
+                PC3[PC-3 · 192.168.20.10]
+            end
+            T1([Gi0/1 — Trunk 802.1Q])
+        end
+        subgraph AND2["SW-Andar2 — 2º Andar"]
+            T2([Gi0/1 — Trunk 802.1Q])
+            subgraph A2V20["VLAN 20 — DESENVOLVIMENTO"]
+                PC5[PC-5 · 192.168.20.40]
+            end
+        end
+        T1 === T2
+
+        style AND1 fill:#fff,stroke:#000,stroke-width:3px
+        style AND2 fill:#fff,stroke:#000,stroke-width:3px
+        style A1V10 fill:#e0e0e0,stroke:#000
+        style A1V20 fill:#f2f2f2,stroke:#000
+        style A2V20 fill:#f2f2f2,stroke:#000
+        style T1 fill:#000,stroke:#000,color:#fff
+        style T2 fill:#000,stroke:#000,color:#fff
+  </div>
+
+  <h3>Desafio do Aluno</h3>
+  <ol>
+    <li>No <code>SW-Andar2</code>, recriar a <strong>VLAN 10</strong> (<code>ADM</code>) e a <strong>VLAN 20</strong> (<code>DESENVOLVIMENTO</code>).</li>
+    <li>Mover o PC do time de Desenvolvimento no andar de cima para a porta <code>Fa0/1</code> do <code>SW-Andar2</code>.</li>
+    <li>Configurar a porta de interconexão <code>Gi0/1</code> em <strong>ambos os switches</strong> para o modo <strong>Trunk</strong> (<code>switchport mode trunk</code>).</li>
+    <li>Testar o ping entre o desenvolvedor do 1º andar e o desenvolvedor do 2º andar.</li>
+  </ol>
+
+  <h3>Configuração de IP do Novo PC</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>PC</th>
+        <th>Porta no SW-Andar2</th>
+        <th>VLAN</th>
+        <th>Endereço IP</th>
+        <th>Máscara</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PC-5</td><td>Fa0/1</td><td>VLAN 20 (DESENVOLVIMENTO)</td><td>192.168.20.40</td><td>255.255.255.0</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Verificação Esperada</h3>
+  <p><strong>Teste de conexão:</strong> a partir do PC-3 (192.168.20.10, no 1º andar), execute <code>ping 192.168.20.40</code> (PC-5, no 2º andar).</p>
+  <pre><code>PC&gt; ping 192.168.20.40
+
+Pinging 192.168.20.40 with 32 bytes of data:
+
+Reply from 192.168.20.40: bytes=32 time=1ms TTL=128
+Reply from 192.168.20.40: bytes=32 time=1ms TTL=128
+Reply from 192.168.20.40: bytes=32 time=1ms TTL=128
+Reply from 192.168.20.40: bytes=32 time=1ms TTL=128</code></pre>
+  <p><strong>Contraprova:</strong> um ping do PC-1 (192.168.10.10, ADM) para o PC-5 (VLAN 20) deve continuar falhando — o isolamento lógico sobrevive ao novo andar e ao trunk.</p>
+
+  <div class="tip-box">
+    <h4>Onde está a tag?</h4>
+    <p>Quando o quadro sai do PC-5, ele está <strong>sem tag</strong> (untagged) na porta de acesso. Ao entrar no trunk <code>Gi0/1</code>, o switch insere o cabeçalho <strong>802.1Q de 4 bytes</strong> com o VLAN ID 20. No <code>SW-Andar1</code>, o cabeçalho é removido antes de o quadro ser entregue ao PC-3. Use o <strong>Simulation Mode</strong> do Packet Tracer para acompanhar essa jornada.</p>
+  </div>
+
+  {% if mostrar_gabarito %}
+  <details class="answer-box">
+    <summary>Ver gabarito da Atividade 3</summary>
+    <div class="answer-content">
+      <p><strong>No SW-Principal (que agora vira SW-Andar1):</strong></p>
+      <pre><code>enable
+configure terminal
+hostname SW-Andar1
+
+interface GigabitEthernet 0/1
+ switchport mode trunk
+exit
+
+end
+wr</code></pre>
+      <p><strong>No novo SW-Andar2:</strong></p>
+      <pre><code>enable
+configure terminal
+hostname SW-Andar2
+
+vlan 10
+ name ADM
+exit
+
+vlan 20
+ name DESENVOLVIMENTO
+exit
+
+interface FastEthernet 0/1
+ switchport mode access
+ switchport access vlan 20
+exit
+
+interface GigabitEthernet 0/1
+ switchport mode trunk
+exit
+
+end
+wr</code></pre>
+    </div>
+  </details>
+  {% endif %}
+</section>
+
+<!-- ============================================================ -->
+<!-- ATIVIDADE 4 -->
+<!-- ============================================================ -->
+<section class="section-box" id="atividade-4">
+  <h2>Atividade 4 — Auditoria de Segurança e Reestruturação de Redes</h2>
+
+  <h3>História</h3>
+  <p>O consultor de segurança da empresa identificou dois problemas: a <strong>VLAN 1</strong> (padrão) ainda está sendo usada para tráfego e o link Trunk entre os andares está transportando mais dados do que deveria. Além disso, foi criado o setor de <strong>Diretoria (VLAN 30)</strong>.</p>
+
+  <h3>Cenário Físico</h3>
+  <ul>
+    <li>A mesma estrutura de 2 Switches com link Trunk da Atividade 3.</li>
+    <li>As portas <code>Fa0/5</code> em ambos os switches ficam reservadas para o setor de Diretoria (use uma delas se quiser conectar um <code>PC-6</code> em 192.168.30.10 para testes).</li>
+  </ul>
+
+  <h3>Desafio do Aluno</h3>
+  <ol>
+    <li>Criar a <strong>VLAN 30</strong> (<code>DIRETORIA</code>) em ambos os switches.</li>
+    <li>Mudar a VLAN Nativa do Trunk na porta <code>Gi0/1</code> dos dois switches da VLAN 1 para a <strong>VLAN 99</strong> (<code>NATIVA</code>).</li>
+    <li>Restringir o Trunk na porta <code>Gi0/1</code> para permitir <strong>apenas</strong> o tráfego das VLANs <code>10,20,30,99</code> (<code>switchport trunk allowed vlan</code>).</li>
+    <li>Desativar a negociação automática de tronco na porta com <code>switchport nonegotiate</code>.</li>
+  </ol>
+
+  <h3>Verificação Esperada</h3>
+  <p>Execute <code>show interfaces trunk</code> em <strong>um</strong> dos switches (deve ser idêntico nos dois):</p>
+  <pre><code>SW-Andar1# show interfaces trunk
+Port        Mode         Encapsulation  Status        Native vlan
+Gi0/1       on           802.1q         trunking      99
+
+Port        Vlans allowed on trunk
+Gi0/1       10,20,30,99
+
+Port        Vlans allowed and active in management domain
+Gi0/1       10,20,30,99
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Gi0/1       10,20,30,99</code></pre>
+
+  <div class="tip-box">
+    <h4>Por que isso importa?</h4>
+    <ul>
+      <li><strong>VLAN nativa trocada:</strong> a VLAN 1 deixa de carregar tráfego, neutralizando a base do ataque de <em>VLAN Hopping</em>.</li>
+      <li><strong>Allowed vlan:</strong> um enlace só transporta o que foi explicitamente autorizado — princípio do menor privilégio.</li>
+      <li><strong>Nonegotiate:</strong> desliga o DTP (Dynamic Trunking Protocol), impedindo que um dispositivo conectado ao trunk "negocie" e mude o modo da porta (ex.: trunco não autorizado).</li>
+    </ul>
+  </div>
+
+  {% if mostrar_gabarito %}
+  <details class="answer-box">
+    <summary>Ver gabarito da Atividade 4</summary>
+    <div class="answer-content">
+      <p><strong>Execute nos DOIS switches (SW-Andar1 e SW-Andar2):</strong></p>
+      <pre><code>configure terminal
+
+vlan 30
+ name DIRETORIA
+exit
+
+vlan 99
+ name NATIVA
+exit
+
+interface GigabitEthernet 0/1
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport nonegotiate
+exit
+
+end
+wr</code></pre>
+    </div>
+  </details>
+  {% endif %}
+</section>
+
+<!-- ============================================================ -->
+<!-- ATIVIDADE 5 -->
+<!-- ============================================================ -->
+<section class="section-box" id="atividade-5">
+  <h2>Atividade 5 — Migração de Equipamento e Recuperação de Desastre</h2>
+
+  <h3>História</h3>
+  <p>O switch do 1º andar sofreu uma falha física e precisou ser substituído por um switch novinho saindo da caixa. Para piorar, a equipe de infraestrutura precisa reordenar as faixas de IP porque o setor de <strong>TI</strong> foi criado (<strong>VLAN 40</strong>).</p>
+
+  <h3>Cenário Físico</h3>
+  <ul>
+    <li>Substituição do <code>SW-Andar1</code> por um switch resetado/novo (mesmo modelo 2960).</li>
+    <li>Reconecte os cabos dos PCs do 1º andar nas mesmas portas de antes.</li>
+    <li>O <code>SW-Andar2</code> (2º andar) permanece intacto.</li>
+  </ul>
+
+  <h3>Desafio do Aluno</h3>
+  <ol>
+    <li>Reconfigurar o novo switch do zero com o banco de VLANs completo (10, 20, 30, 40 e 99).</li>
+    <li>Mover um grupo de portas antigo que era da VLAN 10 para a nova <strong>VLAN 40</strong> (<code>TI</code>) — use o intervalo <code>Fa0/10</code> a <code>Fa0/12</code>.</li>
+    <li>Readequar os endereços IP dos computadores que mudaram de VLAN para que correspondam à nova sub-rede (ex.: VLAN 40 = <code>192.168.40.X</code>).</li>
+    <li>Garantir que <strong>todas</strong> as configurações em ambos os switches sejam salvas na NVRAM (<code>wr</code>) e auditadas com <code>show running-config</code> e <code>show interfaces trunk</code>.</li>
+  </ol>
+
+  <h3>Configuração de IP dos PCs Atualizada</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>PC</th>
+        <th>Porta no SW-Andar1</th>
+        <th>VLAN</th>
+        <th>Endereço IP</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PC-1</td><td>Fa0/1</td><td>10 (ADM)</td><td>192.168.10.10</td></tr>
+      <tr><td>PC-2</td><td>Fa0/2</td><td>20 (DESENVOLVIMENTO)</td><td>192.168.20.30</td></tr>
+      <tr><td>PC-3</td><td>Fa0/3</td><td>20 (DESENVOLVIMENTO)</td><td>192.168.20.10</td></tr>
+      <tr><td>PC-4</td><td>Fa0/4</td><td>20 (DESENVOLVIMENTO)</td><td>192.168.20.20</td></tr>
+      <tr><td>PC-6 (TI)</td><td>Fa0/10</td><td>40 (TI)</td><td>192.168.40.10</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Verificação Esperada</h3>
+  <p><strong>Auditoria no novo SW-Andar1:</strong></p>
+  <pre><code>SW-Andar1# show interfaces trunk
+Port        Mode         Encapsulation  Status        Native vlan
+Gi0/1       on           802.1q         trunking      99
+
+Port        Vlans allowed on trunk
+Gi0/1       10,20,30,40,99
+
+Port        Vlans allowed and active in management domain
+Gi0/1       10,20,30,40,99
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Gi0/1       10,20,30,40,99</code></pre>
+  <p><strong>Testes de conectividade:</strong></p>
+  <ul>
+    <li>PC-3 (192.168.20.10) → PC-5 (192.168.20.40): <strong>sucesso</strong> (VLAN 20 atravessando o trunk).</li>
+    <li>PC-1 (192.168.10.10) → PC-2 (192.168.20.30): <strong>falha</strong> (VLANs diferentes).</li>
+    <li>PC-6 (192.168.40.10) → um host da VLAN 40 no 2º andar (se existir): somente depois de liberar a VLAN 40 no trunk do <code>SW-Andar2</code>.</li>
+  </ul>
+
+  {% if mostrar_gabarito %}
+  <details class="answer-box">
+    <summary>Ver gabarito da Atividade 5</summary>
+    <div class="answer-content">
+      <p><strong>No novo SW-Andar1 (configuração do zero):</strong></p>
+      <pre><code>enable
+configure terminal
+hostname SW-Andar1
+
+vlan 10
+ name ADM
+exit
+
+vlan 20
+ name DESENVOLVIMENTO
+exit
+
+vlan 30
+ name DIRETORIA
+exit
+
+vlan 40
+ name TI
+exit
+
+vlan 99
+ name NATIVA
+exit
+
+interface FastEthernet 0/1
+ switchport mode access
+ switchport access vlan 10
+exit
+
+interface FastEthernet 0/2
+ switchport mode access
+ switchport access vlan 20
+exit
+
+interface FastEthernet 0/3
+ switchport mode access
+ switchport access vlan 20
+exit
+
+interface FastEthernet 0/4
+ switchport mode access
+ switchport access vlan 20
+exit
+
+interface range FastEthernet 0/10-12
+ switchport mode access
+ switchport access vlan 40
+exit
+
+interface GigabitEthernet 0/1
+ switchport mode trunk
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,40,99
+ switchport nonegotiate
+exit
+
+end
+wr</code></pre>
+      <p><strong>No SW-Andar2 (adicionar a VLAN 40 já existente ao trunk):</strong></p>
+      <pre><code>configure terminal
+
+vlan 40
+ name TI
+exit
+
+interface GigabitEthernet 0/1
+ switchport trunk allowed vlan add 40
+exit
+
+end
+wr</code></pre>
+      <p>Não esqueça de ajustar o IP do PC-6 para <code>192.168.40.10</code> (máscara <code>255.255.255.0</code>).</p>
+    </div>
+  </details>
+  {% endif %}
+</section>
+
+<!-- ============================================================ -->
+<!-- CHECKLIST -->
+<!-- ============================================================ -->
+<section class="section-box" id="checklist">
+  <h2>Checklist Final de Auditoria</h2>
+  <p>Marque cada item somente depois de <strong>validar no simulador</strong>:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Item de Verificação</th>
+        <th>Como Validar</th>
+        <th>Concluído</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Banco de VLANs 10, 20, 30, 40 e 99 presente nos dois switches.</td>
+        <td><code>show vlan brief</code> em <code>SW-Andar1</code> e <code>SW-Andar2</code></td>
+        <td>____</td>
+      </tr>
+      <tr>
+        <td>Portas de acesso corretas em cada VLAN.</td>
+        <td><code>show vlan brief</code> — conferir as portas listadas por VLAN</td>
+        <td>____</td>
+      </tr>
+      <tr>
+        <td>Trunk <code>Gi0/1</code> operando em ambos os switches.</td>
+        <td><code>show interfaces trunk</code> — Status = <code>trunking</code></td>
+        <td>____</td>
+      </tr>
+      <tr>
+        <td>VLAN nativa do trunk igual a 99 nas duas pontas.</td>
+        <td><code>show interfaces trunk</code> — <code>Native vlan = 99</code></td>
+        <td>____</td>
+      </tr>
+      <tr>
+        <td>Trunk transporta apenas as VLANs autorizadas (10,20,30,40,99).</td>
+        <td><code>show interfaces trunk</code> — <code>Vlans allowed on trunk</code></td>
+        <td>____</td>
+      </tr>
+      <tr>
+        <td>Negociação DTP desativada no trunk.</td>
+        <td><code>show running-config interface Gi0/1</code> — <code>switchport nonegotiate</code></td>
+        <td>____</td>
+      </tr>
+      <tr>
+        <td>IPs das máquinas coerentes com a VLAN de cada uma.</td>
+        <td><code>ping</code> entre hosts da mesma VLAN (sucesso) e entre VLANs distintas (falha)</td>
+        <td>____</td>
+      </tr>
+      <tr>
+        <td>Toda a configuração salva na NVRAM.</td>
+        <td><code>show startup-config</code> após <code>wr</code> nos dois switches</td>
+        <td>____</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- ORIENTAÇÕES FINAIS -->
+<!-- ============================================================ -->
+<div class="tip-box" id="orientacoes">
+  <h4>Orientações Finais</h4>
+  <ul>
+    <li><strong>Errou uma etapa?</strong> Use os gabaritos apenas para corrigir depois de tentar. O erro é parte do aprendizado — o importante é entender <em>por que</em> cada comando foi necessário.</li>
+    <li><strong>Troubleshooting:</strong> sem resposta no ping entre andares? Verifique (1) se a VLAN existe nos <em>dois</em> switches, (2) se o trunk está <code>trunking</code>, (3) se a VLAN está na lista de <code>allowed vlan</code> e (4) se o IP está na sub-rede certa.</li>
+    <li><strong>Alerta <code>%CDP-4-NATIVE_VLAN_MISMATCH</code>?</strong> As VLANs nativas das duas pontas do trunk estão diferentes — corrigir com <code>switchport trunk native vlan 99</code> dos dois lados.</li>
+    <li><strong>Nunca esqueça o <code>wr</code>:</strong> sem o salvamento, todo o trabalho é perdido ao religar o equipamento — o pior cenário para um técnico de redes.</li>
+    <li><strong>Entrega:</strong> ao final, gere um print de <code>show running-config</code> e <code>show interfaces trunk</code> de cada switch e anexe ao relatório de auditoria da TechSolutions.</li>
+  </ul>
+</div>
